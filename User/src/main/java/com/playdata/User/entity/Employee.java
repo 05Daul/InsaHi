@@ -35,10 +35,6 @@ public class Employee {
     @Column(name = "name", length = 100, nullable = false) 
     private String name;  
 
-    // 호봉 - 초반 값?
-    @Column(name = "salary_grade") 
-    private Integer salaryGrade; 
-
      // 근무 상태
     @Column(name = "work_status", length = 20)
     private String workStatus; 
@@ -74,6 +70,11 @@ public class Employee {
     // 우편번호
     @Column(name = "postal_code", length = 25) 
     private String postalCode;  
+
+    // 호봉 - 초반 값?
+    // @Column(name = "salary_grade") 
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // private Integer salaryGrade; 
 
     // @ManyToOne(fetch = FetchType.LAZY)
     // @JoinColumn(name = "company_code") // 회사 코드 (외래키)
