@@ -67,14 +67,7 @@ public class Employee {
     @Column(name = "address", columnDefinition = "TEXT") 
     private String address; 
 
-    // 우편번호
-    @Column(name = "postal_code", length = 25) 
-    private String postalCode;  
 
-    // 호봉 - 초반 값?
-    // @Column(name = "salary_grade") 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // private Integer salaryGrade; 
 
     // @ManyToOne(fetch = FetchType.LAZY)
     // @JoinColumn(name = "company_code") // 회사 코드 (외래키)
@@ -85,7 +78,7 @@ public class Employee {
     // private Role role; 
 
     // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "position_id") // 직무 ID (외래키)
+    // @JoinColumn(name = "position_id") // 직급호봉봉 ID (외래키) 
     // private Position position;
     
     // @ManyToOne(fetch = FetchType.LAZY)
