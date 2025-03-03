@@ -26,8 +26,8 @@ public class DepartmentService {
         department.setParentDepartmentId(updatedDepartment.getParentDepartmentId());
         department.setDepartmentLevel(updatedDepartment.getDepartmentLevel());
         department.setCompanyCode(updatedDepartment.getCompanyCode());
-        department.setLeft(updatedDepartment.getLeft());
-        department.setRight(updatedDepartment.getRight());
+        department.setLeftNode(updatedDepartment.getLeftNode());
+        department.setRightNode(updatedDepartment.getRightNode());
         return departmentRepository.save(department);
     }
 

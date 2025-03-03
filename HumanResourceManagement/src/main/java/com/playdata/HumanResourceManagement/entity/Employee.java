@@ -43,13 +43,16 @@ public class Employee {
 
     private String birthday;
 
-    private String departmentId;
     private String teamId;
     private String state;
 
     @ManyToOne
     @JoinColumn(name = "company_code", referencedColumnName = "companyCode", nullable = false)
     private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "department_id")
+    private Department department;  // 부서 정보 (연관 관계 설정)
 
     @CreatedDate
     private Date createdAt;

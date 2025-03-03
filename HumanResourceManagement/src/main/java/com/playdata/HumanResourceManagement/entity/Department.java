@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Department {
 
     @Id
-    @Column(name = "department_id", length = 20)
+    @Column(name = "department_id", length = 20)  // VARCHAR(20) 설정
     private String departmentId;  // 부서 ID (PK)
 
     @Column(name = "department_name", length = 100)
@@ -28,9 +28,9 @@ public class Department {
     @Column(name = "company_code", length = 100)
     private String companyCode;  // 회사 코드
 
-    @Column(name = "left")
-    private Integer left;  // 왼쪽 값
+    @Column(name = "left_node")
+    private Integer leftNode;  // 왼쪽 값
 
-    @Column(name = "right")
-    private Integer right;  // 오른쪽 값
+    @Column(name = "right_node")
+    private Integer rightNode;  // 오른쪽 값
 }
