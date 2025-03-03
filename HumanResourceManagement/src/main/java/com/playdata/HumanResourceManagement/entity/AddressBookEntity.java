@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressBook {
+public class AddressBookEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +50,7 @@ public class AddressBook {
 
     @ManyToOne
     @JoinColumn(name = "file_id", referencedColumnName = "fileId")
-    private File file;  // 파일 아이디
+    private FileEntity fileEntity;  // 파일 아이디
 
     @Column(name = "memo", columnDefinition = "TEXT")
     private String memo;  // 메모
