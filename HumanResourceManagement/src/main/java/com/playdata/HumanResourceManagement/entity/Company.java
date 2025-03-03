@@ -1,11 +1,13 @@
 package com.playdata.HumanResourceManagement.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*;  // JPA 패키지로 통일
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;  // 변경: LocalTime → LocalDateTime
 import java.util.Date;
 import java.util.List;
 
@@ -14,31 +16,32 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Company {
 
-    @Id
+    @Id  // JPA 어노테이션만 사용
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // 회사 고유 ID (PK)
+    private Long id;
 
     @Column(unique = true)
-    private String companyCode;  // 회사 코드 (고유값)
+    private String companyCode;
 
-    private String companyName;  // 회사 이름
+    private String companyName;
+    private String companyImage;
+    private String companyAddress;
 
-    private String companyImage;  // 회사 이미지 URL
+    private Integer headCount;
 
-    private String companyAddress;  // 회사 주소
+    private String category;
 
-    private String headCount;  // 회사의 직원 수
+    @Temporal(TemporalType.TIMESTAMP)  // 추가: 날짜 타입 명시
+    @CreatedDate  // 자동 생성일시
+    private Date createdAt;
 
-    private String category;  // 회사의 카테고리
+    private String businessNumber;
 
-    private Date createdAt;  // 생성일시
-
-    private String businessNumber;  // 사업자 등록 번호
-
-    private Timestamp startTime;  // 시작 시간
+    private LocalDateTime startTime;  // 변경: LocalTime → LocalDateTime
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Employee> employees;  // 회사와 관련된 직원 목록
+    private List<Employee> employees;
 }

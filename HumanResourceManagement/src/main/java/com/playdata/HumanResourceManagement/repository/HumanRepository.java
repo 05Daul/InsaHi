@@ -4,25 +4,18 @@ import com.playdata.HumanResourceManagement.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.List;  // List 임포트
 
 @Repository
 public interface HumanRepository extends JpaRepository<Employee, Integer> {
 
-    // 1. 회사 코드로 모든 직원 검색
-    List<Employee> findByCompanyCode(String companyCode);
+    // 모든 직원 조회 (회사 코드 기준)
+    List<Employee> getEmployeesByCompany_CompanyCode(String companyCode);
 
-    // 2. 회사 코드로 특정 직원 검색
-    Employee findByCompanyCodeAndEmployeeId(String companyCode, Integer employeeId);
+    // 특정 직원 조회 (회사 코드 + 직원 ID)
+    Employee getEmployeeByCompany_CompanyCodeAndEmployeeId(String companyCode, String employeeId);
 
-    // 3. 회사 코드로 특정 직원 삭제 (직원 ID 기준)
-    void deleteByCompanyCodeAndEmployeeId(String companyCode, Integer employeeId);
-
-    // 4. 회사 코드로 특정 직원 추가
-    Employee save(Employee employee);
-
-    // 5. 회사코드로 특정 직원 권한 변경
-
+    // 특정 직원 삭제 (회사 코드 + 직원 ID)
+    void removeEmployeeByCompany_CompanyCodeAndEmployeeId(String companyCode, String employeeId);
 
 }
-

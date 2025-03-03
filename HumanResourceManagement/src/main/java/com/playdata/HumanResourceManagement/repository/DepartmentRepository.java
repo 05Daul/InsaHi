@@ -19,9 +19,6 @@ public interface DepartmentRepository extends JpaRepository<Department, String> 
     // 3. 회사 코드로 특정 부서 ID 조회
     Optional<Department> findByDepartmentIdAndCompanyCode(String departmentId, String companyCode);
 
-    // 4. 부서 저장
-    List<Department> saveAll(List<Department> departments);
-
-    // 5. 회사 코드로 모든 부서 삭제
+    // 4. 회사 코드로 모든 부서 삭제
     void deleteByCompanyCode(String companyCode);
 }

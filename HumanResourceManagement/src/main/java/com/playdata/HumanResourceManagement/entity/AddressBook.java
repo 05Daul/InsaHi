@@ -49,7 +49,7 @@ public class AddressBook {
     private String contactPersonEmail;  // 담당자 이메일
 
     @ManyToOne
-    @JoinColumn(name = "file_id", referencedColumnName = "attachmentId")
+    @JoinColumn(name = "file_id", referencedColumnName = "fileId")
     private File file;  // 파일 아이디
 
     @Column(name = "memo", columnDefinition = "TEXT")
