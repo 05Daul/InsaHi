@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-broker-mapping
+data:
+  last_broker_id: "1"
+  broker_usage: |           
+    1:                       

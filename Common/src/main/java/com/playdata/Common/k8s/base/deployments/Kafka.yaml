@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      initContainers:
+        - name: init-broker-id
+          image: busybox
+          command: ['sh', '-c', 'echo $(cat /etc/config/${COMPANY_CODE}) > /etc/broker-id']
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: broker-id-volume
+              mountPath: /etc
+      containers:
+        - name: kafka
+          image: wurstmeister/kafka:latest
+          env:
+            - name: COMPANY_CODE
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: COMPANY_CODE
+            - name: KAFKA_BROKER_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-broker-mapping
+                  key: COMPANY_CODE
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: PLAINTEXT://kafka:9092
+          ports:
+            - containerPort: 9092
+      volumes:
+        - name: config-volume
+          configMap:
+            name: kafka-broker-mapping
+        - name: broker-id-volume
+          emptyDir: {}

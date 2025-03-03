@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-config
+data:
+  FILE_STORAGE_PATH: "/data/files"
+  KAFKA_TOPIC_ORG_EVENT: "department-event"
+  KAFKA_TOPIC_CHAT: "chat-event"
+  REDIS_ORG_KEY_PREFIX: "org:dept:"              # 조직도 저장 시 발생하는 key
+  REDIS_ORG_MEMBERS_PREFIX: "org:members:"       # 회원 추가 시 발생하는 key
