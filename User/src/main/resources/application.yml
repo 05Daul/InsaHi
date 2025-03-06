@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: customer-service
+    name: employee
 
 
   datasource:
@@ -22,8 +22,8 @@ spring:
     show-sql: true
     hibernate:
 #      ddl-auto: create
-      ddl-auto: update
-#      ddl-auto: none
+#      ddl-auto: update
+      ddl-auto: none
 #
     defer-datasource-initialization: true
     properties:
@@ -31,11 +31,11 @@ spring:
         format_sql: true
         use_sql_comments: true
 
-#jwt:
-#  header: Authorization
-#  secret: aGVhdmVzIHNwcmluZyBzZWN1cml0eSBqd3QgZXhhbWE=
-#  #  token-validity-in-second: 86400000 #60*60*24*1000
-#  token-validity-in-second: 86400 #60*60*24*1000
+jwt:
+  header: Authorization
+  secret: aGVhdmVzIHNwcmluZyBzZWN1cml0eSBqd3QgZXhhbWE=
+  #  token-validity-in-second: 86400000 #60*60*24*1000
+  token-validity-in-second: 86400 #60*60*24*1000
 
 
 #jwt:

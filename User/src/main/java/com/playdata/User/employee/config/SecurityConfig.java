@@ -1,50 +1,49 @@
-//package com.playdata.User.employee.config;
-//
-//import com.playdata.User.employee.authentication.EmployeeJwtFilter;
-//import com.playdata.User.employee.authentication.TokenManager;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.http.SessionCreationPolicy;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.web.SecurityFilterChain;
-//import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-//import org.springframework.web.cors.CorsConfiguration;
-//import org.springframework.web.cors.CorsConfigurationSource;
-//import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-//
-//@Configuration
-//@EnableWebSecurity
-//@RequiredArgsConstructor
-//public class SecurityConfig {
-//    private final TokenManager tokenManager;
-//
-////    @Bean
-////    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-////        return new BCryptPasswordEncoder();
-////    }
-//
+package com.playdata.User.employee.config;
+
+import com.playdata.User.employee.authentication.EmployeeJwtFilter;
+import com.playdata.User.employee.authentication.TokenManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+    private final TokenManager tokenManager;
+
 //    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/login","/company/signup").permitAll()
-//                        .anyRequest().authenticated())
-//                .addFilterBefore(new EmployeeJwtFilter(tokenManager),
-//                        UsernamePasswordAuthenticationFilter.class)
-//                //CORS필터를 정의하거나 설정을 정의한 메소드를 통해서 CORS허용되도록 적용
-//                //CORS(Cross-Origin Resource Sharing) 정책 설정
-//                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
-//                        .configurationSource(corsConfigurationSource()))
-//                //세션을 사용하지 않겠다는 의미
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) );
-//
-//
-//        return http.build();
-//    }
-//
+//    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+//        return new BCryptPasswordEncoder();
+//    }344
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(CsrfConfigurer :: disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/","/company/signup").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(new EmployeeJwtFilter(tokenManager),
+                        UsernamePasswordAuthenticationFilter.class)
+
+                //세션을 사용하지 않겠다는 의미
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) );
+
+
+        return http.build();
+    }
+
 //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration configuration = new CorsConfiguration();
@@ -63,4 +62,4 @@
 //        source.registerCorsConfiguration("/**", configuration);
 //        return source;
 //    }
-//}
+}

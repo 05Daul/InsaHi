@@ -15,7 +15,7 @@ public class EmployeeRequestDTO {
 //    private String role; //enum
     private String companyCode;
     private String email;
-//    private String phoneNumber;
+    private String phoneNumber;
 //    private String address;
 //    private String gender;
 //    private String birthday;

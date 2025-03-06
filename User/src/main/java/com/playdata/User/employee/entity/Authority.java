@@ -18,5 +18,5 @@ public class Authority {
     @Column(length = 50)
     private String authorityName;
     //company 관계매핑
-    private String companyCode;
+
 }

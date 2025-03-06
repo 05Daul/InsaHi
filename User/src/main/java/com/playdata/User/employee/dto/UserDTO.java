@@ -14,11 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-    private Long userId;
-    private String name;
+    private String employeeId;
     private String password;
-    private String nickname;
-    private boolean checkVal;
+    private String companyCode;
+    private String name;
     private Set<Authority> authoritylist;
 
 }
