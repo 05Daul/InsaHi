@@ -21,6 +21,8 @@ public class SeverancePayEntity extends DateEntity {
     private String companyCode;
 
     @Id
+    private String empCode;
+
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
