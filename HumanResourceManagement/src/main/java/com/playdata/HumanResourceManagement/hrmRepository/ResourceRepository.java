@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface ResourceRepository extends JpaRepository<AddressBookEntity, Long> {
 //
 //    // 1. 회사코드로 연락처 조회

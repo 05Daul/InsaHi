@@ -8,8 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface AttendanceRepository extends JpaRepository<AttendanceEntity, Long> {
-    /** 추후 변경*/
-    @Query("SELECT a FROM AttendanceEntity a WHERE a.employeeId = :employeeId AND a.companyCode = :companyCode")
-    AttendanceEntity findByIdCode(@Param("employeeId") String employeeId, @Param("companyCode") String companyCode);
+    // @Query("SELECT a FROM AttendanceEntity a WHERE Employee.employeeId= :employeeId AND a.companyCode = :companyCode")
+   // AttendanceEntity findByIdCode(@Param("employeeId") String employeeId, @Param("companyCode") String companyCode);
 }
 

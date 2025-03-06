@@ -1,7 +1,11 @@
 package com.playdata.attendanceSalary.atdSalEntity.atd;
+
 import com.playdata.Common.publicEntity.DateEntity;
+import com.playdata.User.company.entity.Company;
+import com.playdata.User.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.ibatis.annotations.One;
 
 import java.math.BigDecimal;
 
@@ -15,25 +19,28 @@ public class AnnualLeaveEntity extends DateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long AnnualLeaveId;
+//
+//    @OneToOne(cascade = CascadeType.ALL)
+//    private Long annualLeaveIdUsageId; //
 
-    @Column(name = "직원ID", nullable = false, length = 50)
-    private char employeeId;
+    @Column(length = 50)
+    private String positionName; //직급? 부서?
 
-    @Column( length = 50)
-    private String positionName;
+    private int baseLeave; // 기본 연차
 
-    private int baseLeave;
+    private int additionalLeave;  //추가 연차
 
-    private int additionalLeave;
+    private int totalGrantedLeave; // 총 연차
 
-    private int totalGrantedLeave;
+    private int remainingLeave; // 남은
 
-    private int remainingLeave;
+    private int usedLeave; //사용 연차
 
-    private int usedLeave;
+    private String companyCode;
 
-    @Column(length = 100)
-    private BigDecimal companyCode;
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id")
+//    private Employee employee;
 
 }

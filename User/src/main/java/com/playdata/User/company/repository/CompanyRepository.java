@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface CompanyRepository extends JpaRepository<Company, Long> {
+public interface CompanyRepository extends JpaRepository<Company, String> {
     Optional<Company> findByCompanyCode(String companyCode);
 }

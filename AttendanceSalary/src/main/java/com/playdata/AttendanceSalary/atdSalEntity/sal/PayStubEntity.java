@@ -1,6 +1,7 @@
 package com.playdata.attendanceSalary.atdSalEntity.sal;
 
 import com.playdata.Common.publicEntity.DateEntity;
+import com.playdata.User.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,8 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
-
+/// 급여 명세
 @Entity
 @Table(name = "pay_stub")
 @Data
@@ -20,7 +20,7 @@ public class PayStubEntity extends DateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pay_stub_id")
-    private long payStubId;
+    private Long payStubId;
 
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;
@@ -36,15 +36,19 @@ public class PayStubEntity extends DateEntity {
     @Column(precision = 11, scale = 2)
     private BigDecimal totalPayment;
 
-    @Column( precision = 11, scale = 2)
+    @Column(precision = 11, scale = 2)
     private BigDecimal totalDeductions;
 
-    @Column( precision = 11, scale = 2)
+    @Column(precision = 11, scale = 2)
     private BigDecimal netPay;
-    @Column( precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2)
 
-    private BigDecimal companyCode;
+    private String companyCode;
 
-    @Column(name = "유저_id")
-    private char EmployeeId;
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
+
+
 }

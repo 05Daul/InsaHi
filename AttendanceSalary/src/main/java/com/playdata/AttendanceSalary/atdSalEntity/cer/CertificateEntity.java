@@ -1,6 +1,8 @@
 package com.playdata.attendanceSalary.atdSalEntity.cer;
 
 import com.playdata.Common.publicEntity.DateEntity;
+import com.playdata.User.company.entity.Company;
+import com.playdata.User.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,9 +20,7 @@ public class CertificateEntity extends DateEntity {
     @Column(name = "certificate_id")
     private long certificateId;
 
-    @Column(name = "employee_id", nullable = false, length = 50)
-    private long employeeId;
-
+    //@Column(name = "employee_id", nullable = false, length = 50)
 
     @Column(name = "reason", length = 255)
     private String reason;
@@ -32,6 +32,4 @@ public class CertificateEntity extends DateEntity {
     @Column(name = "approval_id")
     private long approvalId;
 
-    @Column(name = "회사코드", length = 100)
-    private BigDecimal companyCode;
 }

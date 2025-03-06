@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -20,14 +20,13 @@ public class Company {
     @Id
     @Column(unique = true, length = 36)
     private String companyCode; //1
-
     private String companyName; //2
 //    private String companyImage;
     private String companyAddress; //3
     private String headCount; //4
     private Date createdAt; // 설립일 입력 받아서 저장
     private String businessNumber;
-    private Timestamp startTime;
+    private LocalTime startTime;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Employee> employees;

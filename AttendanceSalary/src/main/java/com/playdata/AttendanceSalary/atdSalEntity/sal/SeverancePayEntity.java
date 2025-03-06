@@ -1,20 +1,32 @@
 package com.playdata.attendanceSalary.atdSalEntity.sal;
+
 import com.playdata.Common.publicEntity.DateEntity;
+import com.playdata.User.employee.entity.Employee;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+/// 퇴직금
 @Entity
 @Table(name = "severance_pay")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeverancePayEntity  extends DateEntity {
+public class SeverancePayEntity extends DateEntity {
+    /// 퇴직금
+
+    private String companyCode;
 
     @Id
-    @Column(name = "직원ID", length = 50)
-    private long employeeId;
+    private String empCode;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
 
     @Column(nullable = false)
     private LocalDate startDate;
@@ -25,6 +37,5 @@ public class SeverancePayEntity  extends DateEntity {
     @Column(precision = 10, scale = 2)
     private BigDecimal severanceAmount;
 
-    @Column(name = "회사코드", precision = 10)
-    private BigDecimal companyCode;
+
 }

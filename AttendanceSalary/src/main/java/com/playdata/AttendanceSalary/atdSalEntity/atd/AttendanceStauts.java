@@ -5,5 +5,8 @@ public enum AttendanceStauts {
     ATTENDANCE,
     ABSENCE,
     TARDINESS,
-    DAY_OFF;
+    DAY_OFF,
+    WEEKEND_WORK,
+    VACATION;
+
 }

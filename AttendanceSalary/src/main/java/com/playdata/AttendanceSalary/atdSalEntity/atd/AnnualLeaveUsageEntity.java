@@ -1,6 +1,8 @@
 package com.playdata.attendanceSalary.atdSalEntity.atd;
 
 import com.playdata.Common.publicEntity.DateEntity;
+import com.playdata.User.company.entity.Company;
+import com.playdata.User.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,27 +18,27 @@ public class AnnualLeaveUsageEntity extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "annual_leave_id", nullable = false)
-    private Long annualLeaveId;
+    @Column( nullable = false)
+    private Long annualLeaveIdUsageId; //
+
+    @Column( nullable = false)
+    private LocalDate startDate; //시작일
+
+    @Column( nullable = false)
+    private LocalDate stopDate; //종료일
 
 
-    @Column(name = "employee_id", nullable = false, length = 50)
-    private char employeeId;
-
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-    @Column(name = "reason", length = 255)
-    private String reason;
-
-    @Column(name = "회사코드", length = 100)
-    private BigDecimal companyCode;
+    @Column( length = 255)
+    private String reason; // 사유
 
 
-
-
-
-    @Column(name = "id")
-    private Long id;
+    private String companyCode;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id")
+//    private Employee employee;
+//
+//    @Column(name = "id")
+//    private Long id;
 
 }
