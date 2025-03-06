@@ -1,5 +1,6 @@
 package com.playdata.User.company.entity;
 
+import com.playdata.User.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,6 @@ import java.util.UUID;
 public class Company {
     @Id
     @Column(unique = true, length = 36)
-
     private String companyCode; //1
 
     private String companyName; //2

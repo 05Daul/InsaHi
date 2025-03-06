@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,7 +20,8 @@ public class Employee {
     @Id
     @Column(name = "employee_id", unique = true, length = 36 )
     private String employeeId;
-    private String password; // 1
+    @ColumnDefault("1234")
+    private String password; // 1(default 1234)
     private String name; //2
     private String email; //3
     private String phoneNumber; //4

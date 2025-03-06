@@ -4,7 +4,7 @@ import com.playdata.User.company.entity.Company;
 import com.playdata.User.employee.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     Employee findByEmployeeId(String employeeId);
 
