@@ -6,8 +6,8 @@ import com.playdata.attendanceSalary.atdSalEntity.atd.AttendanceEntity;
 import com.playdata.attendanceSalary.atdSalEntity.atd.AttendanceStauts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.*;
@@ -18,10 +18,13 @@ import java.time.*;
 public class AttendanceServiceImpl implements AttendanceService {
 
     private final AttendanceDAO attendanceDAO;
+    private final ModelMapper modelMapper;
+
 
     @Override
     public AttendanceEntity checkIn(String employeeId, String companyCode) throws IllegalAccessException {
         Employee employee = attendanceDAO.findEmployeeById(employeeId);
+        // 1) null 처리 후 진행
         AttendanceEntity attendanceEntity = new AttendanceEntity();
         attendanceEntity.setEmployee(employee);
         attendanceEntity.setCompanyCode(companyCode);
@@ -82,8 +85,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // 연장 근무 시간 계산 (법정 근무 시간: 8시간)
         long overtimeMinutesTotal = 0;
-        if (workHours > 8 || (workHours == 8 && workMinutes > 0) || isWeekend) {
-            overtimeMinutesTotal = ((workHours - 8) * 60) + workMinutes; // 초과 근무 시간을 분 단위로 변환
+        if (workHours > 8 || (workHours == 8 && workMinutes > 0) || !isWeekend) {//수정
+             overtimeMinutesTotal = ((workHours - 8) * 60) + workMinutes; // 초과 근무 시간을 분 단위로 변환
         }
 
         // 주말 일시 모두 연장 근무 시간으로 더하기
@@ -91,18 +94,18 @@ public class AttendanceServiceImpl implements AttendanceService {
             overtimeMinutesTotal += (workHours * 60) + workMinutes;
         }
 
-        // DB에서 기존 연장 근무 시간 불러오기
-        BigDecimal overtimeDB = attendance.getOvertimeHours() != null ? attendance.getOvertimeHours() : BigDecimal.ZERO;
+        // DB에서 기존 연장 근무 시간 불러오기. // 수정
+//        BigDecimal overtimeDB = attendance.getOvertimeHours() != null ? attendance.getOvertimeHours() : BigDecimal.ZERO;
 
         BigDecimal todayOvertimeWorkHours = BigDecimal.valueOf(overtimeMinutesTotal)
                 .divide(BigDecimal.valueOf(60), 3, RoundingMode.HALF_UP); // 소수점 3자리 반올림
 
-        // 총 연장 근로 시간 계산
+        /*// 총 연장 근로 시간 계산
         BigDecimal totalOvertimeWorkTime = overtimeDB.add(todayOvertimeWorkHours);
-
+*/
         // 근무 시간 및 연장 근무 시간 저장
-        attendance.setWorkHours(BigDecimal.valueOf(duration.toMinutes()).max(BigDecimal.ZERO)); // 총 근무 시간 (분 단위)
-        attendance.setOvertimeHours(totalOvertimeWorkTime);
+        attendance.setWorkHours(BigDecimal.valueOf(duration.toMinutes()).max(BigDecimal.ZERO).divide(BigDecimal.valueOf(60),3,RoundingMode.HALF_UP)); // 총 근무 시간 (분 단위)
+        attendance.setOvertimeHours(todayOvertimeWorkHours);
 
         // 데이터 저장
         attendanceDAO.save(attendance);
