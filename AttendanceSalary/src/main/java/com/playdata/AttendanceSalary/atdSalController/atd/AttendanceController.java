@@ -33,7 +33,7 @@ public class AttendanceController {
 
     //  ResponseEntity<?> 으로 교체예정
     @PutMapping("/check-out/{id}")
-    public void checkOut(@PathVariable Long id) {
+    public void checkOut(@PathVariable("id") Long id) {
         attendanceService.checkOut(id);
     }
 }

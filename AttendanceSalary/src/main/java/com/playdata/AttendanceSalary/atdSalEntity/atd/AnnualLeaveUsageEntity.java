@@ -33,12 +33,12 @@ public class AnnualLeaveUsageEntity extends DateEntity {
 
 
     private String companyCode;
-
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
-
-    @Column(name = "id")
-    private Long id;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id")
+//    private Employee employee;
+//
+//    @Column(name = "id")
+//    private Long id;
 
 }

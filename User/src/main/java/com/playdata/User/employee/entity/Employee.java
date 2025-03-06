@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,6 +28,11 @@ public class Employee {
     private String departmentId;
     private String teamId;
     private String state;
+    private LocalDate retirement; //은퇴
+    private LocalDate startdate; // 입사일
+    private Long positionSalaryId;
+
+
 
     @ManyToOne
     @JoinColumn(name = "company_code", referencedColumnName = "companyCode")
@@ -48,7 +55,6 @@ public class Employee {
             this.employeeId = UUID.randomUUID().toString().substring(0, 8);
         }
     }
-
 
     //   public Employee(String employeeId, String password, String name, String email, String gender){
 //        this.employeeId = employeeId;
