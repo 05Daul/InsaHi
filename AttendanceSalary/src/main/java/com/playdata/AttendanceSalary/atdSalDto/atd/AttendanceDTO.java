@@ -1,21 +1,22 @@
 package com.playdata.attendanceSalary.atdSalDto.atd;
 
-import com.playdata.attendanceSalary.atdSalEntity.atd.AttendanceEntity;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
+@Setter
 public class AttendanceDTO {
-    private final Long id;
-//    private final String employeeId;
-    private final LocalDateTime checkInTime;
-
-
-    public AttendanceDTO(AttendanceEntity attendance) {
-        this.id = attendance.getId();
-        //this.employeeId = attendance.getEmployeeId();
-        this.checkInTime = attendance.getCheckInTime();
-    }
+    private Long id;
+    private String employeeId;
+    private String companyCode;
+    private LocalDate workDate;
+    private LocalDateTime checkInTime;
+    private LocalDateTime checkOutTime;
+    private BigDecimal workHours;
+    private BigDecimal overtimeHours;
+    private String attendanceStatus;
 }

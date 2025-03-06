@@ -13,7 +13,6 @@ public interface AttendanceDAO {
     Company findCompanyById(String id);
     Employee findEmployeeById(String employeeid);
 
-    // AttendanceEntity findWorkingOutside();
 
 
 }

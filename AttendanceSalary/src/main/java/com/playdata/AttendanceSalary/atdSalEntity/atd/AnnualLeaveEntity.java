@@ -20,9 +20,9 @@ public class AnnualLeaveEntity extends DateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long AnnualLeaveId;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Long annualLeaveIdUsageId; //
+//
+//    @OneToOne(cascade = CascadeType.ALL)
+//    private Long annualLeaveIdUsageId; //
 
     @Column(length = 50)
     private String positionName; //직급? 부서?
@@ -39,8 +39,8 @@ public class AnnualLeaveEntity extends DateEntity {
 
     private String companyCode;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id")
+//    private Employee employee;
 
 }

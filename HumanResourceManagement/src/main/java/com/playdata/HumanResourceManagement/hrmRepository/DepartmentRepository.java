@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.List;
 
-@Repository
+
 public interface DepartmentRepository extends JpaRepository<DepartmentEntity, String> {
 //
 //    // 1. 회사 코드로 모든 부서 조회

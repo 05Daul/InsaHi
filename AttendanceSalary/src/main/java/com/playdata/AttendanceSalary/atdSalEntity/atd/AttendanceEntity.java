@@ -34,10 +34,10 @@ public class AttendanceEntity {
     @Column(name = "check_out_time") //퇴근시간
     private LocalDateTime checkOutTime;
 
-    @Column(name = "work_hours", precision = 5, scale = 2) //근무시간
+    @Column(name = "work_hours", precision = 7, scale = 2) //근무시간
     private BigDecimal workHours;
 
-    @Column(name = "overtime_hours", precision = 5, scale = 2)// 일일연장근로 시간
+    @Column(name = "overtime_hours", precision = 7, scale = 2)// 일일연장근로 시간
     private BigDecimal overtimeHours;
 
     // @Column(name = "총연장근로시간", precision = 5, scale = 2)
@@ -55,7 +55,7 @@ public class AttendanceEntity {
     private Employee employee;
 
 /*   @Column(name = "is_late")
-    private boolean isLate;
+    prALTER TABLE employee DROP FOREIGN KEY FK_employee_company;ivate boolean isLate;
 */
 
 /*

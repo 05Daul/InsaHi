@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;  // List 임포트
 
-@Repository
 public interface HumanRepository extends JpaRepository<Employee, String> {
 //
 //    // 모든 직원 조회 (회사 코드 기준)
