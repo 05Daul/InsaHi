@@ -11,7 +11,7 @@ export default function Sidebar1() {
                 출퇴근 관리 <FaRegEdit className="icon" />
             </h3>
             <nav>
-                <ul className="menu">
+                <ul className="menu-under">
                     <li><Link href="#">- 출퇴근 기록 조회</Link></li>
                     <li><Link href="#">- 출퇴근 체크</Link></li>
 

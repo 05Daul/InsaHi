@@ -1,6 +1,6 @@
-package com.playdata.attendanceSalary.atdSalRepository.atd;
+package com.playdata.AttendanceSalary.atdSalRepository.atd;
 
-import com.playdata.attendanceSalary.atdSalEntity.atd.AnnualLeaveUsageEntity;
+import com.playdata.AttendanceSalary.atdSalEntity.atd.AnnualLeaveUsageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AnnualLeaveUsageRepository extends JpaRepository<AnnualLeaveUsageEntity,Long> {

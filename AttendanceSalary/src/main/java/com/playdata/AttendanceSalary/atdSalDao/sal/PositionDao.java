@@ -1,12 +1,15 @@
-package com.playdata.attendanceSalary.atdSalDao.sal;
+package com.playdata.AttendanceSalary.atdSalDao.sal;
+import com.playdata.AttendanceSalary.atdSalEntity.sal.PositionEntity;
+import java.util.Optional;
 
-import com.playdata.attendanceSalary.atdSalEntity.sal.PositionEntity;
-import org.springframework.stereotype.Repository;
 
-import javax.swing.text.Position;
+public interface PositionDao {
+    PositionEntity savePosition(PositionEntity positionEntity);
 
-@Repository
-public interface PositionDao { PositionEntity insertPosition(PositionEntity positionEntity,String CompanyCode);
-void updatePosition(PositionEntity positionEntity,String CompanyCode);
-void deletePosition(PositionEntity positionEntity,String CompanyCode);
+    void deletePosition(PositionEntity positionEntity);
+
+    Optional<PositionEntity> findById(Long positionId);
+
+
+
 }

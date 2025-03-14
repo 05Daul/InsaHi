@@ -11,7 +11,7 @@ export default function Sidebar4() {
                 사용자 관리
             </h3>
             <nav>
-                <ul className="menu">
+                <ul className="menu-under">
                     <li className="menu-section"><Link href="#">부서 관리</Link></li>
                     <li className="menu-section"><Link href="#">직무/직급 관리</Link></li>
                     <li className="menu-section"><Link href="#">권한 관리</Link></li>

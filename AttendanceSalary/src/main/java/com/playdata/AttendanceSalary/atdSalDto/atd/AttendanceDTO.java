@@ -1,4 +1,4 @@
-package com.playdata.attendanceSalary.atdSalDto.atd;
+package com.playdata.AttendanceSalary.atdSalDto.atd;
 
 import lombok.Getter;
 import lombok.Setter;

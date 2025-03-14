@@ -1,8 +1,7 @@
-package com.playdata.attendanceSalary.atdSalRepository.sal;
+package com.playdata.AttendanceSalary.atdSalRepository.sal;
 
-import com.playdata.HumanResourceManagement.employee.entity.Employee;
-import com.playdata.attendanceSalary.atdSalEntity.sal.SeverancePayEntity;
+import com.playdata.AttendanceSalary.atdSalEntity.sal.SeverancePayEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SeverancePayRepository extends JpaRepository<SeverancePayEntity, Employee> {
+public interface SeverancePayRepository extends JpaRepository<SeverancePayEntity, String> {
 }

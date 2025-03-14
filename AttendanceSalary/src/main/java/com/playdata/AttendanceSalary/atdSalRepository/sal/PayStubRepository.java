@@ -1,7 +1,10 @@
-package com.playdata.attendanceSalary.atdSalRepository.sal;
+package com.playdata.AttendanceSalary.atdSalRepository.sal;
 
-import com.playdata.attendanceSalary.atdSalEntity.sal.PayStubEntity;
+import com.playdata.AttendanceSalary.atdSalEntity.sal.PayStubEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 
 public interface PayStubRepository extends JpaRepository<PayStubEntity,Long> {
+    PayStubEntity findByEmployeeId(@Param("employeeId") String employeeId);
+    /// sort 추ㄷ
 }

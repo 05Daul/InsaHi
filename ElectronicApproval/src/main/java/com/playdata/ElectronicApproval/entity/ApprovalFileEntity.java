@@ -1,6 +1,5 @@
 package com.playdata.ElectronicApproval.entity;
 
-import com.playdata.HumanResourceManagement.employee.entity.Employee;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -39,9 +38,9 @@ public class ApprovalFileEntity {
 
   private String companyCode;
 
-  @ManyToOne
-  @JoinColumn(name = "employee_id")
-  private Employee employee;
+//  @ManyToOne
+//  @JoinColumn(name = "employee_id")
+//  private Employee employee;
 
   private String referenceIds; //참조인 "id1, id2, ..."
 

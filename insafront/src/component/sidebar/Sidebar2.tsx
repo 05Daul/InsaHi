@@ -12,7 +12,7 @@ export default function Sidebar2() {
 
             <h4 className="menu-section">나의 문서함 <FaRegEdit className="icon" /></h4>
             <nav>
-                <ul className="menu">
+                <ul className="menu-under">
                     <li><Link href="#">- 필터링 1</Link></li>
                     <li><Link href="#">- 필터링 2</Link></li>
                 </ul>
@@ -20,7 +20,7 @@ export default function Sidebar2() {
 
             <h4 className="menu-section">결재 문서함</h4>
             <nav>
-                <ul className="menu">
+                <ul className="menu-under">
                     <li><Link href="#">- 임시 저장 문서</Link></li>
                     <li><Link href="#">- 결재 대기 문서</Link></li>
                     <li><Link href="#">- 결재 수신 문서</Link></li>
@@ -31,7 +31,7 @@ export default function Sidebar2() {
 
             <h4 className="menu-section">개인 문서함</h4>
             <nav>
-                <ul className="menu">
+                <ul className="menu-under">
                     <li><Link href="#">- 기간 문서함</Link></li>
                     <li><Link href="#">- 발송 문서함</Link></li>
                     <li><Link href="#">- 수신 문서함</Link></li>
@@ -41,7 +41,7 @@ export default function Sidebar2() {
 
             <h4 className="menu-section">부서 문서함</h4>
             <nav>
-                <ul className="menu">
+                <ul className="menu-under">
                     <li><Link href="#">- 기간 문서함</Link></li>
                     <li><Link href="#">- 발송 문서함</Link></li>
                     <li><Link href="#">- 수신 문서함</Link></li>

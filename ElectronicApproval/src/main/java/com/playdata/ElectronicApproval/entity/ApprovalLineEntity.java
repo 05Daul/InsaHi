@@ -1,6 +1,5 @@
 package com.playdata.ElectronicApproval.entity;
 
-import com.playdata.HumanResourceManagement.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +18,7 @@ public class ApprovalLineEntity {
   private ApprovalFileEntity approvalFile;
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "employee_id")
-  private Employee employee;
+//  private Employee employee;
   private int approvalOrder;
   private String companyId;
 }

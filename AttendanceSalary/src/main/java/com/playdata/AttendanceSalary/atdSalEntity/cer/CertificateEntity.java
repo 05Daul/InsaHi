@@ -1,8 +1,6 @@
-package com.playdata.attendanceSalary.atdSalEntity.cer;
+package com.playdata.AttendanceSalary.atdSalEntity.cer;
 
-import com.playdata.Common.publicEntity.DateEntity;
-import com.playdata.HumanResourceManagement.company.entity.Company;
-import com.playdata.HumanResourceManagement.employee.entity.Employee;
+import com.playdata.common.publicEntity.DateEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

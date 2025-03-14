@@ -3,6 +3,10 @@ server:
   port: 1012
 
 spring:
+  security:
+    user:
+      name: admin
+      password: 1234
   application:
     name: employee
 
@@ -21,20 +25,29 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-#      ddl-auto: create
-#      ddl-auto: update
-      ddl-auto: none
-#
+      ddl-auto: update
     defer-datasource-initialization: true
     properties:
       hibernate:
         format_sql: true
         use_sql_comments: true
 
+  redis:
+    host: localhost            # Redis 서버 호스트
+    port: 6379                 # Redis 서버 포트
+    password:                  # 비밀번호 (필요한 경우)
+    timeout: 10000             # 연결 타임아웃 (밀리초)
+    lettuce:
+      pool:
+        max-active: 10         # 최대 연결 수
+        max-idle: 5            # 최대 유휴 연결 수
+        min-idle: 1            # 최소 유휴 연결 수
+        max-wait: 10000        # 최대 대기 시간 (밀리초)
+
 jwt:
   header: Authorization
-  secret: aGVhdmVzIHNwcmluZyBzZWN1cml0eSBqd3QgZXhhbWE=
-  #  token-validity-in-second: 86400000 #60*60*24*1000
+  secret: 4Hirx6BNM+kTbhOxA4cHCUz/BF0B0tokIgTRs2d5ORn3zF8fPAESoo/jXcUiBnWYoZWrxgunF3l3gvGCUi6JGQ==
+#  token-validity-in-second: 86400000 #60*60*24*1000
   token-validity-in-second: 86400 #60*60*24*1000
 
 
@@ -52,15 +65,3 @@ logging:
         type:
           descriptor:
             sql: trace
-#eureka:
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#
-#    service-url:
-#      defaultZone: http://127.0.0.1:8761/eureka
-#
-#  instance:
-##    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-#    lease-renewal-interval-in-seconds: 10
-#    lease-expiration-duration-in-seconds: 30

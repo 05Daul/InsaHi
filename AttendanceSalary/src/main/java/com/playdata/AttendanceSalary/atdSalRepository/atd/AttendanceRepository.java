@@ -1,14 +1,23 @@
-package com.playdata.attendanceSalary.atdSalRepository.atd;
+package com.playdata.AttendanceSalary.atdSalRepository.atd;
 
-import com.playdata.attendanceSalary.atdSalEntity.atd.AttendanceEntity;
-import org.apache.ibatis.annotations.Param;
+import com.playdata.AttendanceSalary.atdSalEntity.atd.AttendanceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public interface AttendanceRepository extends JpaRepository<AttendanceEntity, Long> {
-    // @Query("SELECT a FROM AttendanceEntity a WHERE Employee.employeeId= :employeeId AND a.companyCode = :companyCode")
-   // AttendanceEntity findByIdCode(@Param("employeeId") String employeeId, @Param("companyCode") String companyCode);
+    @Query("SELECT COALESCE(SUM(a.overtimeHours), 0) " +
+            "FROM AttendanceEntity a " +
+            "WHERE a.employeeId = :employeeId " +
+            "AND a.workDate BETWEEN :startDate AND :endDate")
+    BigDecimal getTotalOvertimeHoursByEmployeeAndDateRange(
+            @Param("employeeId") String employeeId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+    //sort
+
 }
 

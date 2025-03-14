@@ -1,4 +1,4 @@
-package com.playdata.attendanceSalary.atdSalDao.sal;
+package com.playdata.AttendanceSalary.atdSalDao.sal;
 
 public interface SeverancePayDaoImpl {
 }

@@ -1,21 +1,13 @@
-package com.playdata.attendanceSalary;
+package com.playdata.AttendanceSalary;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
-@EntityScan(basePackages = {
-        "com.playdata.attendanceSalary.atdSalEntity",
-        "com.playdata.Common.publicEntity",
-        "com.playdata.User.employee.entity",
-        "com.playdata.User.company.entity"})
-@EnableJpaRepositories(basePackages = {"com.playdata.User.company.repository",
-        "com.playdata.attendanceSalary.atdSalRepository.atd",
-        "com.playdata.User.employee.repository"
-})
 @SpringBootApplication
+@EnableFeignClients  // Feign Client 활성화
+
 public class AttendanceSalaryApplication {
 
     public static void main(String[] args) {

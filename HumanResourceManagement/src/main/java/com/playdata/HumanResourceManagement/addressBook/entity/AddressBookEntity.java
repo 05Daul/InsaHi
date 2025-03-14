@@ -1,17 +1,20 @@
 package com.playdata.HumanResourceManagement.addressBook.entity;
 
-import com.playdata.Common.publicEntity.DateEntity;
-import com.playdata.Common.publicEntity.FileEntity;
+import com.playdata.HumanResourceManagement.company.entity.Company;
+import com.playdata.HumanResourceManagement.publicEntity.DateEntity;
+import com.playdata.HumanResourceManagement.publicEntity.FileEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "address_books")
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressBookEntity extends DateEntity {
@@ -19,52 +22,66 @@ public class AddressBookEntity extends DateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_book_id")
-    private String addressBookId;  // 고유 아이디 (PK)
+    private Long addressBookId;
 
+    // 기업명 (필수)
     @Column(name = "company_name", nullable = false)
-    private String companyName;  // 기업명 (not null)
+    private String companyName;
 
+    // 업종
     @Column(name = "industry", length = 100)
-    private String industry;  // 업종
+    private String industry;
 
+    // 주소
     @Column(name = "address", length = 500)
-    private String address;  // 주소
+    private String address;
 
+    // 웹사이트 URL
     @Column(name = "website", length = 255)
-    private String website;  // 웹사이트 URL
+    private String website;
 
+    // 연락처 유형 (필수)
     @Column(name = "contact_type", nullable = false)
-    private String contactType;  // 연락처 유형
+    private String contactType;
 
+    // 전화번호 (필수)
     @Column(name = "phone_number", nullable = false, length = 50)
-    private String phoneNumber;  // 전화번호 (not null)
+    private String phoneNumber;
 
+    // 담당자 이름
     @Column(name = "contact_person_name", length = 100)
-    private String contactPersonName;  // 담당자 이름
+    private String contactPersonName;
 
+    // 담당자 직책
     @Column(name = "contact_person_position", length = 100)
-    private String contactPersonPosition;  // 담당자 직책
+    private String contactPersonPosition;
 
+    // 담당자 이메일
     @Column(name = "contact_person_email", length = 255)
-    private String contactPersonEmail;  // 담당자 이메일
+    private String contactPersonEmail;
 
-    @ManyToOne
-    @JoinColumn(name = "file_id", referencedColumnName = "fileId")
-    private FileEntity fileEntity;  // 파일 아이디
+    // 파일과의 관계 매핑
+    @OneToMany(mappedBy = "addressBook")
+    private List<FileEntity> fileEntities;
 
+    // 메모 (TEXT 타입)
     @Column(name = "memo", columnDefinition = "TEXT")
-    private String memo;  // 메모
+    private String memo;
 
-
-
+    // 열람 권한
     @Enumerated(EnumType.STRING)
     @Column(name = "view_permission", nullable = false)
-    private ViewPermission viewPermission;  // 열람 권한
+    private ViewPermission viewPermission;
 
-    @Column(name = "company_code", length = 100)
-    private String companyCode;  // 회사코드
+    // 회사 코드 (Company 참조)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_code", referencedColumnName = "company_code")
+    private Company company;
 
-    // 열람 권한을 관리하는 Enum 타입
+    // 주소록 업로드한 사용자 ID
+    @Column(name = "uploaded_by_user_id")
+    private String uploadedByUserId;
+
     public enum ViewPermission {
         PUBLIC,      // 전체 공개
         DEPARTMENT,  // 부서 공유

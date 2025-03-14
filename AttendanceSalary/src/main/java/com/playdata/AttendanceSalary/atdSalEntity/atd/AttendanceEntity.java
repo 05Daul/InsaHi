@@ -1,6 +1,5 @@
-package com.playdata.attendanceSalary.atdSalEntity.atd;
+package com.playdata.AttendanceSalary.atdSalEntity.atd;
 
-import com.playdata.HumanResourceManagement.employee.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +25,6 @@ public class AttendanceEntity {
     @Column(name = "check_in_time")
     private LocalDateTime checkInTime;
 
-
     @Column(name = "work_date", nullable = false) // 근무일자
     private LocalDate workDate;
 
@@ -49,13 +47,9 @@ public class AttendanceEntity {
 
     private String companyCode;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+    @Column(name = "employee_id")
+    private String employeeId;
 
-/*   @Column(name = "is_late")
-    prALTER TABLE employee DROP FOREIGN KEY FK_employee_company;ivate boolean isLate;
-*/
 
 /*
     @PrePersist //db에 출근으로  생성시

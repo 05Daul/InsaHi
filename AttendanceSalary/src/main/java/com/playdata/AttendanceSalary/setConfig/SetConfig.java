@@ -1,4 +1,4 @@
-package com.playdata.attendanceSalary.setConfig;
+package com.playdata.AttendanceSalary.setConfig;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
