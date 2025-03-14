@@ -1,0 +1,58 @@
+/* 전체 레이아웃 */
+.topcontainer {
+    display: flex;
+}
+
+/* 헤더 스타일 */
+.toptopbar {
+    background-color: #3D67D7;
+    padding: 0.5rem 1rem;
+    width: 100%;
+}
+
+.topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 로고 */
+.toplogo {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* 메뉴 스타일 */
+.topmenu {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+.topmenulink {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.topmenulink:hover {
+    color: #FFD700;
+}
+
+/* 오른쪽 아이콘 */
+.topicons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+}
+
+/* Sidebar 컨테이너 */
+.topsidebarcontainer {
+    margin-left: 1rem;
+}

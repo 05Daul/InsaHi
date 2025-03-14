@@ -1,6 +1,6 @@
 server:
 #  port: 0
-  port: 1012
+  port: 1010
 
 spring:
   security:

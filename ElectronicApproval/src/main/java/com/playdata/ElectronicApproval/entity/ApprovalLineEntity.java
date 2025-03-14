@@ -11,14 +11,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApprovalLineEntity {
+
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
+
   @ManyToOne
   @JoinColumn(name = "approvalfile_id")
   private ApprovalFileEntity approvalFile;
+
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "employee_id")
-//  private Employee employee;
+  @JoinColumn(name = "approvallinedetail_id")
+  private ApprovalLineDetailEntity approvalLineDetail;
+
+  private String employeeId;
+
   private int approvalOrder;
+
   private String companyId;
 }

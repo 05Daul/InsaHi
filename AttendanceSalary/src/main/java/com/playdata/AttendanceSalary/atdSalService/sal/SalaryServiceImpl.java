@@ -25,128 +25,131 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SalaryServiceImpl implements SalaryService {
 
-    private final PositionDao positionDao;
-    private final PositionSalaryDao positionSalaryDao;
-    private final ModelMapper modelMapper;
-    private final AllowanceDao allowanceDao;
-    private final DeductionDao deductionDao;
-    private final PayStubDao payStubDao;
-    private final EmployeeAllowDao employeeAllowDao;
-    //    private final SalaryDao salaryDao;
-    private final HrmFeignClient hrmFeignClient;
-    private final AttendanceServiceImpl attendanceServiceImpl; // dao에서 로직 구성 x => service로
+  private final PositionDao positionDao;
+  private final PositionSalaryDao positionSalaryDao;
+  private final ModelMapper modelMapper;
+  private final AllowanceDao allowanceDao;
+  private final DeductionDao deductionDao;
+  private final PayStubDao payStubDao;
+  private final EmployeeAllowDao employeeAllowDao;
+  //    private final SalaryDao salaryDao;
+  private final HrmFeignClient hrmFeignClient;
+  private final AttendanceServiceImpl attendanceServiceImpl; // dao에서 로직 구성 x => service로
 
 
-    /// 급여 계산 로직
-    @Override
-    public PayStubResponseDTO calculateAndSaveEmployeePayStub(String employeeId) {
+  /// 급여 계산 로직
+  @Override
+  public PayStubResponseDTO calculateAndSaveEmployeePayStub(String employeeId) {
 
-        // 1. 직원 정보 조회
-        EmployeeResponseDTO employee = hrmFeignClient.findEmployee(employeeId);
-        log.info("employeeId:{}", employee.getEmployeeId());
+    // 1. 직원 정보 조회
+    EmployeeResponseDTO employee = hrmFeignClient.findEmployee(employeeId);
+    log.info("employeeId:{}", employee.getEmployeeId());
 
-        if (employee.getEmployeeId() == null) {
-            throw new RuntimeException("직원 정보를 찾을 수 없습니다.");
-        }
-
-        // 2. 직급 및 호봉 정보 조회
-        if (employee.getPositionSalaryId() == null) {
-            throw new RuntimeException("직원의 직급 정보를 찾을 수 없습니다.");
-        }
-
-        PositionSalaryStepResponseDTO salaryStep = findPositionSalaryStep(employee.getPositionSalaryId());
-        log.info("employeePositionSalaryId:{}", salaryStep);
-        log.info("BaseSalary:{}", salaryStep.getBaseSalary());
-
-        // 2.1 기본급
-        BigDecimal baseSalary = salaryStep.getBaseSalary();
-        // 2.2 직급수당
-        BigDecimal positionAllowance = salaryStep.getPositionAllowance();
-
-        // ✅ 기준급 = 기본급 + 직급수당
-        BigDecimal totalBaseSalary = baseSalary.add(positionAllowance);
-        log.info("기준급 (기본급 + 직급수당): {}", totalBaseSalary);
-
-        // 2.3 연장근로수당 (시간 * 시간당 수당)
-        BigDecimal hourlyOvertimeAllowance = salaryStep.getOvertimeAllowance();
-        BigDecimal overtimeHours = attendanceServiceImpl.calculateMonthlyOvertimeHours(employeeId, YearMonth.now());
-        BigDecimal totalOvertimeAllowance = hourlyOvertimeAllowance.multiply(overtimeHours);
-
-        log.info("연장근로 수당 = {}", totalOvertimeAllowance);
-
-        // 3. PayStubEntity 초기 생성
-        PayStubEntity payStubEntity = PayStubEntity.builder()
-                .employeeId(employeeId)
-                .companyCode(employee.getCompanyCode())
-                .baseSalary(totalBaseSalary) // 기준급 저장
-                .paymentDate(LocalDateTime.now())
-                .build();
-
-        PayStubEntity savedStub = payStubDao.save(payStubEntity);
-
-        // 4. 직원별 수당 조회 및 계산
-        List<EmployeeAllowEntity> employeeAllowances = employeeAllowDao.findByEmployeeId(employeeId);
-
-        BigDecimal totalTaxFreeAllowances = BigDecimal.ZERO;
-        BigDecimal totalTaxableAllowances = BigDecimal.ZERO;
-
-        for (EmployeeAllowEntity employeeAllowance : employeeAllowances) {
-
-            AllowanceType type = employeeAllowance.getAllowanceType();
-            BigDecimal amount = employeeAllowance.getAmount();
-
-            boolean isTaxExempt = type.isTaxExemption();
-            BigDecimal exemptionLimit = type.getTaxExemptionLimit();
-
-            if (isTaxExempt) {
-                BigDecimal taxFreeAmount = amount.min(exemptionLimit);
-                BigDecimal taxableAmount = amount.subtract(exemptionLimit).max(BigDecimal.ZERO);
-
-                totalTaxFreeAllowances = totalTaxFreeAllowances.add(taxFreeAmount);
-                totalTaxableAllowances = totalTaxableAllowances.add(taxableAmount);
-
-                log.info("[비과세 수당] {} - 비과세 금액: {}, 과세 금액: {}",
-                        type.getDisplayName(), taxFreeAmount, taxableAmount);
-
-            } else {
-                totalTaxableAllowances = totalTaxableAllowances.add(amount);
-
-                log.info("[과세 수당] {} - 과세 금액: {}", type.getDisplayName(), amount);
-            }
-        }
-
-        // 5. 공제 항목 계산 및 저장
-        List<DeductionEntity> deductionEntities = calculateAndSaveDeductions(totalBaseSalary, savedStub);
-
-        BigDecimal totalDeductions = deductionEntities.stream()
-                .map(DeductionEntity::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        // 6. 총 지급액 계산 (기준급 + 연장근로수당 + 수당)
-        BigDecimal totalPayment = totalBaseSalary
-                .add(totalOvertimeAllowance)
-                .add(totalTaxableAllowances)
-                .add(totalTaxFreeAllowances);
-
-        // 7. 실 지급액 계산
-        BigDecimal netPay = totalPayment.subtract(totalDeductions);
-
-        // 8. PayStubEntity 최종 업데이트 및 저장
-        savedStub.setBaseSalary(totalBaseSalary);
-        savedStub.setTotalAllowances(totalTaxableAllowances.add(totalTaxFreeAllowances));
-        savedStub.setTotalTaxFreeAllowances(totalTaxFreeAllowances);
-        savedStub.setOvertimePay(totalOvertimeAllowance);
-        savedStub.setTotalDeductions(totalDeductions);
-        savedStub.setTotalPayment(totalPayment);
-        savedStub.setNetPay(netPay);
-
-        PayStubEntity finalStub = payStubDao.save(savedStub);
-
-        log.info("급여 계산 완료 - 총 지급액 : {}", totalPayment);
-        log.info("급여 계산 완료 - 공제 후 실 지급액 : {}", netPay);
-
-        return modelMapper.map(finalStub, PayStubResponseDTO.class);
+    if (employee.getEmployeeId() == null) {
+      throw new RuntimeException("직원 정보를 찾을 수 없습니다.");
     }
+
+    // 2. 직급 및 호봉 정보 조회
+    if (employee.getPositionSalaryId() == null) {
+      throw new RuntimeException("직원의 직급 정보를 찾을 수 없습니다.");
+    }
+
+    PositionSalaryStepResponseDTO salaryStep = findPositionSalaryStep(
+        employee.getPositionSalaryId());
+    log.info("employeePositionSalaryId:{}", salaryStep);
+    log.info("BaseSalary:{}", salaryStep.getBaseSalary());
+
+    // 2.1 기본급
+    BigDecimal baseSalary = salaryStep.getBaseSalary();
+    // 2.2 직급수당
+    BigDecimal positionAllowance = salaryStep.getPositionAllowance();
+
+    // ✅ 기준급 = 기본급 + 직급수당
+    BigDecimal totalBaseSalary = baseSalary.add(positionAllowance);
+    log.info("기준급 (기본급 + 직급수당): {}", totalBaseSalary);
+
+    // 2.3 연장근로수당 (시간 * 시간당 수당)
+    BigDecimal hourlyOvertimeAllowance = salaryStep.getOvertimeAllowance();
+    BigDecimal overtimeHours = attendanceServiceImpl.calculateMonthlyOvertimeHours(employeeId,
+        YearMonth.now());
+    BigDecimal totalOvertimeAllowance = hourlyOvertimeAllowance.multiply(overtimeHours);
+
+    log.info("연장근로 수당 = {}", totalOvertimeAllowance);
+
+    // 3. PayStubEntity 초기 생성
+    PayStubEntity payStubEntity = PayStubEntity.builder()
+        .employeeId(employeeId)
+        .companyCode(employee.getCompanyCode())
+        .baseSalary(totalBaseSalary) // 기준급 저장
+        .paymentDate(LocalDateTime.now())
+        .build();
+
+    PayStubEntity savedStub = payStubDao.save(payStubEntity);
+
+    // 4. 직원별 수당 조회 및 계산
+    List<EmployeeAllowEntity> employeeAllowances = employeeAllowDao.findByEmployeeId(employeeId);
+
+    BigDecimal totalTaxFreeAllowances = BigDecimal.ZERO;
+    BigDecimal totalTaxableAllowances = BigDecimal.ZERO;
+
+    for (EmployeeAllowEntity employeeAllowance : employeeAllowances) {
+
+      AllowanceType type = employeeAllowance.getAllowanceType();
+      BigDecimal amount = employeeAllowance.getAmount();
+
+      boolean isTaxExempt = type.isTaxExemption();
+      BigDecimal exemptionLimit = type.getTaxExemptionLimit();
+
+      if (isTaxExempt) {
+        BigDecimal taxFreeAmount = amount.min(exemptionLimit);
+        BigDecimal taxableAmount = amount.subtract(exemptionLimit).max(BigDecimal.ZERO);
+
+        totalTaxFreeAllowances = totalTaxFreeAllowances.add(taxFreeAmount);
+        totalTaxableAllowances = totalTaxableAllowances.add(taxableAmount);
+
+        log.info("[비과세 수당] {} - 비과세 금액: {}, 과세 금액: {}",
+            type.getDisplayName(), taxFreeAmount, taxableAmount);
+
+      } else {
+        totalTaxableAllowances = totalTaxableAllowances.add(amount);
+
+        log.info("[과세 수당] {} - 과세 금액: {}", type.getDisplayName(), amount);
+      }
+    }
+
+    // 5. 공제 항목 계산 및 저장
+    List<DeductionEntity> deductionEntities = calculateAndSaveDeductions(totalBaseSalary,
+        savedStub);
+
+    BigDecimal totalDeductions = deductionEntities.stream()
+        .map(DeductionEntity::getAmount)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    // 6. 총 지급액 계산 (기준급 + 연장근로수당 + 수당)
+    BigDecimal totalPayment = totalBaseSalary
+        .add(totalOvertimeAllowance)
+        .add(totalTaxableAllowances)
+        .add(totalTaxFreeAllowances);
+
+    // 7. 실 지급액 계산
+    BigDecimal netPay = totalPayment.subtract(totalDeductions);
+
+    // 8. PayStubEntity 최종 업데이트 및 저장
+    savedStub.setBaseSalary(totalBaseSalary);
+    savedStub.setTotalAllowances(totalTaxableAllowances.add(totalTaxFreeAllowances));
+    savedStub.setTotalTaxFreeAllowances(totalTaxFreeAllowances);
+    savedStub.setOvertimePay(totalOvertimeAllowance);
+    savedStub.setTotalDeductions(totalDeductions);
+    savedStub.setTotalPayment(totalPayment);
+    savedStub.setNetPay(netPay);
+
+    PayStubEntity finalStub = payStubDao.save(savedStub);
+
+    log.info("급여 계산 완료 - 총 지급액 : {}", totalPayment);
+    log.info("급여 계산 완료 - 공제 후 실 지급액 : {}", netPay);
+
+    return modelMapper.map(finalStub, PayStubResponseDTO.class);
+  }
 //
 //    @Override
 //    public PayStubResponseDTO calculateAndSaveEmployeePayStub(String employeeId) {
@@ -290,202 +293,231 @@ public class SalaryServiceImpl implements SalaryService {
 //        return modelMapper.map(finalStub, PayStubResponseDTO.class);
 //    }
 
-    private List<DeductionEntity> calculateAndSaveDeductions(BigDecimal baseSalary, PayStubEntity payStubEntity) {
+  private List<DeductionEntity> calculateAndSaveDeductions(BigDecimal baseSalary,
+      PayStubEntity payStubEntity) {
 
-        List<DeductionEntity> deductions = Arrays.stream(DeductionType.values())
-                .map(type -> {
+    List<DeductionEntity> deductions = Arrays.stream(DeductionType.values())
+        .map(type -> {
 
-                    // 공제액 계산: 기본급 * 공제율
-                    BigDecimal deductionAmount = baseSalary.multiply(BigDecimal.valueOf(type.getRate()));
-                    DeductionEntity deductionEntity = new DeductionEntity();
-                    deductionEntity.setDeductionType(type);
-                    deductionEntity.setAmount(deductionAmount);
-                    deductionEntity.setPayStub(payStubEntity);
-                    return deductionEntity;
-                })
-                .collect(Collectors.toList());
-        deductionDao.saveAll(deductions);
+          // 공제액 계산: 기본급 * 공제율
+          BigDecimal deductionAmount = baseSalary.multiply(BigDecimal.valueOf(type.getRate()));
+          DeductionEntity deductionEntity = new DeductionEntity();
+          deductionEntity.setDeductionType(type);
+          deductionEntity.setAmount(deductionAmount);
+          deductionEntity.setPayStub(payStubEntity);
+          return deductionEntity;
+        })
+        .collect(Collectors.toList());
+    deductionDao.saveAll(deductions);
 
-        return deductions;
-    }
+    return deductions;
+  }
 
-    ///  Position 서비스
-    // 회사에서 직급 추가
-    @Override
-    public PositionResponseDTO insertPosition(PositionResponseDTO requestDTO, String CompanyCode) {
-        PositionEntity position = requestDTO.toEntity();
-        PositionEntity pp = positionDao.savePosition(position);
-        return modelMapper.map(pp, PositionResponseDTO.class);
-    }
+  ///  Position 서비스
+  // 회사에서 직급 추가
+  @Override
+  public PositionResponseDTO insertPosition(PositionResponseDTO requestDTO, String CompanyCode) {
+    PositionEntity position = requestDTO.toEntity();
+    PositionEntity pp = positionDao.savePosition(position);
+    return modelMapper.map(pp, PositionResponseDTO.class);
+  }
 
-    @Override
-    public void updatePosition(PositionResponseDTO requestDTO) {
-        PositionEntity position = requestDTO.toEntity();
-        positionDao.savePosition(position);
-    }
+  @Override
+  public void updatePosition(PositionResponseDTO requestDTO) {
+    PositionEntity position = requestDTO.toEntity();
+    positionDao.savePosition(position);
+  }
 
-    // 회사에서 직급 삭제
-    @Override
-    public void deletePosition(PositionResponseDTO requestDTO) {
-        PositionEntity position = requestDTO.toEntity();
-        positionDao.deletePosition(position);
-    }
+  // 회사에서 직급 삭제
+  @Override
+  public void deletePosition(PositionResponseDTO requestDTO) {
+    PositionEntity position = requestDTO.toEntity();
+    positionDao.deletePosition(position);
+  }
 
-    @Override
-    public PositionResponseDTO findPosition(Long positionId) {
-        return modelMapper.map(positionDao.findById(positionId), PositionResponseDTO.class);
-    }
+  @Override
+  public PositionResponseDTO findPosition(Long positionId) {
+    return modelMapper.map(positionDao.findById(positionId), PositionResponseDTO.class);
+  }
 
-    /// positionSalaryStep 서비스
-    @Override
-    public PositionSalaryStepResponseDTO insertPositionSalaryStep(PositionSalaryStepResponseDTO responseDTO) {
-        PositionSalaryStepEntity pss = modelMapper.map(responseDTO, PositionSalaryStepEntity.class);
-        PositionSalaryStepEntity ps = positionSalaryDao.savePositionSalaryStep(pss);
-        PositionSalaryStepResponseDTO dto = modelMapper.map(ps, PositionSalaryStepResponseDTO.class);
-        return dto;
-    }
+  /// positionSalaryStep 서비스
+  @Override
+  public PositionSalaryStepResponseDTO insertPositionSalaryStep(
+      PositionSalaryStepResponseDTO responseDTO) {
+    PositionSalaryStepEntity pss = modelMapper.map(responseDTO, PositionSalaryStepEntity.class);
+    PositionSalaryStepEntity ps = positionSalaryDao.savePositionSalaryStep(pss);
+    PositionSalaryStepResponseDTO dto = modelMapper.map(ps, PositionSalaryStepResponseDTO.class);
+    return dto;
+  }
 
-    @Override
-    public void updatePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO) {
-        PositionSalaryStepEntity pss = modelMapper.map(responseDTO, PositionSalaryStepEntity.class);
-        positionSalaryDao.savePositionSalaryStep(pss);
-    }
+  @Override
+  public void updatePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO) {
+    PositionSalaryStepEntity pss = modelMapper.map(responseDTO, PositionSalaryStepEntity.class);
+    positionSalaryDao.savePositionSalaryStep(pss);
+  }
 
-    @Override
-    public void deletePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO) {
-        PositionSalaryStepEntity pss = modelMapper.map(responseDTO, PositionSalaryStepEntity.class);
-        positionSalaryDao.deletePosition(pss);
-    }
+  @Override
+  public void deletePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO) {
+    PositionSalaryStepEntity pss = modelMapper.map(responseDTO, PositionSalaryStepEntity.class);
+    positionSalaryDao.deletePosition(pss);
+  }
 
-    @Override
-    public PositionSalaryStepResponseDTO findPositionSalaryStep(Long positionSalaryId) {
-        log.info("서비스단 메서드 positionSalaryStepId:{}", positionSalaryId);
-        //return modelMapper.map(positionSalaryDao.findPositionSalaryStepById(positionSalaryStepId), PositionSalaryStepResponseDTO.class);
-        Optional<PositionSalaryStepEntity> pss = positionSalaryDao.findPositionSalaryById(positionSalaryId);
-        log.info(pss.toString());
-        return modelMapper.map(pss.get(), PositionSalaryStepResponseDTO.class);
-    }
+  @Override
+  public PositionSalaryStepResponseDTO findPositionSalaryStep(Long positionSalaryId) {
+    log.info("서비스단 메서드 positionSalaryStepId:{}", positionSalaryId);
+    //return modelMapper.map(positionSalaryDao.findPositionSalaryStepById(positionSalaryStepId), PositionSalaryStepResponseDTO.class);
+    Optional<PositionSalaryStepEntity> pss = positionSalaryDao.findPositionSalaryById(
+        positionSalaryId);
+    log.info(pss.toString());
+    return modelMapper.map(pss.get(), PositionSalaryStepResponseDTO.class);
+  }
 
-    /// AllowanceResponse 서비스
-    @Override
-    public AllowanceResponseDTO insertAllowance(AllowanceResponseDTO allowanceResponseDTO) {
-        AllowanceEntity allowance = allowanceDao.saveAllowance(allowanceResponseDTO.toEntity());
-        return modelMapper.map(allowance, AllowanceResponseDTO.class);
-    }
+  /// AllowanceResponse 서비스
+  @Override
+  public AllowanceResponseDTO insertAllowance(AllowanceResponseDTO allowanceResponseDTO) {
+    AllowanceEntity allowance = allowanceDao.saveAllowance(allowanceResponseDTO.toEntity());
+    return modelMapper.map(allowance, AllowanceResponseDTO.class);
+  }
 
-    @Override
-    public List<AllowanceEntity> findByAllowance_CompanyCode(String CompanyCode) {
-        return List.of();
-    }
-
-
-    @Override
-    public void updateAllowance(AllowanceResponseDTO responseDTO) {
-        AllowanceEntity allowance = modelMapper.map(responseDTO, AllowanceEntity.class);
-        allowanceDao.saveAllowance(allowance);
-    }
-
-    @Override
-    public void deleteAllowance(AllowanceResponseDTO responseDTO) {
-        AllowanceEntity allowance = modelMapper.map(responseDTO, AllowanceEntity.class);
-        allowanceDao.deleteAllowanceById(allowance.getAllowanceId());
-    }
-
-    @Override
-    public AllowanceResponseDTO findAllowance(Long allowanceId) {
-        return modelMapper.map(allowanceDao.findAllowanceById(allowanceId), AllowanceResponseDTO.class);
-    }
-
-    /// Deduction 서비스
-    @Override
-    public DeductionResponseDTO insertDeduction(DeductionResponseDTO responseDTO) {
-        DeductionEntity dd = deductionDao.save(responseDTO.toEntity());
-        return modelMapper.map(dd, DeductionResponseDTO.class);
-    }
-
-    @Override
-    public void updateDeduction(DeductionResponseDTO responseDTO) {
-        DeductionEntity deduction = modelMapper.map(responseDTO, DeductionEntity.class);
-        deductionDao.save(deduction);
-    }
-
-    @Override
-    public void deleteDeduction(DeductionResponseDTO responseDTO) {
-        deductionDao.deleteById(responseDTO.getDeductionId());
-    }
-
-    @Override
-    public DeductionResponseDTO findDeduction(Long deductionId) {
-        return modelMapper.map(deductionDao.fetchById(deductionId), DeductionResponseDTO.class);
-    }
-
-    /// PayStub 서비스
-    @Override
-    public PayStubResponseDTO insertPayStub(PayStubResponseDTO responseDTO) {
-        PayStubEntity pp = modelMapper.map(responseDTO, PayStubEntity.class);
-        PayStubEntity ps = payStubDao.save(pp);
-        return modelMapper.map(ps, PayStubResponseDTO.class);
-    }
-
-    @Override
-    public void updateDeduction(PayStubResponseDTO responseDTO) {
-        PayStubEntity pp = modelMapper.map(responseDTO, PayStubEntity.class);
-        payStubDao.save(pp);
-    }
-
-    @Override
-    public void deleteDeduction(PayStubResponseDTO responseDTO) {
-        PayStubEntity pp = modelMapper.map(responseDTO, PayStubEntity.class);
-        payStubDao.delete(responseDTO.toEntity());
-    }
-
-    @Override
-    public PayStubResponseDTO findPayStubByEmployeeId(String employeeId) {
-        PayStubEntity payStub = payStubDao.findPayStubByeEmployeeId(employeeId);
-        return modelMapper.map(payStub, PayStubResponseDTO.class);
-    }
+  @Override
+  public List<AllowanceEntity> findByAllowance_CompanyCode(String CompanyCode) {
+    return List.of();
+  }
 
 
-    @Override
-    public List<AllowanceResponseDTO> findAllowancesByPayStubId(Long payStubId) {
-        List<AllowanceEntity> allowances = allowanceDao.findByPayStubId(payStubId);
-        return allowances.stream()
-                .map(entity -> modelMapper.map(entity, AllowanceResponseDTO.class))
-                .collect(Collectors.toList());
-    }
+  @Override
+  public void updateAllowance(AllowanceResponseDTO responseDTO) {
+    AllowanceEntity allowance = modelMapper.map(responseDTO, AllowanceEntity.class);
+    allowanceDao.saveAllowance(allowance);
+  }
 
-    @Override
-    public List<DeductionResponseDTO> findDeductionsByPayStubId(Long payStubId) {
-        List<DeductionEntity> deductions = deductionDao.findByPayStubId(payStubId);
-        return deductions.stream()
-                .map(entity -> modelMapper.map(entity, DeductionResponseDTO.class))
-                .collect(Collectors.toList());
-    }
+  @Override
+  public void deleteAllowance(AllowanceResponseDTO responseDTO) {
+    AllowanceEntity allowance = modelMapper.map(responseDTO, AllowanceEntity.class);
+    allowanceDao.deleteAllowanceById(allowance.getAllowanceId());
+  }
 
-    /// EmployeeAllowService
-    @Override
-    public EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO) {
-       EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
-       employeeAllowDao.save(ea);
-       return modelMapper.map(ea, EmployeeAllowDTO.class);
-    }
+  @Override
+  public AllowanceResponseDTO findAllowance(Long allowanceId) {
+    return modelMapper.map(allowanceDao.findAllowanceById(allowanceId), AllowanceResponseDTO.class);
+  }
 
-    @Override
-    public void updateEmployeeAllow(EmployeeAllowDTO responseDTO) {
-        EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
-        employeeAllowDao.update(ea);
-    }
+  /// Deduction 서비스
+  @Override
+  public DeductionResponseDTO insertDeduction(DeductionResponseDTO responseDTO) {
+    DeductionEntity dd = deductionDao.save(responseDTO.toEntity());
+    return modelMapper.map(dd, DeductionResponseDTO.class);
+  }
 
-    @Override
-    public void deleteEmployeeAllow(EmployeeAllowDTO responseDTO) {
-        EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
-        employeeAllowDao.delete(ea);
-    }
+  @Override
+  public void updateDeduction(DeductionResponseDTO responseDTO) {
+    DeductionEntity deduction = modelMapper.map(responseDTO, DeductionEntity.class);
+    deductionDao.save(deduction);
+  }
+
+  @Override
+  public void deleteDeduction(DeductionResponseDTO responseDTO) {
+    deductionDao.deleteById(responseDTO.getDeductionId());
+  }
+
+  @Override
+  public DeductionResponseDTO findDeduction(Long deductionId) {
+    return modelMapper.map(deductionDao.fetchById(deductionId), DeductionResponseDTO.class);
+  }
+
+  /// PayStub 서비스
+  @Override
+  public PayStubResponseDTO insertPayStub(PayStubResponseDTO responseDTO) {
+    PayStubEntity pp = modelMapper.map(responseDTO, PayStubEntity.class);
+    PayStubEntity ps = payStubDao.save(pp);
+    return modelMapper.map(ps, PayStubResponseDTO.class);
+  }
+
+  @Override
+  public void updateDeduction(PayStubResponseDTO responseDTO) {
+    PayStubEntity pp = modelMapper.map(responseDTO, PayStubEntity.class);
+    payStubDao.save(pp);
+  }
+
+  @Override
+  public void deleteDeduction(PayStubResponseDTO responseDTO) {
+    PayStubEntity pp = modelMapper.map(responseDTO, PayStubEntity.class);
+    payStubDao.delete(responseDTO.toEntity());
+  }
+
+  @Override
+  public PayStubResponseDTO findPayStubByEmployeeId(String employeeId) {
+    PayStubEntity payStub = payStubDao.findPayStubByeEmployeeId(employeeId);
+    return modelMapper.map(payStub, PayStubResponseDTO.class);
+  }
 
 
-    @Override
-    public EmployeeAllowDTO findEmployeeAllowByEmployeeId(Long employeeId) {
-        Optional<EmployeeAllowEntity> ea = employeeAllowDao.selectByEmployeeAllowId(employeeId);
-        return modelMapper.map(ea.get(), EmployeeAllowDTO.class);
-    }
+  @Override
+  public List<AllowanceResponseDTO> findAllowancesByPayStubId(Long payStubId) {
+    List<AllowanceEntity> allowances = allowanceDao.findByPayStubId(payStubId);
+    return allowances.stream()
+        .map(entity -> modelMapper.map(entity, AllowanceResponseDTO.class))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<DeductionResponseDTO> findDeductionsByPayStubId(Long payStubId) {
+    List<DeductionEntity> deductions = deductionDao.findByPayStubId(payStubId);
+    return deductions.stream()
+        .map(entity -> modelMapper.map(entity, DeductionResponseDTO.class))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO) {
+    EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+    employeeAllowDao.save(ea);
+    return modelMapper.map(ea, EmployeeAllowDTO.class);
+  }
+
+  @Override
+  public void updateEmployeeAllow(EmployeeAllowDTO responseDTO) {
+    EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+    employeeAllowDao.update(ea);
+  }
+
+  @Override
+  public void deleteEmployeeAllow(EmployeeAllowDTO responseDTO) {
+    EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+    employeeAllowDao.delete(ea);
+  }
+
+
+  @Override
+  public EmployeeAllowDTO findEmployeeAllowByEmployeeId(Long employeeId) {
+    Optional<EmployeeAllowEntity> ea = employeeAllowDao.selectByEmployeeAllowId(employeeId);
+    return modelMapper.map(ea.get(), EmployeeAllowDTO.class);
+  }
+/// EmployeeAllowService
+//    @Override
+//    public EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO) {
+//       EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+//       employeeAllowDao.save(ea);
+//       return modelMapper.map(ea, EmployeeAllowDTO.class);
+//    }
+//
+//    @Override
+//    public void updateEmployeeAllow(EmployeeAllowDTO responseDTO) {
+//        EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+//        employeeAllowDao.update(ea);
+//    }
+//
+//    @Override
+//    public void deleteEmployeeAllow(EmployeeAllowDTO responseDTO) {
+//        EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+//        employeeAllowDao.delete(ea);
+//    }
+//
+//
+//    @Override
+//    public EmployeeAllowDTO findEmployeeAllowByEmployeeId(Long employeeId) {
+//        Optional<EmployeeAllowEntity> ea = employeeAllowDao.selectByEmployeeAllowId(employeeId);
+//        return modelMapper.map(ea.get(), EmployeeAllowDTO.class);
+//    }
+
 }

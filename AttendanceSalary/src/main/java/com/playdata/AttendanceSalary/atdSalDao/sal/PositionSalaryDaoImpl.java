@@ -12,15 +12,16 @@ import java.util.Optional;
 public class PositionSalaryDaoImpl implements PositionSalaryDao {
     private final PositionSalaryStepRepository positionSalaryStepRepository;
 
-    @Override
-    public PositionSalaryStepEntity savePositionSalaryStep(PositionSalaryStepEntity positionSalaryStepEntity) {
+  @Override
+  public PositionSalaryStepEntity savePositionSalaryStep(
+      PositionSalaryStepEntity positionSalaryStepEntity) {
     return positionSalaryStepRepository.save(positionSalaryStepEntity);
-    }
+  }
 
-    @Override
-    public void deletePosition(PositionSalaryStepEntity positionSalaryStepEntity) {
-        positionSalaryStepRepository.delete(positionSalaryStepEntity);
-    }
+  @Override
+  public void deletePosition(PositionSalaryStepEntity positionSalaryStepEntity) {
+    positionSalaryStepRepository.delete(positionSalaryStepEntity);
+  }
 
     @Override
     public Optional<PositionSalaryStepEntity> findPositionSalaryById(Long positionSalaryID) {

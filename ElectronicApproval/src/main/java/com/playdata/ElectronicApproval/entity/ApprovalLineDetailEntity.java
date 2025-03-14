@@ -4,9 +4,9 @@ package com.playdata.ElectronicApproval.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,16 +20,17 @@ import lombok.NoArgsConstructor;
 public class ApprovalLineDetailEntity {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
-  @OneToOne
-  @JoinColumn(name = "approvalline_id")
-  private ApprovalLineEntity approvalLine;
-  @Enumerated(EnumType.STRING)
 
+  @Enumerated(EnumType.STRING)
   private ApprovalStatus status;
+
   //결제일시는 updatedtime
   //private Date approvalDate;
   private String reason;
 
   private String companyCode;
+
+//  5955942d-6bf6-43b3-b6aa-c5d11acd7bbe_detail_3
 }

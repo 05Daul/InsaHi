@@ -1,23 +1,39 @@
-// 인사관리
+//조직도,주소록
 import Link from 'next/link';
-// import { FaRegEdit } from 'react-icons/fa';
-// import { FiSettings } from 'react-icons/fi';
-import '../../styles/Sidebar1.css';
+import {FaRegEdit} from 'react-icons/fa';
+import {FiSettings} from 'react-icons/fi';
+import styles from '@/styles/Sidebar.module.css';
+
 
 export default function Sidebar4() {
     return (
-        <aside className="sidebar" style={{ marginTop: '50px' }}>
-            <h3 className="sidebar-title">
-                사용자 관리
-            </h3>
+        <aside className={styles.sidesidebar} style={{ marginTop: '50px' }}>
+            <h3 className={styles.sidesidebartitle}></h3>
+
+            <h4 className={styles.sidemenusection}></h4>
             <nav>
-                <ul className="menu-under">
-                    <li className="menu-section"><Link href="#">부서 관리</Link></li>
-                    <li className="menu-section"><Link href="#">직무/직급 관리</Link></li>
-                    <li className="menu-section"><Link href="#">권한 관리</Link></li>
+                <ul className={styles.sidemenu}>
+                    <li><Link href="#">-  <span className="highlight">32</span></Link></li>
+                    <li><Link href="#">- </Link></li>
                 </ul>
             </nav>
-            <div className="sidebar-border"></div>
+
+            <h4 className={styles.sidemenusection}></h4>
+            <nav>
+                <ul className={styles.sidemenu}>
+                    <li><Link href="#">-  <span className="highlight">16</span></Link></li>
+                    <li><Link href="#">- </Link></li>
+                </ul>
+            </nav>
+
+            <h4 className={styles.sidemenusection}></h4>
+            <nav>
+                <ul className={styles.sidemenu}>
+                    <li><Link href="#">-  <span className="highlight">12</span></Link></li>
+                    <li><Link href="#">- </Link></li>
+                    <li><Link href="#">- </Link></li>
+                </ul>
+            </nav>
         </aside>
     );
 }

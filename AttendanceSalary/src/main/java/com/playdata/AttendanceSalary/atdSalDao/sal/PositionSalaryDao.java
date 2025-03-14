@@ -3,9 +3,11 @@ import com.playdata.AttendanceSalary.atdSalEntity.sal.PositionSalaryStepEntity;
 import java.util.Optional;
 
 public interface PositionSalaryDao {
-    PositionSalaryStepEntity savePositionSalaryStep(PositionSalaryStepEntity positionSalaryStepEntity);
 
-    void deletePosition(PositionSalaryStepEntity positionSalaryStepEntity);
+  PositionSalaryStepEntity savePositionSalaryStep(
+      PositionSalaryStepEntity positionSalaryStepEntity);
+
+  void deletePosition(PositionSalaryStepEntity positionSalaryStepEntity);
 
     Optional<PositionSalaryStepEntity> findPositionSalaryById(Long positionSalaryId);
 }

@@ -60,12 +60,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     try {
         // 부서 목록 가져오기
-        const res = await fetch(`http://localhost:2025/api/${companyCode}/department/list`);
+        const res = await fetch(`http://localhost:1010/api/${companyCode}/department/list`);
         const data = await res.json();
         console.log('Departments data:', data); // 부서 데이터 확인
 
         // 추가 데이터 (예: 예산, 프로젝트 등) 가져오기
-        const additionalDataRes = await fetch(`http://localhost:2025/api/${companyCode}/additional-data`);
+        const additionalDataRes = await fetch(`http://localhost:1010/api/${companyCode}/additional-data`);
         const additionalData = await additionalDataRes.json();
         console.log('Additional data:', additionalData); // 추가 데이터 확인
 

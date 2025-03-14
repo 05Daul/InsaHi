@@ -2,13 +2,16 @@ package com.playdata.AttendanceSalary.atdSalService.sal;
 
 import com.playdata.AttendanceSalary.atdSalDto.sal.*;
 import com.playdata.AttendanceSalary.atdSalEntity.sal.AllowanceEntity;
+import com.playdata.AttendanceSalary.atdSalEntity.sal.EmployeeAllowEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface SalaryService {
     /// 급여계산 로직
     public PayStubResponseDTO calculateAndSaveEmployeePayStub(String employeeId);
+
     List<AllowanceEntity> findByAllowance_CompanyCode(String CompanyCode);
 
 
@@ -64,7 +67,18 @@ public interface SalaryService {
     void deleteDeduction(PayStubResponseDTO responseDTO);
 
 
-    PayStubResponseDTO findPayStubByEmployeeId(String employeeId);}
+    PayStubResponseDTO findPayStubByEmployeeId(String employeeId);
+
+    EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO);
+
+    void updateEmployeeAllow(EmployeeAllowDTO responseDTO);
+
+    void deleteEmployeeAllow(EmployeeAllowDTO responseDTO);
+
+    EmployeeAllowDTO findEmployeeAllowByEmployeeId(Long employeeId);
+
+
+}
 //
 //    /// Salary 서비스
 //    SalaryResponseDTO insertSalary(SalaryResponseDTO responseDTO);

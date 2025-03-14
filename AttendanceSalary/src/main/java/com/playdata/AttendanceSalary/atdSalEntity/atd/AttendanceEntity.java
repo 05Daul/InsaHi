@@ -14,41 +14,40 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 
-
 public class AttendanceEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")//출퇴근ID
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")//출퇴근ID
+  private Long id;
 
-    @Column(name = "check_in_time")
-    private LocalDateTime checkInTime;
+  @Column(name = "check_in_time")
+  private LocalDateTime checkInTime;
 
-    @Column(name = "work_date", nullable = false) // 근무일자
-    private LocalDate workDate;
+  @Column(name = "work_date", nullable = false) // 근무일자
+  private LocalDate workDate;
 
-    @Column(name = "check_out_time") //퇴근시간
-    private LocalDateTime checkOutTime;
+  @Column(name = "check_out_time") //퇴근시간
+  private LocalDateTime checkOutTime;
 
-    @Column(name = "work_hours", precision = 7, scale = 2) //근무시간
-    private BigDecimal workHours;
+  @Column(name = "work_hours", precision = 7, scale = 2) //근무시간
+  private BigDecimal workHours;
 
-    @Column(name = "overtime_hours", precision = 7, scale = 2)// 일일연장근로 시간
-    private BigDecimal overtimeHours;
+  @Column(name = "overtime_hours", precision = 7, scale = 2)// 일일연장근로 시간
+  private BigDecimal overtimeHours;
 
-    // @Column(name = "총연장근로시간", precision = 5, scale = 2)
-    // private BigDecimal totalOvertimeHours;
-    // private boolean workWorkingOutside;
+  // @Column(name = "총연장근로시간", precision = 5, scale = 2)
+  // private BigDecimal totalOvertimeHours;
+  // private boolean workWorkingOutside;
 
-    @Column(name = "Attendance_status")
-    @Enumerated(EnumType.STRING)
-    private AttendanceStauts attendanceStatus;
+  @Column(name = "Attendance_status")
+  @Enumerated(EnumType.STRING)
+  private AttendanceStauts attendanceStatus;
 
-    private String companyCode;
+  private String companyCode;
 
-    @Column(name = "employee_id")
-    private String employeeId;
+  @Column(name = "employee_id")
+  private String employeeId;
 
 
 /*

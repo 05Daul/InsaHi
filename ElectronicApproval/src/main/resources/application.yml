@@ -1,9 +1,9 @@
 server:
-  port: 1000
+  port: 1006
 
 spring:
   application:
-    name: AttendanceSalary
+    name: ElectronicApproval
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,7 +14,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      # ddl-auto: create
+      #      ddl-auto: create
       ddl-auto: update
 
     properties:

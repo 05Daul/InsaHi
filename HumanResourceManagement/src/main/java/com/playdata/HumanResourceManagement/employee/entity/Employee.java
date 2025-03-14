@@ -5,9 +5,11 @@ import com.playdata.HumanResourceManagement.company.entity.Company;
 import com.playdata.HumanResourceManagement.department.business.entity.DepartmentEntity;
 import com.playdata.HumanResourceManagement.publicEntity.FileEntity;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,22 +22,23 @@ import java.util.UUID;
 @Table(name = "employee")
 public class Employee {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "employee_id", unique = true, length = 36)
-    private String employeeId;
+  @Id
+  @Column(name = "employee_id", unique = true, length = 36)
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String employeeId;
+  @Column(nullable = false)
+  @ColumnDefault("1234")
+  private String password; // 1(default 1234)
+  private String name; //2
+  private String email; //3
+  private String phoneNumber; //4
+  private String address; //5
+  private String state;
+  private String positionSalaryId;
+//    private LocalDate hireDate;
+//    private LocalDate retireDate;
 
-    @Column(nullable = false)
-    private String password;  // 비밀번호
 
-    private String name;      // 이름
-    private String email;     // 이메일
-    private String phoneNumber;  // 전화번호
-    private String address;   // 주소
-    private String state;     // 상태 (Active, Inactive 등)
-
-    private Long positionId;  // 직급 ID
-    private String positionName;  // 직급명
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = true)
@@ -58,17 +61,19 @@ public class Employee {
     )
     private Set<Authority> authorityList = new HashSet<>();  // 권한 목록
 
+
+
     // 부서 ID 반환 (부서가 없는 경우 null 반환)
     public String getDepartmentId() {
         return department != null ? department.getDepartmentId() : null;
     }
 
-    // 직급명 설정 (직급 ID로 외부에서 직급명 조회)
-    public void setPositionNameFromClient() {
-        if (this.positionId != null) {
-            this.positionName = fetchPositionNameFromClient(positionId);
-        }
-    }
+    /// 직급명 설정 (직급 ID로 외부에서 직급명 조회)
+//    public void setPositionNameFromClient() {
+//        if (this.positionSalaryId != null) {
+//            this.positionSalaryIdName = fetchPositionNameFromClient(positionId);
+//        }
+//    }
 
     // 외부 시스템에서 직급명 조회 (예시: API 호출)
     private String fetchPositionNameFromClient(Long positionId) {
@@ -104,8 +109,8 @@ public class Employee {
         return state != null ? state : "Status not available";
     }
 
-    // 직급 반환 (직급이 없는 경우 "Position not available" 반환)
-    public String getPosition() {
-        return positionName != null ? positionName : "Position not available";
-    }
+   /// 직급 반환 (직급이 없는 경우 "Position not available" 반환)
+//    public String getPosition() {
+//        return positionName != null ? positionName : "Position not available";
+//    }
 }

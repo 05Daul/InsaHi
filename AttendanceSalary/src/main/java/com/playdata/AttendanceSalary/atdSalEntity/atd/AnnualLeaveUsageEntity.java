@@ -13,23 +13,28 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AnnualLeaveUsageEntity extends DateEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( nullable = false)
-    private Long annualLeaveIdUsageId; //
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(nullable = false)
+  private Long annualLeaveUsageId; //
 
-    @Column( nullable = false)
-    private LocalDate startDate; //시작일
+  private Long AnnualLeaveId;
 
-    @Column( nullable = false)
-    private LocalDate stopDate; //종료일
+  @Column(nullable = false)
+  private LocalDate startDate; //시작일
 
+  @Column(nullable = false)
+  private LocalDate stopDate; //종료일
 
-    @Column( length = 255)
-    private String reason; // 사유
+  @Column(length = 255)
+  private String reason; // 사유
 
+  @Enumerated(EnumType.STRING)
+  private LeaveApprovalStatus leaveApprovalStatus;
 
-    private String companyCode;
+  private String employeeId;
+
+  private String companyCode;
 //
 //    @ManyToOne
 //    @JoinColumn(name = "employee_id")
