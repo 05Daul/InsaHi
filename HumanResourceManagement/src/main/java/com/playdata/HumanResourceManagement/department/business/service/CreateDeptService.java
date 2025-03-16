@@ -6,8 +6,6 @@ import com.playdata.HumanResourceManagement.department.business.dto.newDto.Emplo
 import com.playdata.HumanResourceManagement.department.business.dto.newDto.OrganizationStructureDTO; // 변경
 import com.playdata.HumanResourceManagement.department.business.entity.DepartmentEntity;
 import com.playdata.HumanResourceManagement.department.business.repository.DepartmentRepository;
-import com.playdata.HumanResourceManagement.department.deventAPI.Service.SendService;
-import com.playdata.HumanResourceManagement.department.deventAPI.redis.RedisService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,36 +13,31 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class CreateDeptService {
 
     private final DepartmentRepository departmentRepository;
-    private final RedisService redisService;
-    private final SendService sendService;
 
     /**
      * 부서 생성
      */
     @Transactional
     public ActionBasedOrganizationChartDTO createDepartment(String companyCode, OrganizationStructureDTO request) {
-        DepartmentEntity parentDepartment = getParentDepartmentIfExists(request.getParentDepartmentId());
+        DepartmentEntity parent = getParentDepartmentIfExists(request.getParentDepartmentId());
 
         DepartmentEntity department = DepartmentEntity.builder()
                 .companyCode(companyCode)
                 .departmentName(request.getDepartmentName())
-                .parentDepartmentId(parentDepartment)
+                .parentDepartmentId(parent)
                 .build();
 
-        department = departmentRepository.save(department);
-        ActionBasedOrganizationChartDTO createdDepartment = ActionBasedOrganizationChartDTO.fromDepartment(department, "CREATE");
+        DepartmentEntity savedDepartment = departmentRepository.save(department);
+        ActionBasedOrganizationChartDTO dto = ActionBasedOrganizationChartDTO.fromDepartment(savedDepartment, "CREATE");
 
-        // Redis 업데이트 및 Kafka 이벤트 발행
-        redisService.updateOrganizationChart(companyCode, createdDepartment);
-        sendService.publishDepartmentCreatedEvent(createdDepartment);
+//        publishAndUpdateCache(companyCode, dto);
 
-        return createdDepartment;
+        return dto;
     }
 
     /**
@@ -53,21 +46,19 @@ public class CreateDeptService {
     @Transactional
     public ActionBasedOrganizationChartDTO updateDepartment(String companyCode, String departmentId, OrganizationStructureDTO request) {
         DepartmentEntity department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 부서입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 부서입니다. ID = " + departmentId));
 
-        DepartmentEntity parentDepartment = getParentDepartmentIfExists(request.getParentDepartmentId());
+        DepartmentEntity parent = getParentDepartmentIfExists(request.getParentDepartmentId());
 
         department.setDepartmentName(request.getDepartmentName());
-        department.setParentDepartmentId(parentDepartment);
-        department = departmentRepository.save(department);
+        department.setParentDepartmentId(parent);
 
-        ActionBasedOrganizationChartDTO updatedDepartment = ActionBasedOrganizationChartDTO.fromDepartment(department, "UPDATE");
+        DepartmentEntity updatedDepartment = departmentRepository.save(department);
+        ActionBasedOrganizationChartDTO dto = ActionBasedOrganizationChartDTO.fromDepartment(updatedDepartment, "UPDATE");
 
-        // Redis 업데이트 및 Kafka 이벤트 발행
-        redisService.updateOrganizationChart(companyCode, updatedDepartment);
-        sendService.publishDepartmentUpdatedEvent(updatedDepartment);
+//        publishAndUpdateCache(companyCode, dto);
 
-        return updatedDepartment;
+        return dto;
     }
 
     /**
@@ -76,26 +67,29 @@ public class CreateDeptService {
     @Transactional
     public ActionBasedOrganizationChartDTO deleteDepartment(String companyCode, String departmentId) {
         DepartmentEntity department = departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 부서입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 부서입니다. ID = " + departmentId));
 
         departmentRepository.delete(department);
-        ActionBasedOrganizationChartDTO deletedDepartment = ActionBasedOrganizationChartDTO.fromDepartment(department, "DELETE");
+        ActionBasedOrganizationChartDTO dto = ActionBasedOrganizationChartDTO.fromDepartment(department, "DELETE");
 
-        // Redis 삭제 및 Kafka 이벤트 발행
-        redisService.deleteOrganizationChart(companyCode);
-        sendService.publishDepartmentDeletedEvent(companyCode, departmentId);
 
-        return deletedDepartment;
+        return dto;
     }
 
-    /**
-     * 부모 부서 조회 (없으면 null 반환)
-     */
     private DepartmentEntity getParentDepartmentIfExists(String parentDepartmentId) {
         if (parentDepartmentId == null) {
             return null;
         }
         return departmentRepository.findById(parentDepartmentId)
-                .orElseThrow(() -> new EntityNotFoundException("부모 부서를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("부모 부서를 찾을 수 없습니다. ID = " + parentDepartmentId));
     }
+//
+//    private void publishAndUpdateCache(String companyCode, ActionBasedOrganizationChartDTO dto) {
+//        redisService.updateOrganizationChart(companyCode, dto);
+//
+//        switch (dto.getAction()) {
+//            case "CREATE" -> sendService.publishDepartmentCreatedEvent(dto);
+//            case "UPDATE" -> sendService.publishDepartmentUpdatedEvent(dto);
+//        }
+//    }
 }

@@ -4,6 +4,8 @@ import {FaRegEdit} from 'react-icons/fa';
 import {FiSettings} from 'react-icons/fi';
 import styles from '@/styles/Sidebar.module.css';
 
+// import { FaRegEdit } from 'react-icons/fa';
+// import { FiSettings } from 'react-icons/fi';
 
 export default function Sidebar4() {
     return (

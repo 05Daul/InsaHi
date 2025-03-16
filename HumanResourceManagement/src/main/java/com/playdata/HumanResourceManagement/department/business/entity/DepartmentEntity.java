@@ -54,12 +54,20 @@ public class DepartmentEntity extends DateEntity {
 
     @OneToMany(mappedBy = "parentDepartmentId", cascade = CascadeType.ALL, orphanRemoval = false)
     @JsonManagedReference
-    private List<DepartmentEntity> subDepartments = new ArrayList<>();
+    private List<DepartmentEntity> subDepartments = new ArrayList<>(); // 기본값 빈 리스트로 초기화
 
     @PrePersist
     public void setDefaultDepartmentId() {
         if (this.departmentId == null) {
             this.departmentId = "Default"; // 임시 부서 ID
         }
+    }
+
+    // Getter에서 null 처리하여 빈 리스트로 초기화
+    public List<DepartmentEntity> getSubDepartments() {
+        if (subDepartments == null) {
+            subDepartments = new ArrayList<>();
+        }
+        return subDepartments;
     }
 }

@@ -5,6 +5,13 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+
+
+### 깃에 올리지 않을 것 ###
+/src/main/java/com/playdata/HumanResourceManagement/department/deventAPI/
+
+
+
 ### STS ###
 .apt_generated
 .classpath
@@ -35,3 +42,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/HumanResourceManagement/src/main/java/com/playdata/HumanResourceManagement/department/deventAPI/

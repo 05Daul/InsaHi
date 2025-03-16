@@ -14,7 +14,7 @@ public class EmployeeDataDTO {
     private String employeeName;    // 직원 이름
     private String departmentId;    // 부서 ID
     private String status;          // 직원 상태 (Active / Inactive)
-    private String position;        // 직급 (필요시 추가)
+    /// private String position;        // 직급 (필요시 추가)
 
     /**
      * Entity로부터 DTO 생성
@@ -28,8 +28,7 @@ public class EmployeeDataDTO {
                 .employeeId(employee.getEmployeeId())
                 .employeeName(employee.getName())
                 .departmentId(employee.getDepartmentId())
-                .status(employee.getStatus())  // 상태 기본값 처리
-                .position(employee.getPosition())  // 직급 기본값 처리
+                .status(employee.getStatus())  // 상태
                 .build();
     }
 }
