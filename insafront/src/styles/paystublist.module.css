@@ -1,0 +1,23 @@
+.listContainer {
+    width: 100%;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,.table td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f5f5f5;
+}
+
+.tableRow:hover {
+    background-color: #f0f8ff;
+    cursor: pointer;
+}
