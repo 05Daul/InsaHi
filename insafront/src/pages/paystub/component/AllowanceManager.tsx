@@ -22,9 +22,9 @@ const AllowanceManager: React.FC = () => {
             <table className={styles.allowanceTable}>
                 <thead>
                 <tr>
-                    <th>수당 이름</th>
-                    <th>수당 금액</th>
-                    <th>추가 여부</th>
+                    <th>코드</th>
+                    <th>관리내역명</th>
+                    <th>사용여부</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,7 +32,7 @@ const AllowanceManager: React.FC = () => {
                     <tr key={index}>
                         <td>{item.code}</td>
                         <td>{item.description}</td>
-                        <td>{item.status === '사용' ? '✅' : '⬜️'}</td>
+                        <td>{item.status}</td>
                     </tr>
                 ))}
                 </tbody>

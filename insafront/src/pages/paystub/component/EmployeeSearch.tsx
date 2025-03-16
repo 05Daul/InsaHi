@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../../../styles/EmployeeSearch.module.css';
+import styles from '../../../styles/EmployeeSearch.module.css'
 import EmployeeListPanel from './EmployeeListPanel'
 
 const EmployeeSearch: React.FC = () => {

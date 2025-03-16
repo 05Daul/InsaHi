@@ -2,9 +2,9 @@ package com.playdata.AttendanceSalary.atdSalEntity.sal;
 
 import com.playdata.AttendanceSalary.atdSalDto.sal.EmployeeAllowDTO;
 import jakarta.persistence.*;
-import lombok.*;
+        import lombok.*;
 
-import java.math.BigDecimal;
+        import java.math.BigDecimal;
 
 @Entity
 @Table(name = "employee_allowance")

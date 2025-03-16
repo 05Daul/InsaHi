@@ -4,11 +4,13 @@ import com.playdata.AttendanceSalary.atdSalDto.sal.AllowanceResponseDTO;
 import com.playdata.common.publicEntity.DateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 //수당
+@Builder
 @Entity
 @Table(name = "allowance")
 @Data

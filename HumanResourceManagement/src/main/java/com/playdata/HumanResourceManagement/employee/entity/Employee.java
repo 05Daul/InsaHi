@@ -52,9 +52,8 @@ public class Employee {
     private String positionSalaryId; //직급호봉
 
 
-
-//    private LocalDate hireDate;
-//    private LocalDate retireDate;
+   private LocalDate hireDate;
+ private LocalDate retireDate;
 
 
 

@@ -54,8 +54,7 @@ public class EmployeeController {
     @GetMapping("/find")
     /// 김다울
     public EmployeeResponseDTO findEmployee(@RequestParam("employeeId") String employeeId) {
-        EmployeeResponseDTO employeeResponseDTO = employeeService.findEmployeeById(employeeId);
-        return employeeResponseDTO;
+        return employeeService.findEmployeeById(employeeId);
     }
 
 

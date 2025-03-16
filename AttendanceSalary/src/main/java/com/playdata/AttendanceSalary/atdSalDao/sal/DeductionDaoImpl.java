@@ -5,6 +5,7 @@ import com.playdata.AttendanceSalary.atdSalRepository.sal.DeductionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,5 +37,10 @@ public class DeductionDaoImpl implements DeductionDao {
     @Override
     public List<DeductionEntity> findByPayStubId(Long payStubId) {
         return deductionRepository.findByPayStubPayStubId(payStubId);
+    }
+
+    @Override
+    public BigDecimal sumByPayStubId(Long payStubId) {
+        return deductionRepository.sumByPayStubId(payStubId);
     }
 }
