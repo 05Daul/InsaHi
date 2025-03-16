@@ -1,5 +1,5 @@
 package com.playdata.ElectronicApproval.entity;
 
 public enum ApprovalStatus {
-  PENDING, APPROVED, REJECTED
+  PENDING, APPROVED, REJECTED, REFERENCES
 }

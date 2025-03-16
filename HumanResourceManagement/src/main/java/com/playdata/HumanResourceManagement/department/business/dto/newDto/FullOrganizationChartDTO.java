@@ -6,11 +6,11 @@ import com.playdata.HumanResourceManagement.department.business.entity.Departmen
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 @Getter
 @Builder
 @ToString
@@ -26,7 +26,7 @@ public class FullOrganizationChartDTO implements Serializable {
     private List<EmployeeDataDTO> employees;  // 직원 목록을 DTO로 변경
 
     @JsonManagedReference
-    private List<FullOrganizationChartDTO> subDepartments; // 하위 부서 목록
+    private List<FullOrganizationChartDTO> subDepartments = new ArrayList<>(); // 하위 부서 목록 (수정 가능한 리스트로 초기화)
 
     private String action;             // 액션 (예: "CREATE", "UPDATE", "DELETE")
 
@@ -38,14 +38,14 @@ public class FullOrganizationChartDTO implements Serializable {
         return FullOrganizationChartDTO.builder()
                 .departmentId(department.getDepartmentId())
                 .departmentName(department.getDepartmentName())
-                .employees(employees != null ? Collections.unmodifiableList(employees) : Collections.emptyList())
-                .subDepartments(Collections.emptyList())
+                .employees(employees != null ? employees : Collections.emptyList())
+                .subDepartments(new ArrayList<>()) // 빈 리스트로 초기화
                 .action(action != null ? action : "UNKNOWN")
                 .build();
     }
 
     public void setSubDepartments(List<FullOrganizationChartDTO> subDepartments) {
-        this.subDepartments = subDepartments != null ? Collections.unmodifiableList(subDepartments) : Collections.emptyList();
+        this.subDepartments = subDepartments != null ? new ArrayList<>(subDepartments) : new ArrayList<>();
     }
 
     public static FullOrganizationChartDTO fromJsonFormat(Object jsonObject) {

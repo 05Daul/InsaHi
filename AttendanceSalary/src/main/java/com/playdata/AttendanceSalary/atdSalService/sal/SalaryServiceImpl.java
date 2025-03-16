@@ -468,7 +468,32 @@ public class SalaryServiceImpl implements SalaryService {
         .collect(Collectors.toList());
   }
 
-  /// EmployeeAllowService
+  @Override
+  public EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO) {
+    EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+    employeeAllowDao.save(ea);
+    return modelMapper.map(ea, EmployeeAllowDTO.class);
+  }
+
+  @Override
+  public void updateEmployeeAllow(EmployeeAllowDTO responseDTO) {
+    EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+    employeeAllowDao.update(ea);
+  }
+
+  @Override
+  public void deleteEmployeeAllow(EmployeeAllowDTO responseDTO) {
+    EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
+    employeeAllowDao.delete(ea);
+  }
+
+
+  @Override
+  public EmployeeAllowDTO findEmployeeAllowByEmployeeId(Long employeeId) {
+    Optional<EmployeeAllowEntity> ea = employeeAllowDao.selectByEmployeeAllowId(employeeId);
+    return modelMapper.map(ea.get(), EmployeeAllowDTO.class);
+  }
+/// EmployeeAllowService
 //    @Override
 //    public EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO) {
 //       EmployeeAllowEntity ea = modelMapper.map(responseDTO, EmployeeAllowEntity.class);
@@ -494,4 +519,5 @@ public class SalaryServiceImpl implements SalaryService {
 //        Optional<EmployeeAllowEntity> ea = employeeAllowDao.selectByEmployeeAllowId(employeeId);
 //        return modelMapper.map(ea.get(), EmployeeAllowDTO.class);
 //    }
+
 }
