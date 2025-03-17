@@ -52,4 +52,22 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        //*은 모든 도메인에 대해서 응답을 허용
+//        //http://127.0.0.1:3000에 대해서만 응답을 허용
+//        //json서버응답을 자바스크립트에서 처리할 수 있도록 허용
+//        //메소드에 대한 허용,모든 http헤더에대해서 ㅎ서용
+//        //config에는 자원에 대한 허용범위
+//        configuration.addAllowedOrigin("http://127.0.0.1:3000");
+//        configuration.addAllowedHeader("*");
+//        configuration.addAllowedMethod("*");
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(3600L);//preflight요청결과를 캐싱
+//        //config셋팅한걸 어떤 요청에 적용할 것인지 설정
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }

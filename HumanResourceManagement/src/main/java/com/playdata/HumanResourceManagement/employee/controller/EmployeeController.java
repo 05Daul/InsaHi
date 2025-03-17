@@ -40,30 +40,30 @@ public class EmployeeController {
         System.out.println("성공 !!!!!!!~~~~~~~~~~~~~~~~~!!!!!!!!!!!!!!");
         return new ResponseEntity<>(jwt,headers, HttpStatus.OK);
     }
-          
-
-  @GetMapping("/{employeeId}/company/start-time")
-  public ResponseEntity<LocalTime> getCompanyStartTime(
-      @PathVariable("employeeId") String employeeId) {
-    LocalTime startTime = employeeService.findCompanyStartTimeByEmployeeId(employeeId);
-    log.info("controller 단 : getCompanyStartTime: {}", startTime);
-    return ResponseEntity.ok(startTime);
-  }
 
 
-  @GetMapping("/find")
-  /// 김다울
-  public EmployeeResponseDTO findEmployee(@RequestParam("employeeId") String employeeId) {
-    EmployeeResponseDTO employeeResponseDTO = employeeService.findEmployeeById(employeeId);
-    return employeeResponseDTO;
-  }
+    @GetMapping("/{employeeId}/company/start-time")
+    public ResponseEntity<LocalTime> getCompanyStartTime(
+            @PathVariable("employeeId") String employeeId) {
+        LocalTime startTime = employeeService.findCompanyStartTimeByEmployeeId(employeeId);
+        log.info("controller 단 : getCompanyStartTime: {}", startTime);
+        return ResponseEntity.ok(startTime);
+    }
+
+
+    @GetMapping("/find")
+    /// 김다울
+    public EmployeeResponseDTO findEmployee(@RequestParam("employeeId") String employeeId) {
+        EmployeeResponseDTO employeeResponseDTO = employeeService.findEmployeeById(employeeId);
+        return employeeResponseDTO;
+    }
 
 
 
-  @GetMapping("/getallemployeeids")
-  public List<String> getAllEmployeeIds() {
-    return employeeService.getAllEmployeeIds();
-  }
+    @GetMapping("/getallemployeeids")
+    public List<String> getAllEmployeeIds() {
+        return employeeService.getAllEmployeeIds();
+    }
 
 
 }

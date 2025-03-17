@@ -11,9 +11,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -22,28 +25,38 @@ import java.util.UUID;
 @Table(name = "employee")
 public class Employee {
 
-  @Id
-  @Column(name = "employee_id", unique = true, length = 36)
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private String employeeId;
-  @Column(nullable = false)
-  @ColumnDefault("1234")
-  private String password; // 1(default 1234)
-  private String name; //2
-  private String email; //3
-  private String phoneNumber; //4
-  private String address; //5
-  private String state;
-  private String positionSalaryId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "employee_id", unique = true, length = 36)
+    private String employeeId;
+
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
+    @ColumnDefault("1234")
+    @Column(nullable = false)
+    private String password; // 1(default 1234) 비밀번호
+
+    private String name; //2 이름
+    private String email; //3 이메일
+    private String phoneNumber; //4 전화번호
+    private String address; //5 주소
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "department_id", nullable = true)  // 외래키 컬럼만 지정
+    @JsonBackReference  // 순환 참조 방지
+    private DepartmentEntity department; // 부서
+
+    private String teamId;
+    private String state; // 상태 (Active, Inactive 등)
+    private String positionSalaryId; //직급호봉
+
+
+
 //    private LocalDate hireDate;
 //    private LocalDate retireDate;
 
 
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "department_id", referencedColumnName = "department_id", nullable = true)
-    @JsonBackReference  // 순환 참조 방지
-    private DepartmentEntity department; // 부서
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "company_code", referencedColumnName = "company_code", nullable = true)
@@ -61,7 +74,12 @@ public class Employee {
     )
     private Set<Authority> authorityList = new HashSet<>();  // 권한 목록
 
-
+    // 권한 이름만 반환
+    public Set<String> getAuthorityNames() {
+        return authorityList.stream()
+                .map(Authority::getAuthorityName)
+                .collect(Collectors.toSet());
+    }
 
     // 부서 ID 반환 (부서가 없는 경우 null 반환)
     public String getDepartmentId() {
@@ -76,7 +94,7 @@ public class Employee {
 //    }
 
     // 외부 시스템에서 직급명 조회 (예시: API 호출)
-    private String fetchPositionNameFromClient(Long positionId) {
+    private String fetchPositionNameFromClient(String positionId) {
         return "직급명";  // 외부 시스템에서 직급명을 조회해야 하는 부분
     }
 
@@ -90,7 +108,7 @@ public class Employee {
             this.authorityList = new HashSet<>();  // 권한 목록 초기화
         }
         if (this.employeeId == null) {
-            this.employeeId = UUID.randomUUID().toString().substring(0, 4);  // UUID로 employeeId 생성
+            this.employeeId = UUID.randomUUID().toString();  // UUID로 employeeId 생성 (전체 UUID 사용)
         }
     }
 

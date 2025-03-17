@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -23,12 +25,6 @@ public class Company {
     @Id
     @Column(name = "company_code", unique = true, length = 36)
     private String companyCode;
-
-    @Column(name = "position_id")
-    private String positionId;
-
-    @Column(name = "position_name")
-    private String positionName;
 
     @Column(name = "company_name")
     private String companyName;

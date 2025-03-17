@@ -18,7 +18,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     Employee findByEmployeeIdAndPasswordAndCompany(String employeeId, String password, Company company);
 
-    boolean existsByDepartment(DepartmentEntity departmentEntity);
+
+    // 부서 ID로 직원 조회
+
+    // 회사 출근 시간 조회
+    @Query("SELECT e FROM Employee e WHERE e.department = :departmentEntity")
+    boolean existsByDepartment(@Param("departmentEntity") DepartmentEntity departmentEntity);
+
 
     // 수정된 메소드
     List<Employee> findByDepartment_DepartmentId(String departmentId);  // 부서 ID로 Employee 조회

@@ -28,8 +28,7 @@ public class EmployeeDataDTO {
                 .employeeId(employee.getEmployeeId())
                 .employeeName(employee.getName())
                 .departmentId(employee.getDepartmentId())
-                .status(employee.getStatus())  // 상태 기본값 처리
-                ///.position(employee.getPosition())  // 직급 기본값 처리
+                .status(employee.getStatus())  // 상태
                 .build();
     }
 }
