@@ -1,7 +1,7 @@
 import {FormEvent, useState} from "react";
 import styles from "@/styles/login/Login.module.css";
 import { useRouter } from "next/router";
-import {login} from "@/pages/api/action";
+import {login} from "@/api/action";
 import Link from "next/link";
 
 export default function Login() {
@@ -25,6 +25,7 @@ export default function Login() {
         if (token) {
             console.log("✅ 로그인 성공! 받은 토큰:", token);
             localStorage.setItem("accessToken", token); // 토큰 저장
+            localStorage.setItem("employeeId", employeeId);
             router.push("/mypage/MyPage");
             // window.location.href = "/mypage/MyPage";
             alert("로그인 성공! 🎉");

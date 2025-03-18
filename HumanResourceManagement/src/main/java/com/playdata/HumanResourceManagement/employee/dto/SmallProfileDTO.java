@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SmallProfileDTO {
+    private String employeeId;
     private String name;
     private String phoneNumber;
     private String departmentId;

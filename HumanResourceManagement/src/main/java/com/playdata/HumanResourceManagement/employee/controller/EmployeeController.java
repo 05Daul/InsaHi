@@ -67,7 +67,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}/smallprofile")
-    public ResponseEntity<?> getSmallProfile(@PathVariable String employeeId) {
+    public ResponseEntity<SmallProfileDTO> getSmallProfile(@PathVariable String employeeId) {
         SmallProfileDTO response = employeeService.getSmallProfile(employeeId);
 
 

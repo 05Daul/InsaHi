@@ -3,7 +3,7 @@ import {FormEvent, useState} from "react";
 import { useForm } from "react-hook-form";
 import styles from "@/styles/form/SignupForm.module.css";
 import {Adminformtype, CompanyFormtype} from "@/type/signupformtype";
-import {signup} from "@/pages/api/action";
+import {signup} from "@/api/action";
 import {useRouter} from "next/router";
 
 
