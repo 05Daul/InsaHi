@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Link from "next/link";
 import Sidebar1 from "../sidebar/Sidebar1";
 import Sidebar2 from "../sidebar/Sidebar2";
-import DepartmentSide from "../sidebar/DepartmentSide";
+import Sidebar3 from "../sidebar/Sidebar3";
 import Sidebar4 from "../sidebar/Sidebar4";
 import Sidebar5 from "../sidebar/Sidebar5";
 import Sidebar6 from "../sidebar/Sidebar6";
@@ -34,7 +34,7 @@ const TopBar: React.FC = () => {
                         </li>
                         <li>
                             <Link
-                                href="/Approval/approval"
+                                href="#"
                                 className={styles.topmenulink}
                                 onClick={() => setActiveSidebar("sidebar2")}
                             >

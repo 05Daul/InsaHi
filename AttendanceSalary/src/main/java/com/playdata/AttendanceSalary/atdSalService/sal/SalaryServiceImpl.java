@@ -33,17 +33,14 @@ public class SalaryServiceImpl implements SalaryService {
   private final DeductionDao deductionDao;
   private final PayStubDao payStubDao;
   private final EmployeeAllowDao employeeAllowDao;
-  //    private final SalaryDao salaryDao;
   private final HrmFeignClient hrmFeignClient;
-  private final AttendanceServiceImpl attendanceServiceImpl; // dao에서 로직 구성 x => service로
+  private final AttendanceServiceImpl attendanceServiceImpl;
 
 
   /// 급여 계산 로직
   @Override
   @Transactional
   public PayStubResponseDTO calculateAndSaveEmployeePayStub(String employeeId) {
-
-    // ✅ Feign으로 직원 정보 가져오기
     EmployeeResponseDTO employee = hrmFeignClient.findEmployee(employeeId);
 
     if (employee == null || employee.getEmployeeId() == null) {
@@ -81,16 +78,8 @@ public class SalaryServiceImpl implements SalaryService {
       allowanceDao.saveAllowance(allowance);
     }
 
-    BigDecimal nationalPension = totalBaseSalary.multiply(BigDecimal.valueOf(0.045));
-    BigDecimal healthInsurance = totalBaseSalary.multiply(BigDecimal.valueOf(0.035));
-    BigDecimal employmentInsurance = totalBaseSalary.multiply(BigDecimal.valueOf(0.009));
-
-    deductionDao.save(new DeductionEntity(null, DeductionType.NATIONAL_PENSION, nationalPension, payStub));
-    deductionDao.save(new DeductionEntity(null, DeductionType.HEALTH_INSURANCE, healthInsurance, payStub));
-    deductionDao.save(new DeductionEntity(null, DeductionType.EMPLOYMENT_INSURANCE, employmentInsurance, payStub));
-
+    createDeductionsForPayStub(payStub);
     BigDecimal totalDeductions = deductionDao.sumByPayStubId(payStub.getPayStubId());
-
     BigDecimal totalAllowances = employeeAllowances.stream()
             .map(EmployeeAllowEntity::getAmount)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -107,22 +96,88 @@ public class SalaryServiceImpl implements SalaryService {
 
     return modelMapper.map(payStub, PayStubResponseDTO.class);
   }
+//  @Override
+//  @Transactional
+//  public PayStubResponseDTO calculateAndSaveEmployeePayStub(String employeeId) {
+//
+//    // ✅ Feign으로 직원 정보 가져오기
+//    EmployeeResponseDTO employee = hrmFeignClient.findEmployee(employeeId);
+//
+//    if (employee == null || employee.getEmployeeId() == null) {
+//      throw new RuntimeException("직원 정보를 찾을 수 없습니다.");
+//    }
+//
+//    PositionSalaryStepEntity salaryStep = positionSalaryDao.findPositionSalaryById(employee.getPositionSalaryId())
+//            .orElseThrow(() -> new RuntimeException("직원의 직급 정보를 찾을 수 없습니다."));
+//
+//    BigDecimal totalBaseSalary = salaryStep.getBaseSalary().add(salaryStep.getPositionAllowance());
+//
+//    BigDecimal overtimeHours = attendanceServiceImpl.calculateMonthlyOvertimeHours(employeeId, YearMonth.now());
+//    BigDecimal totalOvertimeAllowance = salaryStep.getOvertimeAllowance().multiply(overtimeHours);
+//
+//    PayStubEntity payStub = PayStubEntity.builder()
+//            .employeeId(employeeId)
+//            .companyCode(employee.getCompanyCode())
+//            .baseSalary(totalBaseSalary)
+//            .overtimePay(totalOvertimeAllowance)
+//            .paymentDate(LocalDateTime.now())
+//            .build();
+//
+//    payStubDao.save(payStub);
+//
+//    List<EmployeeAllowEntity> employeeAllowances = employeeAllowDao.findByEmployeeId(employeeId);
+//
+//    for (EmployeeAllowEntity employeeAllowance : employeeAllowances) {
+//      AllowanceEntity allowance = AllowanceEntity.builder()
+//              .companyCode(employee.getCompanyCode())
+//              .allowType(employeeAllowance.getAllowanceType())
+//              .allowSalary(employeeAllowance.getAmount())
+//              .payStub(payStub)
+//              .build();
+//
+//      allowanceDao.saveAllowance(allowance);
+//    }
+//
+//    BigDecimal nationalPension = totalBaseSalary.multiply(BigDecimal.valueOf(0.045));
+//    BigDecimal healthInsurance = totalBaseSalary.multiply(BigDecimal.valueOf(0.035));
+//    BigDecimal employmentInsurance = totalBaseSalary.multiply(BigDecimal.valueOf(0.009));
+//
+//    deductionDao.save(new DeductionEntity(null, DeductionType.NATIONAL_PENSION, nationalPension, payStub));
+//    deductionDao.save(new DeductionEntity(null, DeductionType.HEALTH_INSURANCE, healthInsurance, payStub));
+//    deductionDao.save(new DeductionEntity(null, DeductionType.EMPLOYMENT_INSURANCE, employmentInsurance, payStub));
+//
+//    BigDecimal totalDeductions = deductionDao.sumByPayStubId(payStub.getPayStubId());
+//
+//    BigDecimal totalAllowances = employeeAllowances.stream()
+//            .map(EmployeeAllowEntity::getAmount)
+//            .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//    BigDecimal totalPayment = totalBaseSalary.add(totalOvertimeAllowance).add(totalAllowances);
+//    BigDecimal netPay = totalPayment.subtract(totalDeductions);
+//
+//    payStub.setTotalAllowances(totalAllowances);
+//    payStub.setTotalPayment(totalPayment);
+//    payStub.setTotalDeductions(totalDeductions);
+//    payStub.setNetPay(netPay);
+//
+//    payStubDao.save(payStub);
+//
+//    return modelMapper.map(payStub, PayStubResponseDTO.class);
+//  }
 
   private void createDeductionsForPayStub(PayStubEntity payStub) {
     BigDecimal baseSalary = payStub.getBaseSalary();
 
-    /// 국민연금: 4.5%
-    BigDecimal nationalPension = baseSalary.multiply(BigDecimal.valueOf(0.045));
+    for (DeductionType deductionType : DeductionType.values()) {
+      BigDecimal deductionAmount = baseSalary.multiply(BigDecimal.valueOf(deductionType.getRate()));
 
-    /// 건강보험: 3.5%
-    BigDecimal healthInsurance = baseSalary.multiply(BigDecimal.valueOf(0.035));
-
-    /// 고용보험: 0.9%
-    BigDecimal employmentInsurance = baseSalary.multiply(BigDecimal.valueOf(0.009));
-
-    deductionDao.save(new DeductionEntity(null, DeductionType.NATIONAL_PENSION, nationalPension, payStub));
-    deductionDao.save(new DeductionEntity(null, DeductionType.HEALTH_INSURANCE, healthInsurance, payStub));
-    deductionDao.save(new DeductionEntity(null, DeductionType.EMPLOYMENT_INSURANCE, employmentInsurance, payStub));
+      DeductionEntity deduction = DeductionEntity.builder()
+              .deductionType(deductionType)
+              .deductionAmount(deductionAmount)
+              .payStub(payStub)
+              .build();
+      deductionDao.save(deduction);
+    }
   }
   ///  Position 서비스
   // 회사에서 직급 추가

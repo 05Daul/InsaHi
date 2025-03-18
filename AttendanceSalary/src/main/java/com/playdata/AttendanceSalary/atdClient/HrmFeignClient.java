@@ -20,7 +20,7 @@ public interface HrmFeignClient {
     EmployeeResponseDTO findEmployee(@RequestParam("employeeId") String employeeId);
 
     @GetMapping("/employee/{employeeId}/company/start-time")
-    public ResponseEntity<LocalTime> getCompanyStartTime(
+    ResponseEntity<LocalTime> getCompanyStartTime(
             @PathVariable("employeeId") String employeeId);
 
     @GetMapping("/employee/getallemployeeids")

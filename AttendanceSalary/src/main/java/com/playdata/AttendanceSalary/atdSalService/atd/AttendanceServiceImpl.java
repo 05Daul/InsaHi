@@ -3,15 +3,20 @@ package com.playdata.AttendanceSalary.atdSalService.atd;
 import com.playdata.AttendanceSalary.atdClient.HrmFeignClient;
 import com.playdata.AttendanceSalary.atdClient.hrmDTO.EmployeeResponseDTO;
 import com.playdata.AttendanceSalary.atdSalDao.atd.AttendanceDAO;
+import com.playdata.AttendanceSalary.atdSalDto.atd.AttendanceDTO;
 import com.playdata.AttendanceSalary.atdSalEntity.atd.AttendanceEntity;
 import com.playdata.AttendanceSalary.atdSalEntity.atd.AttendanceStauts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +28,26 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final ModelMapper modelMapper;
 
 
+    @Override
+    public AttendanceDTO findIdByEmployeeId(String employeeId) {
 
+        AttendanceEntity attendance = attendanceDAO.findIdByEmployeeId(employeeId).orElseThrow(()
+                -> new RuntimeException("서비스 널 오류"));
+        log.info("Service 단 attendance id:{}", attendance.getId());
+        return attendance.toAttendanceDTO();
+    }
 
+    @Override
+    public List<AttendanceDTO> getAttendanceByEmployeeId(String employeeId) {
+        List<AttendanceEntity> entities = attendanceDAO.findByEmployeeId(employeeId);
+
+        // Entity -> DTO 변환
+        List<AttendanceDTO> dtoList = entities.stream()
+                .map(AttendanceEntity::toAttendanceDTO)
+                .toList();
+
+        return dtoList;
+    }
 
     @Override
     public BigDecimal calculateMonthlyOvertimeHours(String employeeId, YearMonth yearMonth) {
@@ -81,7 +104,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     public void checkOut(Long id) {
         AttendanceEntity attendance = attendanceDAO.findById(id);
-
         LocalDateTime now = LocalDateTime.now();
         attendance.setCheckOutTime(now); // 퇴근 시간 기록
 

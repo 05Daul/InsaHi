@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -31,8 +34,16 @@ public class AttendanceDAOImpl implements AttendanceDAO{
         return attendanceRepository.save(attendance);
     }
 
+    @Override
+    public List<AttendanceEntity> findByEmployeeId(String employeeId) {
+        return attendanceRepository.findByEmployeeId(employeeId);
+    }
 
-    /**
+    @Override
+    public Optional<AttendanceEntity> findIdByEmployeeId(String employeeId) {
+        return Optional.ofNullable(attendanceRepository.findIdByEmployeeId(employeeId));
+    }
+/**
     @Override // 외근 추가
     public AttendanceEntity findWorkingOutside() {
         return attendanceRepository.findWorkingOutside();
