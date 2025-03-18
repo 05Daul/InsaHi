@@ -38,5 +38,8 @@ public class AllowanceDaoImpl implements AllowanceDao {
     @Override
     public List<AllowanceEntity> findByPayStubId(Long payStubId) {
         return allowanceRepository.findByPayStub_PayStubId(payStubId);
+
     }
+
+
 }

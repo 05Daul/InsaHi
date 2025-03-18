@@ -13,26 +13,20 @@ export default function Sidebar1() {
             <nav>
                 <ul className={styles.sidemenu}>
                     <li>
-                        <Link href="#">- 출퇴근 기록 조회</Link>
-                    </li>
-                    <li>
-                        <Link href="#">- 출퇴근 체크</Link>
+                        <Link href="/attendance/attendancelog">- 출퇴근 기록 조회</Link>
                     </li>
 
                     <li className={styles.sidemenusection}>연차/휴가 신청</li>
                     <li>
-                        <Link href="#">- 휴가 신청</Link>
+                        <Link href="/leave/leaveindex">- 휴가 신청 및 조회</Link>
                     </li>
                     <li>
-                        <Link href="#">- 휴가 신청 현황 조회</Link>
+                        <Link href="/leave/leaveindex">- 휴가 신청 처리(관리자)</Link>
                     </li>
 
                     <li className={styles.sidemenusection}>급여 내역 조회</li>
                     <li>
-                        <Link href="#">- 월별 급여 내역</Link>
-                    </li>
-                    <li>
-                        <Link href="#">- 급여 명세서 다운로드</Link>
+                        <Link href="/attendance/attendancelog">- 월별 급여 내역</Link>
                     </li>
 
                     <li className={`${styles.sidemenusection} ${styles.sideflex}`}>

@@ -1,0 +1,21 @@
+export const ATTENDANCE_API_URL = process.env.NEXT_PUBLIC_ATTENDANCE_API!;
+export const BULLETIN_API_URL = process.env.NEXT_PUBLIC_BULLETIN_API!;
+export const CABINET_API_URL = process.env.NEXT_PUBLIC_CABINET_API!;
+export const CALENDAR_API_URL = process.env.NEXT_PUBLIC_CALENDAR_API!;
+export const APPROVAL_API_URL = process.env.NEXT_PUBLIC_APPROVAL_API!;
+export const GATEWAY_API_URL = process.env.NEXT_PUBLIC_GATEWAY_API!;
+export const HRM_API_URL = process.env.NEXT_PUBLIC_HRM_API!;
+export const MEMO_API_URL = process.env.NEXT_PUBLIC_MEMO_API!;
+export const STORAGE_API_URL = process.env.NEXT_PUBLIC_STORAGE_API!;
+export const CHAT_API_URL = process.env.NEXT_PUBLIC_CHAT!;
+
+if (!ATTENDANCE_API_URL) throw new Error('NEXT_PUBLIC_ATTENDANCE_API 누락!');
+if (!BULLETIN_API_URL) throw new Error('NEXT_PUBLIC_BULLETIN_API 누락!');
+if (!CABINET_API_URL) throw new Error('NEXT_PUBLIC_CABINET_API 누락!');
+if (!CALENDAR_API_URL) throw new Error('NEXT_PUBLIC_CALENDAR_API 누락!');
+if (!APPROVAL_API_URL) throw new Error('NEXT_PUBLIC_APPROVAL_API 누락!');
+if (!GATEWAY_API_URL) throw new Error('NEXT_PUBLIC_GATEWAY_API 누락!');
+if (!HRM_API_URL) throw new Error('NEXT_PUBLIC_HRM_API 누락!');
+if (!MEMO_API_URL) throw new Error('NEXT_PUBLIC_MEMO_API 누락!');
+if (!STORAGE_API_URL) throw new Error('NEXT_PUBLIC_STORAGE_API 누락!');
+if (!CHAT_API_URL) throw new Error('NEXT_PUBLIC_CHAT 누락!');

@@ -39,7 +39,7 @@ public class Company {
     private String businessNumber;
 
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private LocalTime startTime;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

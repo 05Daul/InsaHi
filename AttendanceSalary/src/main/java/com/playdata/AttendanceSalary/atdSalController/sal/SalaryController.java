@@ -10,7 +10,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/salary")
+@RequestMapping("/atdsal")
 @RequiredArgsConstructor
 public class SalaryController {
     private final SalaryService salaryService;

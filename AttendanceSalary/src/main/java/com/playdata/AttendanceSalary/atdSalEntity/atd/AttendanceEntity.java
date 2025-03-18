@@ -1,5 +1,6 @@
 package com.playdata.AttendanceSalary.atdSalEntity.atd;
 
+import com.playdata.AttendanceSalary.atdSalDto.atd.AttendanceDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,6 +51,22 @@ public class AttendanceEntity {
   private String employeeId;
 
 
+  public AttendanceDTO toAttendanceDTO() {
+    AttendanceDTO attendanceDTO = new AttendanceDTO();
+    attendanceDTO.setCheckInTime(checkInTime);
+    attendanceDTO.setWorkDate(workDate);
+    attendanceDTO.setCheckOutTime(checkOutTime);
+    attendanceDTO.setWorkHours(workHours);
+    attendanceDTO.setOvertimeHours(overtimeHours);
+    attendanceDTO.setAttendanceStatus(attendanceStatus.toString());
+    attendanceDTO.setCompanyCode(companyCode);
+    attendanceDTO.setEmployeeId(employeeId);
+    return attendanceDTO;
+  }
+
+
+  }
+
 /*
     @PrePersist //db에 출근으로  생성시
     public void calculateLateStatus() {
@@ -58,4 +75,3 @@ public class AttendanceEntity {
         }
         *//**  추후 회사 테이블에서 입력된 시간을 받을 코드  *//*
     }*/
-}

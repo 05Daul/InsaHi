@@ -1,0 +1,21 @@
+.pageContainer {
+    margin-left: 220px; /* 사이드바 너비만큼 이동 */
+    padding: 40px;
+}
+
+.summarySection {
+    margin-bottom: 30px;
+}
+
+.mainContent {
+    display: flex;
+    gap: 20px;
+}
+
+.payStubSection {
+    flex: 1;
+}
+
+.payDetailSection {
+    flex: 1;
+}

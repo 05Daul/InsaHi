@@ -5,7 +5,7 @@ import {FiSettings} from 'react-icons/fi';
 import styles from '@/styles/Sidebar.module.css';
 
 
-export default function DepartmentSide() {
+export default function Sidebar3() {
     return (
         <aside className={styles.sidesidebar} style={{ marginTop: '50px' }}>
             <h3 className={styles.sidesidebartitle}>조직도</h3>
