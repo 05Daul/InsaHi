@@ -18,8 +18,6 @@ class AnnualLeaveServiceImplTest {
   private AnnualLeaveService annualLeaveService;
 
   @Test
-  void
-  @Test
   @DisplayName("휴가 신청 기능 테스트")
   void submitLeaveRequest() {
     // Given

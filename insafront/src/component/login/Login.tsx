@@ -1,12 +1,14 @@
 import {FormEvent, useState} from "react";
 import styles from "@/styles/login/Login.module.css";
 import { useRouter } from "next/router";
-import {login} from "@/pages/api/action";
+import {login} from "@/api/action";
+import Link from "next/link";
 
 export default function Login() {
     const [companyCode, setCompanyCode] = useState("");
     const [employeeId, setEmployeeId] = useState("");
     const [password, setPassword] = useState("");
+    const router = useRouter();
 
     async function loginHandleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault(); // 기본 동작(페이지 새로고침) 방지
@@ -23,19 +25,19 @@ export default function Login() {
         if (token) {
             console.log("✅ 로그인 성공! 받은 토큰:", token);
             localStorage.setItem("accessToken", token); // 토큰 저장
-
+            localStorage.setItem("employeeId", employeeId);
+            router.push("/mypage/MyPage");
+            // window.location.href = "/mypage/MyPage";
             alert("로그인 성공! 🎉");
         } else {
             alert("로그인 실패 ❌");
         }
-
-        alert("로그인 성공 !!!!")
     }
 
     return (
         <div className={styles.container}>
             <form className={styles.form} onSubmit={loginHandleSubmit}>
-                <h2 className={styles.title}>인사관리 로그인</h2>
+                <h2 className={styles.title}>인사HI 로그인</h2>
                 <p className={styles.subtitle}>사내 인사 시스템에 로그인하세요</p>
                 <input
                     type="text"
@@ -62,7 +64,10 @@ export default function Login() {
                     required
                 />
                 <button type="submit" className={styles.button}>로그인</button>
-                <p className={styles.footer}>비밀번호를 잊으셨나요? 관리자에게 문의하세요.</p>
+                <p className={styles.footer}>
+                    계정이 없으신가요?<br/>
+                    <Link href="/SignupForm" className={styles.signupLink}>회원가입</Link>
+                </p>
             </form>
         </div>
     );

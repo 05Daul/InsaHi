@@ -68,3 +68,14 @@
     color: #888;
     margin-top: 10px;
 }
+
+.signupLink {
+    color: #0056b3; /* 기본 파란색 */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signupLink:hover {
+    text-decoration: underline;
+}
+

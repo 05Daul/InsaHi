@@ -1,6 +1,7 @@
 package com.playdata.ElectronicApproval.entity;
 
 
+import com.playdata.ElectronicApproval.common.publicEntity.DateEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "approvallinedetail")
-public class ApprovalLineDetailEntity {
+public class ApprovalLineDetailEntity extends DateEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

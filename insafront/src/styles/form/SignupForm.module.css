@@ -89,3 +89,35 @@
     color: green;
     font-size: 18px;
 }
+
+.emailContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.emailInput {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.sendButton {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    height: 38px;  /* ✅ 입력 필드와 높이 일치 */
+    white-space: nowrap;
+}
+
+
+
+.sendButton:hover {
+    background-color: #218838;
+}

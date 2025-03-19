@@ -2,6 +2,7 @@ package com.playdata.ElectronicApproval.service;
 
 import com.playdata.ElectronicApproval.dto.ApprovalFileDTO;
 import com.playdata.ElectronicApproval.dto.RequestApprovalFileDTO;
+import com.playdata.ElectronicApproval.dto.SubmitApprovalRequest;
 import com.playdata.ElectronicApproval.entity.ApprovalFileEntity;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @Transactional
@@ -37,8 +39,12 @@ class ApprovalServiceTest {
     List<String> referrers = new ArrayList<>();
     referrers.add("A005");
     referrers.add("A006");
-    approvalService.submitApproval(employeeId, companyCode, dto, approvaers, referrers);
+    List<MultipartFile> files = new ArrayList<>();
+    SubmitApprovalRequest request = new SubmitApprovalRequest(null, "기안서", "contents",
+        companyCode,
+        employeeId, approvaers, referrers);
   }
+
 
   @Test
   public void approveFile() {

@@ -26,16 +26,14 @@ import java.util.stream.Collectors;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "employee_id", unique = true, length = 36)
     private String employeeId;
 
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @ColumnDefault("1234")
     @Column(nullable = false)
-    private String password; // 1(default 1234) 비밀번호
+    private String password;
 
     private String name; //2 이름
     private String email; //3 이메일
@@ -72,7 +70,7 @@ public class Employee {
             joinColumns = {@JoinColumn(name = "employee_id", referencedColumnName = "employee_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "authority_id")}
     )
-    private Set<Authority> authorityList = new HashSet<>();  // 권한 목록
+    private Set<Authority> authorityList;  // 권한 목록
 
     // 권한 이름만 반환
     public Set<String> getAuthorityNames() {
@@ -108,7 +106,7 @@ public class Employee {
             this.authorityList = new HashSet<>();  // 권한 목록 초기화
         }
         if (this.employeeId == null) {
-            this.employeeId = UUID.randomUUID().toString();  // UUID로 employeeId 생성 (전체 UUID 사용)
+            this.employeeId = "2025"+UUID.randomUUID().toString().substring(0, 4);  // UUID로 employeeId 생성 (전체 UUID 사용)
         }
     }
 

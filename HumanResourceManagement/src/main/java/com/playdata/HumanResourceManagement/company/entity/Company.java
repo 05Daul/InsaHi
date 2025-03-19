@@ -52,7 +52,7 @@ public class Company {
     @PrePersist
     public void generateCompanyCode() {
         if (this.companyCode == null) {
-            this.companyCode = "2025"+UUID.randomUUID().toString().substring(0, 4);
+            this.companyCode = "Com"+UUID.randomUUID().toString().substring(0, 4);
         }
     }
 }

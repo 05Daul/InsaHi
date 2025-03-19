@@ -14,7 +14,7 @@ public class EmployeeResponseDTO {
     private String employeeId;
     private String password;
     private String name;
-    private String role; //enum
+    private String role;
     private String companyCode;
     private String email;
     private String phoneNumber;

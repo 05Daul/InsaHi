@@ -16,7 +16,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     List<Employee> findByCompany_CompanyCode(String companyCode); // 회사 코드로 조회
 
-    Employee findByEmployeeIdAndPasswordAndCompany(String employeeId, String password, Company company);
+
 
 
     // 부서 ID로 직원 조회

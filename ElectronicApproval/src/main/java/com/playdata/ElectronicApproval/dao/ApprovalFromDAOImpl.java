@@ -9,12 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-@Repository
-@RequiredArgsConstructor
-public class ApprovalFromDAOImpl implements ApprovalFormDAO {
+/*@Repository
+@RequiredArgsConstructor*/
+public class ApprovalFromDAOImpl /*implements ApprovalFormDAO */ {
 
-  private final ApprovalFormRepository approvalFormRepository;
-
+//  private final ApprovalFormRepository approvalFormRepository;
+/*
 
   @Override
   public ApprovalFormEntity save(ApprovalFormEntity ApprovalFormEntity) {
@@ -60,5 +60,5 @@ public class ApprovalFromDAOImpl implements ApprovalFormDAO {
   @Override
   public List<ApprovalFormEntity> findAll(Sort sort, Pageable pageable) {
     return List.of();
-  }
+  }*/
 }

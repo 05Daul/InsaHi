@@ -3,7 +3,7 @@ url:
     att: 127.0.0.1:1000
 
 server:
-#  port: 0
+  #  port: 0
   port: 1010
 
 spring:
@@ -36,6 +36,14 @@ spring:
         format_sql: true
         use_sql_comments: true
 
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://127.0.0.1:8761/eureka
+
+
 #  redis:
 #    host: localhost            # Redis 서버 호스트
 #    port: 6379                 # Redis 서버 포트
@@ -51,7 +59,7 @@ spring:
 jwt:
   header: Authorization
   secret: 4Hirx6BNM+kTbhOxA4cHCUz/BF0B0tokIgTRs2d5ORn3zF8fPAESoo/jXcUiBnWYoZWrxgunF3l3gvGCUi6JGQ==
-#  token-validity-in-second: 86400000 #60*60*24*1000
+  #  token-validity-in-second: 86400000 #60*60*24*1000
   token-validity-in-second: 86400 #60*60*24*1000
 
 

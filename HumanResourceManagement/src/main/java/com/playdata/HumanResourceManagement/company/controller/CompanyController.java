@@ -22,8 +22,7 @@ public class CompanyController {
     //회사 && 대표자 정보 입력
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequestDTO signupRequestDTO) {
-        System.out.println("*&^*&*&*(*&***((((((((((((((((((((((9");
-        System.out.println("))))))))))))))))))))"+signupRequestDTO);
+
         //회사 정보 주입
         Company savedCompany = companyService.insert(signupRequestDTO.companySignupRequestDTO());
 

@@ -5,6 +5,8 @@ import com.playdata.HumanResourceManagement.employee.dao.AuthorityDAO;
 import com.playdata.HumanResourceManagement.employee.dao.EmployeeDAO;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.playdata.HumanResourceManagement.employee.dto.ProfileCardDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -12,8 +14,6 @@ import com.playdata.HumanResourceManagement.employee.dto.AdminRequestDTO;
 import com.playdata.HumanResourceManagement.employee.dto.LoginDTO;
 import com.playdata.HumanResourceManagement.employee.entity.Authority;
 import com.playdata.HumanResourceManagement.employee.entity.Employee;
-import lombok.RequiredArgsConstructor;
-import com.playdata.HumanResourceManagement.employee.dto.EmployeeRequestDTO;
 import com.playdata.HumanResourceManagement.employee.dto.EmployeeResponseDTO;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
@@ -94,15 +93,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   public LocalTime findCompanyStartTimeByEmployeeId(String employeeId) {
     return employeeDAO.findCompanyStartTimeByEmployeeId(employeeId);
   }
-  
-  @Override
-  public Employee insertEmployee(EmployeeRequestDTO employeeRequestDTO) {
 
-    Employee entity = modelMapper.map(employeeRequestDTO, Employee.class);
-//        entity.setCompany(company);
-    employeeDAO.insert(entity);
-    return entity;
-  }
 
   
   @Override
@@ -110,6 +101,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     return employeeDAO.findAll().stream()
         .map(employee -> employee.getEmployeeId())
         .collect(Collectors.toList());
+
+
   }
 
+    //Small Profile
+    @Override
+    public ProfileCardDTO getProfileCard(String employeeId) {
+        Employee employee = employeeDAO.findById(employeeId);
+        ProfileCardDTO smallProfileDTO = modelMapper.map(employee, ProfileCardDTO.class);
+        return smallProfileDTO;
+    }
 }
+

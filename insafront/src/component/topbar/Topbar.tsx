@@ -1,17 +1,31 @@
-import React, {useState} from "react";
+import React, { useState} from "react";
 import Link from "next/link";
 import Sidebar1 from "../sidebar/Sidebar1";
 import Sidebar2 from "../sidebar/Sidebar2";
-import DepartmentSide from "../sidebar/DepartmentSide";
 import Sidebar4 from "../sidebar/Sidebar4";
 import Sidebar5 from "../sidebar/Sidebar5";
 import Sidebar6 from "../sidebar/Sidebar6";
 
 
 import styles from "@/styles/Topbar.module.css";
+import {useRouter} from "next/router";
+
+
 
 const TopBar: React.FC = () => {
     const [activeSidebar, setActiveSidebar] = useState<string | null>(null);
+    const router = useRouter();
+
+
+
+    // 로그아웃 핸들러
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken");
+        alert("로그아웃 되었습니다.");
+        router.push("/");
+    };
+
+
 
     return (
         <div className={styles.topcontainer}>
@@ -71,9 +85,13 @@ const TopBar: React.FC = () => {
 
                     {/* 오른쪽 아이콘 */}
                     <div className={styles.topicons}>
-                        <div>검색</div>
                         <div>알림</div>
-                        <div>사용자</div>
+                        <div className={styles.user}>
+                            사용자
+                        </div>
+                        <button className={styles.logoutButton} onClick={handleLogout}>
+                            로그아웃
+                        </button>
                     </div>
                 </nav>
             </header>
@@ -82,7 +100,6 @@ const TopBar: React.FC = () => {
             <div className={styles.topsidebarcontainer}>
                 {activeSidebar === "sidebar1" && <Sidebar1/>}
                 {activeSidebar === "sidebar2" && <Sidebar2/>}
-                {activeSidebar === "sidebar3" && <Sidebar3/>}
                 {activeSidebar === "sidebar4" && <Sidebar4/>}
                 {activeSidebar === "sidebar5" && <Sidebar5/>}
                 {activeSidebar === "sidebar6" && <Sidebar6/>}

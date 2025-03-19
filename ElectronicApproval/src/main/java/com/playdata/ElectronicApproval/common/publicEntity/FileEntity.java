@@ -1,31 +1,23 @@
 package com.playdata.ElectronicApproval.common.publicEntity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 @Entity
-//@MappedSuperclass
-@Table(name = "files")
+@Table(name = "approval_file")
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-public class FileEntity extends DateEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class FileEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long fileId;  // 파일 고유 ID (PK)
-
-    private String category;  // 파일 카테고리
-
-    private Long userId;  // 파일을 업로드한 사용자 ID
-
-    private String originalFileName;  // 원본 파일명
-
-    private String storeFilename;  // 저장된 파일명
-
-    private String filePath;  // 파일 저장 경로
-
-    private String companyCode;
-
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String approvalFileId;
+  private String originalFilename;
+  private String storeFilename;
 }

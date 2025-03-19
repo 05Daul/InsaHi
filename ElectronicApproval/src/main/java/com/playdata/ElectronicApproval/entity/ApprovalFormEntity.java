@@ -7,16 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "approvalform")
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+//@Entity
+//@Table(name = "approvalform")
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Data
 public class ApprovalFormEntity {
 
-  @Id
-  private String id;
-  private String name;
-  private String companyCode;
+//  @Id
+//  private String id;
+//  private String name;
+//  private String companyCode;
 
 }

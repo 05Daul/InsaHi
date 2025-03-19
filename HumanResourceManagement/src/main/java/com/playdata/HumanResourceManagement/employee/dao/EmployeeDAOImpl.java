@@ -16,9 +16,14 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
   private final EmployeeRepository employeeRepository;
 
+  @Override
   public void insert(Employee employee) {
     employeeRepository.save(employee);
   }
+
+
+
+
 
   @Override
   public Employee findById(String employeeId) {
@@ -44,6 +49,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
   public List<Employee> findAll() {
     return employeeRepository.findAll();
   }
+
 
 
 }

@@ -9,7 +9,7 @@
   padding: 20px;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 10px;
   border-right: 1px solid #ddd;
   overflow-y: auto;
 }

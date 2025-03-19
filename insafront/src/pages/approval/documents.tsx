@@ -2,18 +2,18 @@ import {useState, useEffect} from 'react';
 
 interface Document {
   id: string;
-  title: string;
-  content: string;
+  name: string;
+  text: string;
 }
 
 const DocumentsPage = () => {
-  const [menu, setMenu] = useState<'owned' | 'assigned' | 'pending'>('owned');
+  const [menu, setMenu] = useState<number>(1);
   const [documents, setDocuments] = useState<Document[]>([]);
-  const employeeId = 'employee1'; // 예시로 지정한 직원 ID
+  const employeeId = 'E002';
 
   useEffect(() => {
     const fetchDocuments = async () => {
-      const response = await fetch(`http://127.0.0.1:1005/approve/list?employeeId=${employeeId}&menu=${menu}`);
+      const response = await fetch(`http://127.0.0.1:1005/approval/list/${employeeId}/${menu}`);
       const data = await response.json();
       setDocuments(data);
     };
@@ -26,11 +26,10 @@ const DocumentsPage = () => {
         <h1>결재 문서 목록</h1>
         <div>
           <label>조회할 문서 종류</label>
-          <select onChange={(e) => setMenu(e.target.value as 'owned' | 'assigned' | 'pending')}
-                  value={menu}>
-            <option value="owned">본인이 작성한 문서</option>
-            <option value="assigned">결재자로 지정된 문서</option>
-            <option value="pending">결재해야 할 문서</option>
+          <select onChange={(e) => setMenu(parseInt(e.target.value))} value={menu}>
+            <option value={1}>본인이 작성한 문서</option>
+            <option value={2}>결재자로 지정된 문서</option>
+            <option value={3}>결재해야 할 문서</option>
           </select>
         </div>
         <div>
@@ -38,7 +37,7 @@ const DocumentsPage = () => {
           <ul>
             {documents.map((doc) => (
                 <li key={doc.id}>
-                  <a href={`/file/${doc.id}`}>{doc.title}</a>
+                  <a href={`/approval/file/${doc.id}`}>{doc.name}</a>
                 </li>
             ))}
           </ul>

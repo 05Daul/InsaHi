@@ -19,38 +19,7 @@ public class EmpAuthenticationProvider implements AuthenticationProvider {
     private final ModelMapper modelMapper;
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-//        // 1️⃣ 인증 객체가 올바른 타입인지 확인
-//        if (authentication instanceof EmpAuthenticationToken) {
-//
-//            EmpAuthenticationToken authToken = (EmpAuthenticationToken) authentication;
-//            String employeeId = authToken.getName();
-//            String password = authToken.getCredentials().toString();
-//            String companyCode = authToken.getCompanyCode();
-//
-//            // 2️⃣ 사용자 정보 조회
-//            MyUserDetail userDetail = (MyUserDetail) userDetailService.loadUserByUsername(employeeId);
-//            if (userDetail != null) {
-//                // 3️⃣ 비밀번호 검증
-//                if (passwordEncoder.matches(password, userDetail.getPassword())) {
-//                    // 4️⃣ 회사 코드 검증
-//                    if (userDetail.getUserDto().getCompanyCode().equals(companyCode)) {
-//                        // 5️⃣ 모든 검증 통과 -> 로그인 성공
-//                        LoginDTO loginDTO = modelMapper.map(userDetail, LoginDTO.class);
-//                        return new EmpAuthenticationToken(loginDTO, null, companyCode, userDetail.getAuthorities());
-//                    } else {
-//                        throw new AuthenticationException("잘못된 회사 코드입니다.") {};
-//                    }
-//                } else {
-//                    throw new AuthenticationException("잘못된 비밀번호입니다.") {};
-//                }
-//            } else {
-//                throw new AuthenticationException("사용자를 찾을 수 없습니다.") {};
-//            }
-//        } else {
-//            throw new AuthenticationException("잘못된 인증 객체입니다.") {};
-//        }
-//
-//    }
+
         //1. 인증 객체가 올바른 타입인지
         if (!(authentication instanceof EmpAuthenticationToken)) {
             throw new AuthenticationException("잘못된 인증 객체입니다.") {

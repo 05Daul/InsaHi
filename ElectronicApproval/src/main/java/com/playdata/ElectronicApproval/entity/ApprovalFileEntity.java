@@ -1,6 +1,7 @@
 package com.playdata.ElectronicApproval.entity;
 
 
+import com.playdata.ElectronicApproval.common.publicEntity.DateEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,14 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Data
 @Slf4j
-public class ApprovalFileEntity {
+public class ApprovalFileEntity extends DateEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
   private String name;
   private String text;
-  private String approvalFormId;
   @Enumerated(EnumType.STRING)
   private ApprovalStatus status;
 

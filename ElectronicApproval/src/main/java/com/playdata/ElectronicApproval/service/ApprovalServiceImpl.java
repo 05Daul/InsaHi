@@ -1,19 +1,30 @@
+
+
 package com.playdata.ElectronicApproval.service;
 
 import com.playdata.ElectronicApproval.dao.ApprovalFileDAO;
 import com.playdata.ElectronicApproval.dao.ApprovalLineDAO;
 import com.playdata.ElectronicApproval.dao.ApprovalLineDetailDAO;
+import com.playdata.ElectronicApproval.dao.FileDAO;
 import com.playdata.ElectronicApproval.dto.ApprovalFileDTO;
+import com.playdata.ElectronicApproval.dto.FileDTO;
 import com.playdata.ElectronicApproval.dto.RequestApprovalFileDTO;
+import com.playdata.ElectronicApproval.dto.ResponseApprovalFileDTO;
+import com.playdata.ElectronicApproval.dto.SubmitApprovalRequest;
 import com.playdata.ElectronicApproval.entity.ApprovalFileEntity;
 import com.playdata.ElectronicApproval.entity.ApprovalLineEntity;
 import com.playdata.ElectronicApproval.entity.ApprovalLineDetailEntity;
 import com.playdata.ElectronicApproval.entity.ApprovalStatus;
+import com.playdata.ElectronicApproval.exception.ApprovalAlreadyProcessedException;
+import com.playdata.ElectronicApproval.exception.ApprovalLineNotFoundException;
+import com.playdata.ElectronicApproval.exception.ApprovalPermissionDeniedException;
+import com.playdata.ElectronicApproval.exception.ApprovalProcessException;
 import com.playdata.ElectronicApproval.repository.ApprovalFormRepository;
 import jakarta.transaction.Transactional;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,30 +39,64 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-//@Transactional
+@Transactional
 public class ApprovalServiceImpl implements ApprovalService {
 
+  private final NotificationServiceImpl notificationService;
+
   private final ApprovalFileDAO approvalFileDao;
+  private final FileDAO fileDao;
   private final ApprovalLineDAO approvalLineDao;
   private final ApprovalLineDetailDAO approvalLineDetailDAO;
   private final ModelMapper modelMapper;
+  private final FileDownloadService fileDownloadService;
 
-  // 결재 요청 제출 (나름 리팩토링된 메서드)
-  public void submitApproval(String employeeId, String companyCode, RequestApprovalFileDTO dto,
-      List<String> approvers, List<String> referrers) {
-    log.info("Submitting Approval for DTO: {}", dto);
+  public void submitApproval(SubmitApprovalRequest dto, List<FileDTO> uploadedFiles) {
+    log.info("dto :: {}", dto.toString());
+    log.info("uploadedFiles :: {}", uploadedFiles);
+    // 기존 결재 생성
+    ApprovalFileEntity approvalFileEntity = modelMapper.map(dto, ApprovalFileEntity.class);
+    ApprovalFileEntity savedEntity = approvalFileDao.save(approvalFileEntity);
+
+    // 파일 DB 등록
+    if (uploadedFiles != null && !uploadedFiles.isEmpty()) {
+      uploadedFiles.forEach(file -> file.setApprovalFileId(savedEntity.getId()));
+      fileDao.saveAll(uploadedFiles);
+    }
+
+    List<ApprovalLineEntity> approvers = createApprovalLines(savedEntity,
+        dto.getApprovers() != null ? dto.getApprovers() : new ArrayList<>(),
+        dto.getCompanyCode(), true);
+
+    List<ApprovalLineEntity> referrers = createApprovalLines(savedEntity,
+        dto.getReferencedIds() != null ? dto.getReferencedIds() : new ArrayList<>(),
+        dto.getCompanyCode(), false);
+
+    List<ApprovalLineEntity> savedLines = approvalLineDao.saveAll(approvers);
+    approvalLineDao.saveAll(referrers);
+    if (!savedLines.isEmpty()) {
+      savedLines.get(0).getApprovalFile().setApprovalLineEntities(savedLines);
+    }
+  }
+
+/*  // 결재 요청 제출 (나름 리팩토링된 메서드)
+  public void submitApproval(SubmitApprovalRequest request) {
+    log.info("Submitting Approval for DTO: {}", request);
 
     // 1. 문서 생성
-    ApprovalFileEntity approvalFileEntity = modelMapper.map(dto, ApprovalFileEntity.class);
-    approvalFileEntity.setId(dto.getApprovalForm());
+    ApprovalFileEntity approvalFileEntity = new ApprovalFileEntity();
+    approvalFileEntity.setId(request.getId());                      // 문서 ID
+    approvalFileEntity.setName(request.getName());                 // 문서 제목
+    approvalFileEntity.setText(request.getText());               // 문서 내용
+    approvalFileEntity.setEmployeeId(request.getEmployeeId());      // 작성자
     ApprovalFileEntity savedEntity = approvalFileDao.save(approvalFileEntity);
     log.info("Approval File Created: {}", savedEntity.getId());
 
     //  2. 결재 라인 및 참조인 생성
-    List<ApprovalLineEntity> approverLines = createApprovalLines(savedEntity, approvers,
-        companyCode, true);
-    List<ApprovalLineEntity> referrerLines = createApprovalLines(savedEntity, referrers,
-        companyCode, false);
+    List<ApprovalLineEntity> approverLines = createApprovalLines(savedEntity,
+        request.getApprovers(), request.getCompanyCode(), true);
+    List<ApprovalLineEntity> referrerLines = createApprovalLines(savedEntity,
+        request.getReferencedIds(), request.getCompanyCode(), false);
 
     //  3. 결재 라인 저장
     List<ApprovalLineEntity> savedLines = approvalLineDao.saveAll(approverLines);
@@ -62,7 +107,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     if (!savedLines.isEmpty()) {
       savedLines.get(0).getApprovalFile().setApprovalLineEntities(savedLines);
     }
-  }
+  }*/
 
   //  결재자 및 참조인 라인을 생성하는 메서드
   private List<ApprovalLineEntity> createApprovalLines(ApprovalFileEntity approvalFile,
@@ -87,26 +132,48 @@ public class ApprovalServiceImpl implements ApprovalService {
   }
 
   // 결재 승인/반려 처리
+  @Transactional
   public void approveUpdateStatus(String approvalLineId, String approveOrNot, String reason) {
-    // 결제라인 조회
-    ApprovalLineEntity lineEntity = approvalLineDao.findById(approvalLineId)
-        .orElseThrow(() -> new IllegalArgumentException("Approval line not found"));
-    ApprovalStatus approvalStatus = ApprovalStatus.valueOf(approveOrNot);
-    List<ApprovalLineEntity> lines = lineEntity.getApprovalFile().getApprovalLineEntities();
 
-    if ((approvalStatus == ApprovalStatus.REJECTED) || (approvalStatus == ApprovalStatus.APPROVED
-        && lineEntity.equals(lines.get(lines.size() - 1)))) {
-      lineEntity.getApprovalFile().setStatus(approvalStatus);
-//      updateFileStatus(lineEntity, approvalStatus);
-      approvalFileDao.save(lineEntity.getApprovalFile());
+    ApprovalLineEntity lineEntity = approvalLineDao.findById(approvalLineId)
+        .orElseThrow(() -> new ApprovalLineNotFoundException("결재 라인을 찾을 수 없습니다."));
+
+    //   이미 처리되었는지 검증
+    if (lineEntity.getApprovalLineDetail().getStatus() != ApprovalStatus.PENDING) {
+      throw new ApprovalAlreadyProcessedException("이미 처리된 결재입니다.");
     }
-//    updateDetailStatus(lineEntity, approvalStatus, reason);
-    lineEntity.getApprovalLineDetail().setStatus(approvalStatus);
+
+    ApprovalStatus status = ApprovalStatus.valueOf(approveOrNot);
+
+    List<ApprovalLineEntity> lines = lineEntity.getApprovalFile().getApprovalLineEntities();
+    lines.sort(Comparator.comparingInt(ApprovalLineEntity::getApprovalOrder));
+    int currentIndex = lines.indexOf(lineEntity);
+
+    //   결재 순서 검증
+    for (int i = 0; i < currentIndex; i++) {
+      ApprovalStatus prevStatus = lines.get(i).getApprovalLineDetail().getStatus();
+      if (prevStatus != ApprovalStatus.APPROVED) {
+        throw new ApprovalProcessException("이전 결재자의 승인이 완료되지 않았습니다.");
+      }
+    }
+
+    //   결재 상태 업데이트
+    lineEntity.getApprovalLineDetail().setStatus(status);
     lineEntity.getApprovalLineDetail().setReason(reason);
     approvalLineDetailDAO.save(lineEntity.getApprovalLineDetail());
 
-  }
+    //   최종 결재자인 경우 결재 파일 상태 변경
+    boolean isLastApprover = currentIndex == lines.size() - 1;
+    if (status == ApprovalStatus.REJECTED || (status == ApprovalStatus.APPROVED
+        && isLastApprover)) {
+      lineEntity.getApprovalFile().setStatus(status);
+      approvalFileDao.save(lineEntity.getApprovalFile());
+    }
 
+    //  todo :: 알림 발송
+
+    log.info("결재 처리 완료: lineId={}, status={}", approvalLineId, status);
+  }
 
   // 결재 문서 조회
   public List<ApprovalFileDTO> getApprovalFiles(String employeeId, int menu) {
@@ -168,9 +235,21 @@ public class ApprovalServiceImpl implements ApprovalService {
   }
 
   @Override
-  public ApprovalFileDTO getApprovalFile(String approvalFileId) {
-    return convertToDto(approvalFileDao.findById(approvalFileId)
-        .orElseThrow(() -> new IllegalArgumentException("Approval file not found")));
+  public ResponseApprovalFileDTO getApprovalFile(String approvalFileId) {
+    List<FileDTO> fileDTOs = fileDownloadService.loadAllFiles(approvalFileId);
+    ApprovalFileEntity approvalFile = approvalFileDao.findById(approvalFileId)
+        .orElseThrow(() -> new IllegalArgumentException("Approval file not found"));
+    ResponseApprovalFileDTO dto = new ResponseApprovalFileDTO();
+    dto.setId(approvalFile.getId());
+    dto.setName(approvalFile.getName());
+    dto.setText(approvalFile.getText());
+    dto.setCompanyCode(approvalFile.getCompanyCode());
+    dto.setEmployeeId(approvalFile.getEmployeeId());
+    dto.setStatus(approvalFile.getStatus().name());
+    dto.setDeleteStatus(approvalFile.getDeleteStatus().name());
+    dto.setDeleted(approvalFile.isDeleted());
+    dto.setFiles(fileDTOs);
+    return dto;
   }
 
   private ApprovalFileDTO convertToDto(ApprovalFileEntity approvalFileEntity) {

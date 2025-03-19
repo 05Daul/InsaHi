@@ -3,7 +3,8 @@ import {FormEvent, useState} from "react";
 import { useForm } from "react-hook-form";
 import styles from "@/styles/form/SignupForm.module.css";
 import {Adminformtype, CompanyFormtype} from "@/type/signupformtype";
-import {signup} from "@/pages/api/action";
+import {signup} from "@/api/action";
+import {useRouter} from "next/router";
 
 
 export default function SignupForm() {
@@ -12,8 +13,9 @@ export default function SignupForm() {
         formState: { errors },
     } = useForm<CompanyFormtype & Adminformtype>();
     const [submittedData, setSubmittedData] = useState<CompanyFormtype & Adminformtype | null>(null);
+    const router = useRouter();
 
-    async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    async function onSignupSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault(); // 기본 동작(새로고침) 방지
 
         // FormData 객체 생성 (HTML 폼에서 가져옴)
@@ -26,11 +28,15 @@ export default function SignupForm() {
         alert("회원가입이 완료되었습니다!");
 
         // ✅ Next.js의 로그인 페이지로 이동
-        window.location.href = "/Login";
+        // window.location.href = "/Login";
 
         console.log(response); //  응답 메시지 저장
-        // router.push("/");
+        router.push("/");
 
+    }
+
+    async function onEmail(event: FormEvent<HTMLFormElement>){
+        event.preventDefault();
     }
 
 
@@ -43,7 +49,7 @@ export default function SignupForm() {
                 {submittedData ? (
                     <p className={styles.success}>등록이 완료되었습니다!</p>
                 ) : (
-                    <form onSubmit={onSubmit} className={styles.form}>
+                    <form onSubmit={onSignupSubmit} className={styles.form}>
 
                         {/* 회사 정보 섹션 */}
                         <h3 className={styles.sectionTitle}>🏢 회사 정보 입력</h3>
@@ -67,7 +73,7 @@ export default function SignupForm() {
 
                         <div className={styles.formGroup}>
                             <label>설립일</label>
-                            <input {...register("createdAt", {required: "회사 설립일을 입력하세요"})} placeholder="회사 설립일 입력"/>
+                            <input {...register("createdAt", {required: "회사 설립일을 입력하세요"})} placeholder="회사 설립일 입력(년-월-일)"/>
                             {errors.createdAt && <p className={styles.error}>{errors.createdAt.message}</p>}
                         </div>
 
@@ -108,8 +114,15 @@ export default function SignupForm() {
 
                         <div className={styles.formGroup}>
                             <label>대표자 이메일</label>
-                            <input type="email" {...register("email", {required: "이메일을 입력하세요"})} placeholder="이메일 입력"/>
+                            {/*<input type="email" {...register("email", {required: "이메일을 입력하세요"})} placeholder="이메일 입력"/>*/}
+                            {/*{errors.email && <p className={styles.error}>{errors.email.message}</p>}*/}
+                            {/*<button type="button" className={styles.sendButton}>발송</button>*/}
+                            <div className={styles.emailContainer}>
+                                <input type="email" {...register("email", { required: "이메일을 입력하세요" })} placeholder="이메일 입력" className={styles.emailInput} />
+                                <button type="button" className={styles.sendButton}>인증</button>
+                            </div>
                             {errors.email && <p className={styles.error}>{errors.email.message}</p>}
+
                         </div>
 
 

@@ -20,8 +20,8 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            #테스트용 *
-            allowedOrigins: 'http://127.0.0.1:3000'                       #'*'           #
+            #테스트용 *                   #'*'           #
+            allowedOrigins: 'http://127.0.0.1:3000'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
@@ -55,6 +55,11 @@ spring:
           uri: http://127.0.0.1:1010
           predicates:
             - Path=/company/**
+
+        - id: Chat
+          uri: http://127.0.0.1:1004
+          predicates:
+            - Path=/chat/**
 
 
 
