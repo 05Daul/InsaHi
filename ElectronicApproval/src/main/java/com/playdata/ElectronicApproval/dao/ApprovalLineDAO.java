@@ -1,5 +1,6 @@
 package com.playdata.ElectronicApproval.dao;
 
+import com.playdata.ElectronicApproval.entity.ApprovalFileEntity;
 import com.playdata.ElectronicApproval.entity.ApprovalLineEntity;
 import com.playdata.ElectronicApproval.entity.ApprovalStatus;
 import java.util.List;
@@ -15,13 +16,17 @@ public interface ApprovalLineDAO {
 
   List<ApprovalLineEntity> findAll();
 
-  List<ApprovalLineEntity> findAllByEmployeeId(String employeeId);
+  /**/List<ApprovalLineEntity> findAllByEmployeeIdAndApprovalOrder(String employeeId,
+      int approvalOrder);
+
+  List<ApprovalLineEntity> findAllByEmployeeIdAndApprovalOrderNotZero(String employeeId);
 
   List<ApprovalLineEntity> findAllByEmployeeIdAndApprovalStatus(String employeeId,
       ApprovalStatus approvalStatus);
 
   List<ApprovalLineEntity> findAllByApprovalStatus(ApprovalStatus approvalStatus);
 
+  List<ApprovalLineEntity> findAllByApprovalFile(ApprovalFileEntity approvalFile);
 
   Optional<ApprovalLineEntity> findById(String id);
 

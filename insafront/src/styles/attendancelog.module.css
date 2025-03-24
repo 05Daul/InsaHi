@@ -1,0 +1,59 @@
+.pageContainer {
+    padding: 20px;
+}
+.selectWrapper {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px; /* 드롭다운 간의 간격을 조정 */
+}
+
+.selectWrapper label {
+    margin-right: 10px; /* 레이블과 드롭다운 사이 간격을 조정 */
+}
+
+.selectWrapper select {
+    width: 120px; /* 드롭다운의 너비를 설정 */
+}
+.title {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.buttonWrapper {
+    margin-bottom: 20px;
+}
+/*.selectWrapper + .selectWrapper {*/
+/*    margin-left: 20px; !* 월 드롭다운과 년도 드롭다운 간의 간격을 조정 *!*/
+/*}*/
+.button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.workLogTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.workLogTable th,
+.workLogTable td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.workLogTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}

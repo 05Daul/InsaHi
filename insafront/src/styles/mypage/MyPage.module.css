@@ -1,186 +1,231 @@
 .container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
+
+  padding: 10px;
+  font-family: Arial, sans-serif;
 }
 
 .topSection {
-    display: flex;
-    gap: 30px;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
 }
 
+/*ProfileCard*/
+
 .profileWrapper {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  gap: 20px;
 }
 
 .profileCard {
-    flex: 7;
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.quickMenu {
-    flex: 3;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.quickMenu h2 {
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ccc;
-}
-
-.quickMenu .buttonContainer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-}
-
-.quickMenu .menuItem {
-    flex: 1;
-    padding: 10px;
-    text-align: center;
-    border-right: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.quickMenu .menuItem:last-child {
-    border-right: none;
-}
-
-.calendarCard {
-    width: 70%;
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 8px;
+  flex: 7;
+  border: 1px solid #e0e0e0;
+  padding: 30px 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .profileInfo {
-    text-align: center;
+  text-align: center;
 }
 
 .avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.button {
-    padding: 5px 10px;
-    margin-top: 10px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
+.profileTextBlock {
+  text-align: center;
+  line-height: 1.8;
+  margin-bottom: 15px;
+  font-size: 15px;
+  color: #333;
 }
 
-.button:hover {
-    background-color: #0056b3;
+.profileName {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #111;
 }
+
+.quickMenu {
+  flex: 3;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.quickMenu h3 {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.quickMenu .buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+}
+
+.quickMenu .menuItem {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  align-content: center;
+  border-right: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.quickMenu .menuItem:last-child {
+  border-right: none;
+}
+
+
+.editButton {
+  padding: 8px 16px;
+  margin-top: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+
+.editButton:hover {
+  background-color: #0056b3;
+}
+
+
+/*.button {*/
+/*  padding: 5px 10px;*/
+/*  margin-top: 10px;*/
+/*  border: none;*/
+/*  background-color: #007bff;*/
+/*  color: white;*/
+/*  cursor: pointer;*/
+/*  border-radius: 4px;*/
+/*}*/
+
+/*.button:hover {*/
+/*  background-color: #0056b3;*/
+/*}*/
+/*Calendar div*/
+
+.calendarCard {
+  width: 80%;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+}
+
 
 .bottomSection {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 /* 개인 근태 현황 & 추가 정보 패널 정렬 */
 .attendanceWrapper {
-    display: flex;
-    width: 100%;
-    gap: 20px;
+  display: flex;
+  width: 100%;
+  gap: 20px;
 }
 
 .attendanceCard {
-    width: 40%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
+  width: 40%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
 }
 
 .attendanceHeader {
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+  font-weight: bold;
 }
 
 .attendanceBody {
-    display: flex;
-    border: 1px solid #ccc;
-    margin-top: 5px;
+  display: flex;
+  border: 1px solid #ccc;
+  margin-top: 5px;
 }
 
 .attendanceItem {
-    flex: 1;
-    padding: 10px;
-    text-align: center;
-    border-right: 1px solid #ccc;
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-right: 1px solid #ccc;
 }
 
 .attendanceItem:last-child {
-    border-right: none;
+  border-right: none;
 }
 
 .additionalInfo {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
 }
 
 .infoCard {
-    flex: 1;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    margin: 0 5px;
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin: 0 5px;
 }
 
 .infoCard h3 {
-    margin-bottom: 5px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
 }
 
 .infoDetails {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 5px;
-    border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 5px;
+  border-top: 1px solid #ccc;
 }
 
 .infoItem {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    border-right: 1px solid #ccc;
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-right: 1px solid #ccc;
 }
 
 .infoItem img {
-    display: block;
-    margin: 0 auto 5px;
-    width: 30px;
-    height: 30px;
+  display: block;
+  margin: 0 auto 5px;
+  width: 30px;
+  height: 30px;
 }
 
 .infoItem:last-child {
-    border-right: none;
+  border-right: none;
 }

@@ -5,6 +5,7 @@ import com.playdata.AttendanceSalary.atdSalRepository.sal.PositionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,5 +26,11 @@ public class PositionDaoImpl implements PositionDao {
     @Override
     public Optional<PositionEntity> findById(Long positionId) {
         return positionRepository.findById(positionId);
+    }
+
+
+    @Override
+    public List<PositionEntity> findByCompanyCode(String companyCode) {
+        return positionRepository.findAllByCompanyCode(companyCode);
     }
 }

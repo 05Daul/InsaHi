@@ -1,0 +1,53 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.buttonWrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.addButton {
+    padding: 10px 16px;
+    background-color: #2ecc71;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.addButton:hover {
+    background-color: #27ae60;
+}
+
+.allowanceTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.allowanceTable th,
+.allowanceTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    text-align: center;
+}
+
+.allowanceTable th {
+    background-color: #f4f4f4;
+    font-weight: 600;
+}

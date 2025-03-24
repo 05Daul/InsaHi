@@ -66,6 +66,7 @@ public class TokenManager implements InitializingBean {
                 .setExpiration(targetTime) //만료 시간 설정
                 .compact(); //최종 JWT 토큰 생성
 
+        System.out.println("myUserDetail.getCompanyCode() = " + myUserDetail.getCompanyCode());
         System.out.println("✅ JWT 생성 완료: " + token);
         return token;
 

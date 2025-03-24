@@ -22,6 +22,7 @@ public class SignupRequestDTO {
     //employee
     private String employeeId;
     private String password;
+    private String address;
     private String name;
     private String email;
     private String phoneNumber;

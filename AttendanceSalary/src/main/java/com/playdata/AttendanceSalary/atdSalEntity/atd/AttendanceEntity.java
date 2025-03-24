@@ -1,5 +1,6 @@
 package com.playdata.AttendanceSalary.atdSalEntity.atd;
 
+import com.playdata.AttendanceSalary.atdSalDto.atd.AttendanceDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,13 +14,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class AttendanceEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")//출퇴근ID
-  private Long id;
+  @Column(name = "attendance_id")//출퇴근ID
+  private Long attendanceId;
 
   @Column(name = "check_in_time")
   private LocalDateTime checkInTime;
@@ -50,6 +50,22 @@ public class AttendanceEntity {
   private String employeeId;
 
 
+  public AttendanceDTO toAttendanceDTO() {
+    AttendanceDTO attendanceDTO = new AttendanceDTO();
+    attendanceDTO.setCheckInTime(checkInTime);
+    attendanceDTO.setWorkDate(workDate);
+    attendanceDTO.setCheckOutTime(checkOutTime);
+    attendanceDTO.setWorkHours(workHours);
+    attendanceDTO.setOvertimeHours(overtimeHours);
+    attendanceDTO.setAttendanceStatus(attendanceStatus);
+    attendanceDTO.setCompanyCode(companyCode);
+    attendanceDTO.setEmployeeId(employeeId);
+    return attendanceDTO;
+  }
+
+
+  }
+
 /*
     @PrePersist //db에 출근으로  생성시
     public void calculateLateStatus() {
@@ -58,4 +74,3 @@ public class AttendanceEntity {
         }
         *//**  추후 회사 테이블에서 입력된 시간을 받을 코드  *//*
     }*/
-}

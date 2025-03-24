@@ -7,7 +7,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients  // Feign Client 활성화
-
 public class AttendanceSalaryApplication {
 
     public static void main(String[] args) {

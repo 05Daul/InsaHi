@@ -6,15 +6,12 @@ import com.playdata.HumanResourceManagement.employee.dao.EmployeeDAO;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.playdata.HumanResourceManagement.employee.dto.ProfileCardDTO;
+import com.playdata.HumanResourceManagement.employee.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import com.playdata.HumanResourceManagement.employee.dto.AdminRequestDTO;
-import com.playdata.HumanResourceManagement.employee.dto.LoginDTO;
 import com.playdata.HumanResourceManagement.employee.entity.Authority;
 import com.playdata.HumanResourceManagement.employee.entity.Employee;
-import com.playdata.HumanResourceManagement.employee.dto.EmployeeResponseDTO;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,6 +55,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setAuthorityList(roles);
         employeeDAO.insert(employee);
     }
+
+
 
     @Override
     public Authentication login(LoginDTO employee) {
@@ -105,12 +104,50 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   }
 
-    //Small Profile
+    //mypage 왼쪽 작은 프로필
     @Override
     public ProfileCardDTO getProfileCard(String employeeId) {
         Employee employee = employeeDAO.findById(employeeId);
-        ProfileCardDTO smallProfileDTO = modelMapper.map(employee, ProfileCardDTO.class);
-        return smallProfileDTO;
+        ProfileCardDTO ProfileCardDTO = modelMapper.map(employee, ProfileCardDTO.class);
+
+        return ProfileCardDTO;
+    }
+
+    //개인정보수정페이지
+    @Override
+    public EmployeeResponseDTO getEmployeeInfo(String employeeId) {
+      Employee employee = employeeDAO.findById(employeeId);
+      EmployeeResponseDTO employeeResponseDTO = modelMapper.map(employee, EmployeeResponseDTO.class);
+      return employeeResponseDTO;
+    }
+
+    @Override
+    public EmployeeResponseDTO updateEmployeeInfo(String employeeId) {
+      Employee employee = employeeDAO.findById(employeeId);
+      modelMapper.map(EmployeeUpdateDTO.class, employee);
+      employeeDAO.update(employee);
+      EmployeeResponseDTO employeeResponseDTO = modelMapper.map(employee, EmployeeResponseDTO.class);
+
+        return employeeResponseDTO;
+    }
+
+    @Override
+    public void addUserRoles(Employee employee) {
+        Set<Authority> roles = new HashSet<>();
+
+        authorityDAO.getUserRole().ifPresent(roles::add);
+
+        employee.setAuthorityList(roles);
+        employeeDAO.insert(employee);
+    }
+
+    @Override
+    public Employee employeeInsert(EmployeeRequestDTO employeeRequestDTO) {
+        Employee entity = modelMapper.map(employeeRequestDTO, Employee.class);
+
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+        employeeDAO.insert(entity);
+        return entity;
     }
 }
 

@@ -38,17 +38,16 @@ public class Employee {
     private String name; //2 이름
     private String email; //3 이메일
     private String phoneNumber; //4 전화번호
-    private String address; //5 주소
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "department_id", nullable = true)  // 외래키 컬럼만 지정
     @JsonBackReference  // 순환 참조 방지
     private DepartmentEntity department; // 부서
-
     private String teamId;
     private String state; // 상태 (Active, Inactive 등)
-    private String positionSalaryId; //직급호봉
-
+    private Long positionSalaryId; //직급호봉
+	private LocalTime hireDate;
+    private  LocalTime retireDate;
 
 
 //    private LocalDate hireDate;

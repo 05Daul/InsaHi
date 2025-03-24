@@ -4,6 +4,7 @@ import com.playdata.ElectronicApproval.dto.ApprovalFileDTO;
 import com.playdata.ElectronicApproval.dto.RequestApprovalFileDTO;
 import com.playdata.ElectronicApproval.dto.SubmitApprovalRequest;
 import com.playdata.ElectronicApproval.entity.ApprovalFileEntity;
+import com.playdata.ElectronicApproval.entity.ApprovalStatus;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,7 @@ class ApprovalServiceTest {
   public void approve2() {
 //    String approvalLineId = "";
     String approvalLineId = "f9874012-df2b-40cd-a554-75d8a61b3d04_line_1";
-    String approved = "APPROVED";
+    ApprovalStatus approved = ApprovalStatus.APPROVED;
     String reason = "reason";
 
     approvalService.approveUpdateStatus(approvalLineId, approved, reason);
@@ -82,7 +83,7 @@ class ApprovalServiceTest {
   @Test
   public void approve22() {
     String approvalLineId = "93aef41c-714d-4488-820f-0d219a583dd6_line_2";
-    String rejected = "REJECTED";
+    ApprovalStatus rejected = ApprovalStatus.REJECTED;
     String reason = "reason";
 
     approvalService.approveUpdateStatus(approvalLineId, rejected, reason);
@@ -91,7 +92,7 @@ class ApprovalServiceTest {
   @Test
   public void approve3() {
     String approvalLineId = "93aef41c-714d-4488-820f-0d219a583dd6_line_2";
-    String rejected = "REJECTED";
+    ApprovalStatus rejected = ApprovalStatus.REJECTED;
     String reason = "reason";
 
     approvalService.approveUpdateStatus(approvalLineId, rejected, reason);

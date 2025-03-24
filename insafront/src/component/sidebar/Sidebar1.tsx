@@ -13,10 +13,10 @@ export default function Sidebar1() {
             <nav>
                 <ul className={styles.sidemenu}>
                     <li>
-                        <Link href="#">- 출퇴근 기록 조회</Link>
+                        <Link href="/attendance/attendancelog">- 출퇴근 기록 조회</Link>
                     </li>
                     <li>
-                        <Link href="#">- 출퇴근 체크</Link>
+                        <Link href="/attendance/attendancelog">- 출퇴근 체크</Link>
                     </li>
 
                     <li className={styles.sidemenusection}>연차/휴가 신청</li>
