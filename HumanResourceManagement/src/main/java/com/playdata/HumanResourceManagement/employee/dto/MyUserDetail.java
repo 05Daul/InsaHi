@@ -10,7 +10,7 @@ public class MyUserDetail extends User {
     private UserDTO userDto;
 
     public MyUserDetail(UserDTO userDto, Collection<? extends GrantedAuthority> authorities) {
-        super(userDto.getEmployeeId()+"     ",userDto.getPassword(), authorities);
+        super(userDto.getEmployeeId(),userDto.getPassword(), authorities);
         this.userDto = userDto;
     }
 
