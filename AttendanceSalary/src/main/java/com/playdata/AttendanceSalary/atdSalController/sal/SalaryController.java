@@ -1,70 +1,82 @@
 package com.playdata.AttendanceSalary.atdSalController.sal;
 
+import com.playdata.AttendanceSalary.atdSalDao.sal.PositionSalaryDaoImpl;
 import com.playdata.AttendanceSalary.atdSalDto.sal.*;
 import com.playdata.AttendanceSalary.atdSalService.sal.SalaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/salary")
+@RequestMapping("/atdsal")
 @RequiredArgsConstructor
 public class SalaryController {
     private final SalaryService salaryService;
+    private final PositionSalaryDaoImpl positionSalaryDaoImpl;
 
-    @PostMapping("payStub")
+    @PostMapping("/payStub")
     public PayStubResponseDTO payStub(@RequestParam("employeeId") String employeeId) {
         System.out.println("employeeId = " + employeeId);
         return salaryService.calculateAndSaveEmployeePayStub(employeeId);
 
-
     }
-
+    @GetMapping("/salary-step-list")
+    public List<PositionSalaryStepResponseDTO> positionSalaryStepList(@RequestParam("companyCode") String companyCode) {
+    return salaryService.findPositionSalaryStepByCompanyCode(companyCode);
+    }
     /// 1. Position 서비스
     @PostMapping("/position-insert")
-    public PositionResponseDTO positionInsert(@RequestBody PositionResponseDTO responseDTO,
-                                              @RequestParam String companyCode) {
-        return salaryService.insertPosition(responseDTO, companyCode);
+    public PositionResponseDTO positionInsert(@RequestBody PositionResponseDTO responseDTO) {
+        String companyCode = responseDTO.getCompanyCode();  // 이미 바디에서 가져올 수 있음
+        return salaryService.insertPosition(responseDTO,companyCode);
 
     }
 
-    @PutMapping("/positon-update")
+    @PutMapping("/position-update")
     public void positionupdate(@RequestBody PositionResponseDTO responseDTO) {
         salaryService.updatePosition(responseDTO);
     }
 
-    @DeleteMapping("/positon-delete")
+    @DeleteMapping("/position-delete")
     public void positionDelete(@RequestBody PositionResponseDTO responseDTO) {
         salaryService.deletePosition(responseDTO);
 
     }
 
-    @GetMapping("/positon-find")
-    public PositionResponseDTO positionFind(@RequestParam Long positionId) {
+    @GetMapping("/position-find")
+    public PositionResponseDTO positionFind(@RequestParam("positionId") Long positionId) {
         return salaryService.findPosition(positionId);
+    }
+    @GetMapping("/position-list")
+    public List<PositionResponseDTO> positionList(@RequestParam("companyCode") String companyCode) {
+        log.info("companyCode = " + companyCode);
+        List<PositionResponseDTO> positions = salaryService.findPositionsByCompanyCode(companyCode);
+
+        log.info("positions = {}", positions);  // 리스트 로그 확인
+
+        return positions;
     }
 
     /// 2. PositionSalaryStep 서비스
-    @PostMapping("step-insert")
+    @PostMapping("/step-insert")
     public PositionSalaryStepResponseDTO positionInsert(@RequestBody PositionSalaryStepResponseDTO responseDTO) {
         return salaryService.insertPositionSalaryStep(responseDTO);
     }
 
-    @PutMapping("step-update")
+    @PutMapping("/step-update")
     public void positionupdate(@RequestBody PositionSalaryStepResponseDTO responseDTO) {
         salaryService.updatePositionSalaryStep(responseDTO);
     }
 
-    @DeleteMapping("step-delete")
+    @DeleteMapping("/step-delete")
     public void positionDelete(@RequestBody PositionSalaryStepResponseDTO responseDTO) {
         salaryService.deletePositionSalaryStep(responseDTO);
     }
 
     @GetMapping("/step-find")
-    public PositionSalaryStepResponseDTO positionSalaryStepFind(@RequestParam Long id) {
+    public PositionSalaryStepResponseDTO positionSalaryStepFind(@RequestParam("id") Long id) {
         return salaryService.findPositionSalaryStep(id);
 
     }
@@ -75,12 +87,6 @@ public class SalaryController {
         return salaryService.insertAllowance(responseDTO);
     }
 
-    @GetMapping("/allowance-find-companycode")
-    public List<AllowanceResponseDTO> allowanceFindCompanycode(@RequestParam("companyCode") String companyCode) {
-        // 이제 반환값이 리스트!
-        //return salaryService.findByAllowance_CompanyCode(companyCode);
-        return  null;
-    }
     @PutMapping("/allowance-update")
     public void updateAllowance(@RequestBody AllowanceResponseDTO responseDTO) {
         salaryService.updateAllowance(responseDTO);
@@ -92,14 +98,18 @@ public class SalaryController {
     }
 
     @GetMapping("/allowance-find")
-    public AllowanceResponseDTO findAllowance(@RequestParam Long allowanceId) {
+    public AllowanceResponseDTO findAllowance(@RequestParam("allowanceId") Long allowanceId) {
         return salaryService.findAllowance(allowanceId);
     }
 
+    @GetMapping("allowance-list")
+    public List<AllowanceResponseDTO> findAllowanceList(@RequestParam("companyCode") String companyCode) {
+        return salaryService.findAllowancesByCompanyCode(companyCode);
+    }
 
     /// Deduction 서비스
     @PostMapping("deduction-insert")
-    public DeductionResponseDTO insertDeduction(@RequestBody DeductionResponseDTO responseDTO) {
+    public DeductionResponseDTO insertDeduction(@RequestBody() DeductionResponseDTO responseDTO) {
         return salaryService.insertDeduction(responseDTO);
     }
 
@@ -114,7 +124,7 @@ public class SalaryController {
     }
 
     @GetMapping("deduction-find")
-    public DeductionResponseDTO findDeduction(@RequestParam Long deductionId) {
+    public DeductionResponseDTO findDeduction(@RequestParam("deductionId") Long deductionId) {
         return salaryService.findDeduction(deductionId);
     }
 

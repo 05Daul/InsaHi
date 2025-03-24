@@ -45,7 +45,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         return companyStartTime;
   }
 
-  @Override
+    @Override
+    public void update(Employee employee) {
+        employeeRepository.save(employee);
+    }
+
+    @Override
   public List<Employee> findAll() {
     return employeeRepository.findAll();
   }

@@ -31,7 +31,6 @@ dependencies {
 
     // Spring Cloud OpenFeign (서비스 간 통신)
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-//    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     // MySQL 커넥터
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -55,6 +54,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //javamailsender
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // 외부 프로젝트 의존성 (ElectronicApproval)
 //    implementation project(':ElectronicApproval')

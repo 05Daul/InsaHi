@@ -27,9 +27,6 @@ export default function SignupForm() {
         console.log("서버 응답:", response);
         alert("회원가입이 완료되었습니다!");
 
-        // ✅ Next.js의 로그인 페이지로 이동
-        // window.location.href = "/Login";
-
         console.log(response); //  응답 메시지 저장
         router.push("/");
 
@@ -101,15 +98,15 @@ export default function SignupForm() {
 
                         <div className={styles.formGroup}>
                             <label>대표자 전화번호</label>
-                            <input {...register("phone", {required: "전화번호를 입력하세요"})} placeholder="전화번호 입력"/>
-                            {errors.phone && <p className={styles.error}>{errors.phone.message}</p>}
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label>주소</label>
-                            <input type="address" {...register("address", {required: "주소를 입력하세요"})}
-                                   placeholder="주소 입력"/>
-                            {errors.address && <p className={styles.error}>{errors.address.message}</p>}
+                            <input
+                                type="text"
+                                {...register("phoneNumber", {
+                                required: "전화번호를 입력하세요",
+                                pattern: {
+                                    value: /^[0-9]+$/, // 숫자만 허용
+                                    message: "숫자만 입력하세요"
+                                }})} placeholder="전화번호 입력"/>
+                            {errors.phoneNumber && <p className={styles.error}>{errors.phoneNumber.message}</p>}
                         </div>
 
                         <div className={styles.formGroup}>
@@ -119,7 +116,7 @@ export default function SignupForm() {
                             {/*<button type="button" className={styles.sendButton}>발송</button>*/}
                             <div className={styles.emailContainer}>
                                 <input type="email" {...register("email", { required: "이메일을 입력하세요" })} placeholder="이메일 입력" className={styles.emailInput} />
-                                <button type="button" className={styles.sendButton}>인증</button>
+
                             </div>
                             {errors.email && <p className={styles.error}>{errors.email.message}</p>}
 

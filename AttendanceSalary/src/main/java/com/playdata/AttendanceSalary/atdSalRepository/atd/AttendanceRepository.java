@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public interface AttendanceRepository extends JpaRepository<AttendanceEntity, Long> {
     @Query("SELECT COALESCE(SUM(a.overtimeHours), 0) " +
@@ -17,7 +18,18 @@ public interface AttendanceRepository extends JpaRepository<AttendanceEntity, Lo
             @Param("employeeId") String employeeId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
-    //sort
+
+    List<AttendanceEntity> findByEmployeeId(@Param("employeeId") String employeeId);
+
+    @Query("SELECT a FROM AttendanceEntity a " +
+            "WHERE a.employeeId = :employeeId " +
+            "AND a.checkOutTime IS NULL " +
+            "ORDER BY a.checkInTime DESC LIMIT 1")
+    AttendanceEntity findAttendanceByEmployeeId(@Param("employeeId") String employeeId);
+
+    @Query("SELECT a FROM AttendanceEntity a " +
+            "WHERE a.employeeId = :employeeId " +
+            "ORDER BY a.checkOutTime DESC LIMIT 1")
+    AttendanceEntity findCheckOutTimeByEmployeeId(@Param("employeeId") String employeeId);
 
 }
-

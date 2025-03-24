@@ -71,23 +71,32 @@
 
 /* 사용자 정보 스타일 */
 .user {
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
 }
 
 /* 로그아웃 버튼 스타일 (알림 스타일과 동일) */
 .logoutButton {
-    background: none;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    transition: opacity 0.2s ease-in-out;
+  background: none;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .logoutButton:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
+.notificationDot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: royalblue;
+  border-radius: 50%;
+}

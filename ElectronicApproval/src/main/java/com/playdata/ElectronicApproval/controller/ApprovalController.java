@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playdata.ElectronicApproval.common.publicEntity.FileEntity;
 import com.playdata.ElectronicApproval.dto.ApprovalFileDTO;
 import com.playdata.ElectronicApproval.dto.FileDTO;
+import com.playdata.ElectronicApproval.dto.PermitApprovalRequest;
 import com.playdata.ElectronicApproval.dto.ResponseApprovalFileDTO;
 import com.playdata.ElectronicApproval.dto.SubmitApprovalRequest;
 import com.playdata.ElectronicApproval.service.ApprovalFileUploadServiceImpl;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,18 +96,36 @@ public class ApprovalController {
 //    approvalService.submitApproval(request);
 //  }
 
-  @GetMapping("/permit") // 결재 승인/반려 처리
-  public void permitApproval(@RequestParam("lineId") String lineId,
-      @RequestParam("approveOrNot") String approveOrNot,
-      @RequestParam("reason") String reason) {
-    approvalService.approveUpdateStatus(lineId, approveOrNot, reason);
+  @PostMapping("/permit") // 결재 승인/반려 처리
+  public ResponseEntity<String> permitApproval(@RequestBody PermitApprovalRequest request) {
+    log.info("결재 처리 요청 수신: lineId={}, approveOrNot={}, reason={}", request.getLineId(),
+        request.getApproveOrNot(), request.getReason());
+    try {
+      approvalService.approveUpdateStatus(
+          request.getLineId(),
+          request.getApproveOrNot(),
+          request.getReason()
+      );
+      return ResponseEntity.ok("결재가 성공적으로 처리되었습니다.");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("결재 처리 중 오류가 발생했습니다.");
+    }
+
   }
 
-  @GetMapping("/list/{employeeId}/{menu}") // 결재 문서 조회
-  public List<ApprovalFileDTO> getApprovalFiles(@PathVariable("employeeId") String employeeId,
-      @PathVariable("menu") int menu) {
-    return approvalService.getApprovalFiles(employeeId, menu);
+//  @GetMapping("/list/{employeeId}/{menu}") // 결재 문서 조회
+//  public List<ApprovalFileDTO> getApprovalFiles(@PathVariable("employeeId") String employeeId,
+//      @PathVariable("menu") int menu) {
+//    return approvalService.getApprovalFiles(employeeId, menu);
+//
+//  }
 
+  @GetMapping("/list/{employeeId}/{menu}")
+  public Page<ApprovalFileDTO> getDocuments(@PathVariable String employeeId,
+      @PathVariable int menu,
+      Pageable pageable) {
+    return approvalService.getApprovalFiles(employeeId, menu, pageable);
   }
 /*
   @GetMapping("/file/{approvalFileId}")

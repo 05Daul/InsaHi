@@ -1,5 +1,6 @@
 package com.playdata.ElectronicApproval.repository;
 
+import com.playdata.ElectronicApproval.entity.ApprovalFileEntity;
 import com.playdata.ElectronicApproval.entity.ApprovalLineEntity;
 import com.playdata.ElectronicApproval.entity.ApprovalStatus;
 import java.util.List;
@@ -9,7 +10,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface ApprovalLineRepository extends JpaRepository<ApprovalLineEntity, String> {
 
-  List<ApprovalLineEntity> findAllByEmployeeId(String employeeId);
+  List<ApprovalLineEntity> findAllByEmployeeIdAndApprovalOrder(String employeeId,
+      int approvalOrder);
+
+  @Query("SELECT a FROM ApprovalLineEntity a WHERE a.employeeId = :employeeId AND a.approvalOrder != 0")
+  List<ApprovalLineEntity> findAllByEmployeeIdAndApprovalOrderNotZero(
+      @Param("employeeId") String employeeId);
 
   @Query("SELECT l "
       + "FROM ApprovalLineEntity l "
@@ -31,4 +37,5 @@ public interface ApprovalLineRepository extends JpaRepository<ApprovalLineEntity
       + "   AND l2.approvalLineDetail.status = 'PENDING')")
   List<ApprovalLineEntity> findFirstPendingLinesByEmployee(@Param("employeeId") String employeeId);
 
+  List<ApprovalLineEntity> findAllByApprovalFile(ApprovalFileEntity approvalFile);
 }

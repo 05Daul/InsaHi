@@ -5,6 +5,7 @@ import com.playdata.AttendanceSalary.atdSalRepository.sal.PositionSalaryStepRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,6 +20,11 @@ public class PositionSalaryDaoImpl implements PositionSalaryDao {
   }
 
   @Override
+  public List<PositionSalaryStepEntity> findAllByCompanyCode(String companyCode) {
+    return positionSalaryStepRepository.findAllByCompanyCode(companyCode);
+  }
+
+  @Override
   public void deletePosition(PositionSalaryStepEntity positionSalaryStepEntity) {
     positionSalaryStepRepository.delete(positionSalaryStepEntity);
   }
@@ -26,7 +32,6 @@ public class PositionSalaryDaoImpl implements PositionSalaryDao {
     @Override
     public Optional<PositionSalaryStepEntity> findPositionSalaryById(Long positionSalaryID) {
         return positionSalaryStepRepository.findByPositionSalaryId(positionSalaryID);
-
     }
 }
 

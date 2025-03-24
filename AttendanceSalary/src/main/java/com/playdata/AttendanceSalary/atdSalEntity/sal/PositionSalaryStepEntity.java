@@ -31,8 +31,8 @@ public class PositionSalaryStepEntity extends DateEntity {
     @Column(precision = 11, scale = 2)
     private BigDecimal baseSalary;
 
-//    @Column(precision = 11, scale = 2)
-//    private BigDecimal positionAllowance;
+    @Column(precision = 11, scale = 2)
+    private BigDecimal positionAllowance;
 
     @Column(precision = 11, scale = 2)
     private BigDecimal overtimeAllowance;

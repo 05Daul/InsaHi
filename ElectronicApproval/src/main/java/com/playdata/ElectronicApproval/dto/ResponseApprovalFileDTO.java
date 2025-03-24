@@ -22,9 +22,13 @@ public class ResponseApprovalFileDTO {
   private String companyCode;
   private String employeeId;
   private List<FileDTO> files;  // 해당 결재 문서에 첨부된 파일 목록
+  private List<ApprovalLineDTO> approvalLines; // 결재 라인 정보 추가
+
 
   public ResponseApprovalFileDTO(String s) {
     this.text = s;
     this.files = new ArrayList<>();
   }
+
+
 }

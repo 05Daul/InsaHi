@@ -20,11 +20,11 @@ class AttendanceControllerTest {
         String employeeId = "E001";
         String companyCode= "C001";
 
-        AttendanceEntity attendance = attendanceService.checkIn(employeeId);
+//        AttendanceEntity attendance = attendanceService.checkIn(employeeId);
 
-        System.out.println("attendance = " + companyCode);
-        System.out.println("attendance = " + employeeId);
-        System.out.println("attendance = " + attendance);
+//        System.out.println("attendance = " + companyCode);
+//        System.out.println("attendance = " + employeeId);
+//        System.out.println("attendance = " + attendance);
 
     }
 }

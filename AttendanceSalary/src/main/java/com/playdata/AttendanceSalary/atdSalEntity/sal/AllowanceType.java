@@ -26,18 +26,6 @@ public enum AllowanceType {
         this.taxExemptionLimit = taxExemptionLimit;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public boolean isTaxExemption() {
-        return taxExemption;
-    }
-
-    public BigDecimal getTaxExemptionLimit() {
-        return taxExemptionLimit;
-    }
-
     public static AllowanceType fromDisplayName(String name) {
         for (AllowanceType type : AllowanceType.values()) {
             if (type.getDisplayName().equals(name)) {

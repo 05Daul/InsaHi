@@ -10,6 +10,5 @@ export interface Adminformtype{
     name: string;
     password : string;
     email: string;
-    phone: string;
-    address:string;
+    phoneNumber: string;
 }

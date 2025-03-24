@@ -8,5 +8,5 @@ import java.util.List;
 
 public  interface AllowanceRepository  extends JpaRepository<AllowanceEntity,Long> {
     List<AllowanceEntity> findByPayStub_PayStubId(@Param("payStubId")Long payStubId);
-    List<AllowanceEntity> findByCompanyCode(String companyCode);
+    List<AllowanceEntity> findByCompanyCode(@Param("companyCode") String companyCode);
 }

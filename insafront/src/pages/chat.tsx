@@ -17,7 +17,8 @@ export default function Chat() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const stompClientRef = useRef<Client | null>(null);
-    const [currentUser, setCurrentUser] = useState<string | null>(null);
+    const [currentUserId, setCurrentUserId] = useState("");
+    const [currentUserName, setCurrentUserName] = useState("");
     const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const router = useRouter();
@@ -34,7 +35,7 @@ export default function Chat() {
 
             // 현재 방이 있으면 해당 방 구독
             if (currentRoomId) {
-                stompClient.subscribe(`/topic/chat/${currentRoomId}`, (message) => {
+                stompClient.subscribe(`/topic/messages/${currentRoomId}`, (message) => {
                     setMessages((prev) => [...prev, JSON.parse(message.body)]);
                 });
             }
@@ -54,63 +55,62 @@ export default function Chat() {
 
 
     useEffect(() => {
-        const token = localStorage.getItem("accessToken");
+        const fetchUser = async () => {
+            const token = localStorage.getItem("accessToken");
 
-        if (!token) {
-            console.error("토큰이 없습니다. 로그인 페이지로 이동합니다.");
-            router.push("/");
-            return;
-        }
-        if (!currentUser) {
-            console.log("⏳ currentUser 값이 설정되지 않음, employeeId 요청 지연...");
-            return; // currentUser가 설정되기 전에는 요청 보내지 않음
-        }
-        fetch(`http://127.0.0.1:1006/employee/find?employeeId=${currentUser}`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error("❌ JWT 인증 실패: 응답 코드 " + res.status);
+            if (!token) {
+                console.error("❌ accessToken 없음 → 로그인 페이지로 이동");
+                router.push("/");
+                return;
+            }
+
+            try {
+                const payload = JSON.parse(atob(token.split(".")[1]));
+                const employeeId = payload.sub?.trim();
+                if (employeeId) {
+                    setCurrentUserId(employeeId);
+                    const res = await fetch(`http://localhost:1006/employee/find?employeeId=${employeeId}`, {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    if (!res.ok) {
+                        const msg = await res.text();
+                        throw new Error("❌ JWT 인증 실패: " + msg);
+                    }
+
+                    const data = await res.json();
+                    setCurrentUserName(data.name);
+                    console.log("✅ employeeId 가져오기 성공:", data);
+                } else {
+                    console.error("❌ employeeId 없음");
                 }
-                return res.json();
-            })
-            .then((data) => {
-                console.log("✅ employeeId 가져오기 성공:", data);
-            })
-            .catch((err) => console.error("❌ 사용자 정보 가져오기 실패:", err));
-    }, [currentUser]); // 🔥 currentUser가 변경될 때만 실행
+            } catch (err) {
+                console.error("❌ 사용자 정보 가져오기 실패:", err);
+            }
+        };
 
-    // //  메시지 전송 함수
-    // const sendMessage = () => {
-    //     if (stompClientRef.current && stompClientRef.current.connected) {
-    //         stompClientRef.current.send(
-    //             "/app/chat/send",
-    //             {},
-    //             JSON.stringify({ roomId: currentRoomId, sender: currentUser, message: input })
-    //         );
-    //         setInput("");
-    //     }
-    // };
-    //
+        fetchUser();
+    }, []);
+
 
     return (
-        <div style={{display: "flex", height: "100vh"}}>
+        <div style={{display: "flex", flexDirection: "row", marginTop: "50px"}}>
             <ChatRoomList
-                currentUser={currentUser}
+                currentUserId={currentUserId}
                 stompClient={stompClientRef.current}
                 onSelectRoom={(roomId: string) => setCurrentRoomId(roomId)}
                 onCreateRoom={() => setShowCreateModal(true)}
             />
-            <ChatArea currentUser={currentUser} currentRoomId={currentRoomId} stompClient={stompClientRef.current}/>
+            <ChatArea currentUserName={currentUserName} currentRoomId={currentRoomId} stompClient={stompClientRef.current}/>
             <RoomCreateModal
                 visible={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
                 onRoomCreated={() => console.log("방 생성 완료")}
-                currentUser={currentUser}
+                currentUserName={currentUserName}
             />
         </div>
     );

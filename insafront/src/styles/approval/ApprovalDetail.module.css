@@ -1,0 +1,167 @@
+.approvalDetailPageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.approvalDetailContentContainer {
+  display: flex;
+  flex: 1;
+  margin-top: 60px;
+}
+
+.approvalDetailMainContent {
+  padding: 20px;
+  flex: 1;
+}
+
+.approvalDetailPageTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.approvalDetailCard {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.approvalDetailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+}
+
+.approvalDetailStatus {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.approvalDetailStatusPending {
+  background-color: #fff8e6;
+  color: #f5a623;
+}
+
+.approvalDetailStatusApproved {
+  background-color: #e6f7ee;
+  color: #28a745;
+}
+
+.approvalDetailStatusRejected {
+  background-color: #ffebee;
+  color: #dc3545;
+}
+
+.approvalDetailFieldGroup {
+  margin-bottom: 15px;
+}
+
+.approvalDetailFieldLabel {
+  font-weight: bold;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.approvalDetailFieldValue {
+  font-size: 16px;
+  color: #333;
+}
+
+.approvalDetailHistoryCard {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.approvalDetailHistoryTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.approvalDetailTimeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.approvalDetailTimelineItem {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.approvalDetailTimelineItem:before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #3D67D7;
+  z-index: 1;
+}
+
+.approvalDetailTimelineItem:after {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 12px;
+  width: 2px;
+  height: calc(100% - 12px);
+  background: #e0e0e0;
+}
+
+.approvalDetailTimelineItem:last-child:after {
+  display: none;
+}
+
+.approvalDetailActionButtons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.approvalDetailApproveButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.approvalDetailRejectButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.approvalDetailBackButton {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}

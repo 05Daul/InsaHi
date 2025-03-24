@@ -1,0 +1,98 @@
+.submitPageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.submitContentContainer {
+  display: flex;
+  flex: 1;
+  margin-top: 60px; /* To accommodate fixed topbar height */
+}
+
+.submitMainContent {
+  padding: 20px;
+  flex: 1;
+}
+
+.submitPageTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.submitCard {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.submitFormGroup {
+  margin-bottom: 15px;
+}
+
+.submitLabel {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.submitInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.submitTextarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.submitButton {
+  background-color: #3D67D7;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.submitButton:hover {
+  background-color: #2a4ba8;
+}
+
+.submitSecondaryButton {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.submitSecondaryButton:hover {
+  background-color: #e0e0e0;
+}
+
+.submitButtonGroup {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}

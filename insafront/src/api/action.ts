@@ -48,7 +48,7 @@ export async function login(loginData:FormData){
         throw new Error(`로그인 실패: ${res.status}`);
     }
 
-    const token = await res.text();
+    const token = await res.json();
     console.log("✅ 로그인 성공, 받은 토큰:", token);
 
     // 받은 토큰을 저장 (로컬스토리지)
