@@ -1,5 +1,6 @@
 package com.playdata.Cabinet.controller;
 
+import com.playdata.Cabinet.dto.request.CreateMeetingRoomRequestDto;
 import com.playdata.Cabinet.entity.MeetingRoom;
 import com.playdata.Cabinet.service.MeetingRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,14 @@ public class MeetingRoomController {
     private MeetingRoomService meetingRoomService;
 
     @PostMapping
-    public ResponseEntity<MeetingRoom> createMeetingRoom(@RequestBody MeetingRoom room) {
-        return new ResponseEntity<>(meetingRoomService.createMeetingRoom(room), HttpStatus.CREATED);
+    public ResponseEntity<MeetingRoom> createMeetingRoom(
+            @RequestBody CreateMeetingRoomRequestDto requestDto,
+            String companyCode
+    ) {
+        return new ResponseEntity<>(
+                meetingRoomService.createMeetingRoom(requestDto.map()),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping

@@ -1,6 +1,7 @@
 package com.playdata.HumanResourceManagement.company.dto;
 
 import com.playdata.HumanResourceManagement.employee.dto.AdminRequestDTO;
+import com.playdata.HumanResourceManagement.employee.dto.EmployeeRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,5 +34,9 @@ public class SignupRequestDTO {
 
     public AdminRequestDTO AdminSignupRequestDTO() {
         return new AdminRequestDTO(employeeId, password, name, companyCode, email, phoneNumber);
+    }
+
+    public EmployeeRequestDTO EmployeeSignupRequestDTO(){
+        return new EmployeeRequestDTO(employeeId, password, name, companyCode, email, phoneNumber);
     }
 }

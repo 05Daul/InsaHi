@@ -30,3 +30,12 @@ logging:
           descriptor:
             sql: trace
 
+url:
+  service:
+    att: 127.0.0.1:1000
+
+jwt:
+  header: Authorization
+  secret: 4Hirx6BNM+kTbhOxA4cHCUz/BF0B0tokIgTRs2d5ORn3zF8fPAESoo/jXcUiBnWYoZWrxgunF3l3gvGCUi6JGQ==
+  #  token-validity-in-second: 86400000 #60*60*24*1000
+  token-validity-in-second: 86400 #60*60*24*1000
