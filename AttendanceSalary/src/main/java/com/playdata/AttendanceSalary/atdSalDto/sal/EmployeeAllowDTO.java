@@ -8,8 +8,7 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class EmployeeAllowDTO {
     private Long employeeAllowId;
     private String employeeId;

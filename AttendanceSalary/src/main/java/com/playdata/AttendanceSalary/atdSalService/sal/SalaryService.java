@@ -1,86 +1,93 @@
 package com.playdata.AttendanceSalary.atdSalService.sal;
 
-import com.playdata.AttendanceSalary.atdSalDto.sal.*;
-import com.playdata.AttendanceSalary.atdSalEntity.sal.AllowanceEntity;
-import com.playdata.AttendanceSalary.atdSalEntity.sal.EmployeeAllowEntity;
-import org.springframework.data.repository.query.Param;
-
-import java.math.BigDecimal;
+import com.playdata.AttendanceSalary.atdSalDto.sal.AllowanceResponseDTO;
+import com.playdata.AttendanceSalary.atdSalDto.sal.DeductionResponseDTO;
+import com.playdata.AttendanceSalary.atdSalDto.sal.EmployeeAllowDTO;
+import com.playdata.AttendanceSalary.atdSalDto.sal.PayStubResponseDTO;
+import com.playdata.AttendanceSalary.atdSalDto.sal.PositionResponseDTO;
+import com.playdata.AttendanceSalary.atdSalDto.sal.PositionSalaryStepResponseDTO;
 import java.util.List;
-import java.util.Optional;
 
 
 public interface SalaryService {
-    /// 급여계산 로직
-    public PayStubResponseDTO calculateAndSaveEmployeePayStub(String employeeId);
 
-    List<PositionSalaryStepResponseDTO> findPositionSalaryStepByCompanyCode(String CompanyCode);
-    /// Position  서비스
-    // 회사별 직급 생성
-    PositionResponseDTO insertPosition(PositionResponseDTO requestDTO, String companyCode);
+  List<PayStubResponseDTO> findAllPayStub(String employeeId);
 
-    // 직급 수정
-    void updatePosition(PositionResponseDTO requestDTO);
+  List<PayStubResponseDTO> findAllPayStubAndYearAndMonth(String employeeId, int year, int month);
 
-    // 직급 삭제
-    void deletePosition(PositionResponseDTO requestDTO);
+  /// 급여계산 로직
+  public void calculateAndSaveEmployeePayStub();
 
-    PositionResponseDTO findPosition(Long positionId);
+  List<PositionSalaryStepResponseDTO> findPositionSalaryStepByCompanyCode(String CompanyCode);
 
+  /// Position  서비스
+  // 회사별 직급 생성
+  PositionResponseDTO insertPosition(PositionResponseDTO requestDTO, String companyCode);
 
-    /// PositionSalaryStep 서비스
-    PositionSalaryStepResponseDTO insertPositionSalaryStep(PositionSalaryStepResponseDTO responseDTO);
+  // 직급 수정
+  void updatePosition(PositionResponseDTO requestDTO);
 
-    void updatePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO);
+  // 직급 삭제
+  void deletePosition(PositionResponseDTO requestDTO);
 
-    void deletePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO);
-
-    PositionSalaryStepResponseDTO findPositionSalaryStep(Long positionSalaryId);
-
-    /// Allowance 서비스
-    AllowanceResponseDTO insertAllowance(AllowanceResponseDTO responseDTO);
-
-    void updateAllowance(AllowanceResponseDTO responseDTO);
-
-    void deleteAllowance(AllowanceResponseDTO responseDTO);
-
-    AllowanceResponseDTO findAllowance(Long allowanceId);
-
-    List<AllowanceResponseDTO> findAllowancesByCompanyCode(String CompanyCode);
+  PositionResponseDTO findPosition(Long positionId);
 
 
-    /// Deduction 서비스
-    DeductionResponseDTO insertDeduction(DeductionResponseDTO responseDTO);
+  /// PositionSalaryStep 서비스
+  PositionSalaryStepResponseDTO insertPositionSalaryStep(PositionSalaryStepResponseDTO responseDTO);
 
-    void updateDeduction(DeductionResponseDTO responseDTO);
+  void updatePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO);
 
-    void deleteDeduction(DeductionResponseDTO responseDTO);
+  void deletePositionSalaryStep(PositionSalaryStepResponseDTO responseDTO);
 
-    DeductionResponseDTO findDeduction(Long deductionId);
+  PositionSalaryStepResponseDTO findPositionSalaryStep(Long positionSalaryId);
 
-    List<AllowanceResponseDTO> findAllowancesByPayStubId(Long payStubId);
+  /// Allowance 서비스
+  AllowanceResponseDTO insertAllowance(AllowanceResponseDTO responseDTO);
 
-    List<DeductionResponseDTO> findDeductionsByPayStubId(Long payStubId);
+  void updateAllowance(AllowanceResponseDTO responseDTO);
 
-    /// paystub 서비스
-    PayStubResponseDTO insertPayStub(PayStubResponseDTO responseDTO);
+  void deleteAllowance(AllowanceResponseDTO responseDTO);
 
-    void updateDeduction(PayStubResponseDTO responseDTO);
+  AllowanceResponseDTO findAllowance(Long allowanceId);
 
-    void deleteDeduction(PayStubResponseDTO responseDTO);
+  List<AllowanceResponseDTO> findAllowancesByCompanyCode(String CompanyCode);
 
 
-    PayStubResponseDTO findPayStubByEmployeeId(String employeeId);
+  /// Deduction 서비스
+  DeductionResponseDTO insertDeduction(DeductionResponseDTO responseDTO);
 
-    EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO);
+  void updateDeduction(DeductionResponseDTO responseDTO);
 
-    void updateEmployeeAllow(EmployeeAllowDTO responseDTO);
+  void deleteDeduction(DeductionResponseDTO responseDTO);
 
-    void deleteEmployeeAllow(EmployeeAllowDTO responseDTO);
+  DeductionResponseDTO findDeduction(Long deductionId);
 
-    EmployeeAllowDTO findEmployeeAllowByEmployeeId(Long employeeId);
+  List<AllowanceResponseDTO> findAllowancesByPayStubId(Long payStubId);
 
-    List<PositionResponseDTO> findPositionsByCompanyCode(String companyCode);
+  List<DeductionResponseDTO> findDeductionsByPayStubId(Long payStubId);
+
+  /// paystub 서비스
+  PayStubResponseDTO insertPayStub(PayStubResponseDTO responseDTO);
+
+  void updateDeduction(PayStubResponseDTO responseDTO);
+
+  void deleteDeduction(PayStubResponseDTO responseDTO);
+
+
+  PayStubResponseDTO findPayStubByEmployeeId(String employeeId);
+
+  EmployeeAllowDTO insertEmployeeAllow(EmployeeAllowDTO responseDTO);
+
+  void updateEmployeeAllow(EmployeeAllowDTO responseDTO);
+
+  void deleteEmployeeAllow(EmployeeAllowDTO responseDTO);
+
+  EmployeeAllowDTO findEmployeeAllowByEmployeeId(Long employeeId);
+
+  List<PositionResponseDTO> findPositionsByCompanyCode(String companyCode);
+
+  String findPositionNameByPositionSalaryStepId(Long stepId);
 }
 //
 //    /// Salary 서비스

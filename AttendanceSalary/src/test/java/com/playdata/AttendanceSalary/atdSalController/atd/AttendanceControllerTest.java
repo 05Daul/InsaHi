@@ -12,19 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Rollback(value = false)
 class AttendanceControllerTest {
-    @Autowired
-    private AttendanceService attendanceService;
 
-    @Test
-    public void checkIn() throws IllegalAccessException {
-        String employeeId = "E001";
-        String companyCode= "C001";
+  @Autowired
+  private AttendanceService attendanceService;
+
+  @Test
+  public void checkIn() throws IllegalAccessException {
+    String employeeId = "E001";
+    String companyCode = "C001";
 
 //        AttendanceEntity attendance = attendanceService.checkIn(employeeId);
 
-//        System.out.println("attendance = " + companyCode);
-//        System.out.println("attendance = " + employeeId);
+    System.out.println("attendance = " + companyCode);
+    System.out.println("attendance = " + employeeId);
 //        System.out.println("attendance = " + attendance);
 
-    }
+  }
 }

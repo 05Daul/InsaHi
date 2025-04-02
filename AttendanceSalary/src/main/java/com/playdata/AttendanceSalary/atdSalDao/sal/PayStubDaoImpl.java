@@ -5,6 +5,8 @@ import com.playdata.AttendanceSalary.atdSalRepository.sal.PayStubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class PayStubDaoImpl implements PayStubDao {
@@ -28,5 +30,15 @@ public class PayStubDaoImpl implements PayStubDao {
     @Override
     public PayStubEntity findPayStubByeEmployeeId(String employeeId) {
         return payStubRepository.findByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<PayStubEntity> findAllPayStub(String employeeId) {
+        return payStubRepository.findAllByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<PayStubEntity> findByEmployeeIdAndYearMonth(String employeeId, int year, int month) {
+        return payStubRepository.findAllByEmployeeIdAndYearAndMonth(employeeId, year, month);
     }
 }

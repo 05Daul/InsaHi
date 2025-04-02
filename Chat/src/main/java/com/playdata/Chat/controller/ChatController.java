@@ -29,7 +29,6 @@ public class ChatController {
     public void processMessage(ChatMessage message) {
         // 메시지에 누락된 데이터 채우기(서버에선 해당 사항을 못채움)
         message.setCreatedAt(LocalDateTime.now());        // 현재 시간 추가
-        message.setRead(false);                           // 읽음 여부 기본값 설정
         message.setDeleted(false);
 
         logger.info("WebSocket으로 받은 메시지: {}", message);

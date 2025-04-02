@@ -1,24 +1,32 @@
 package com.playdata.HumanResourceManagement.employee.dao;
 
+import com.playdata.HumanResourceManagement.employee.entity.Authority;
 import com.playdata.HumanResourceManagement.employee.entity.Employee;
-
+import java.time.LocalTime;
 import java.util.List;
-
-import java.time.LocalTime;
-
-import java.time.LocalTime;
 
 public interface EmployeeDAO {
 
-    void insert(Employee employee);
 
-    Employee findById(String employeeId);
+  // 회원 정보 수정
+  void insert(Employee employee);
 
-    List<Employee> findAll();
+  Employee findById(String employeeId);
 
-    ///  김다울 추가
-    LocalTime findCompanyStartTimeByEmployeeId(String employeeId);
+  Employee findByEmployeeId(String employeeId);
 
+  List<Employee> findAll();
 
-    void update(Employee employee);
+  ///  김다울 추가
+  LocalTime findCompanyStartTimeByEmployeeId(String employeeId);
+
+  List<Employee> findByAuthorityList_AuthorityName(String authorityName);
+
+  void addAdminRoleToEmployee(String employeeId);
+
+  List<Authority> findAuthoritiesByCompanyCode(String companyCode);
+
+  void update(Employee employee);
+
+  void removeAdminRoleFromEmployee(String employeeId);
 }

@@ -1,0 +1,32 @@
+server:
+  port: 1002
+
+spring:
+  application:
+    name: Cabinet
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://insahi.cremqog6y49m.ap-northeast-2.rds.amazonaws.com:3306/insahi
+    username: mytest
+    password: playdata
+
+  jpa:
+    show-sql: true
+    hibernate:
+      # ddl-auto: create
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    org:
+      hibernate:
+        sql: debug
+        type:
+          descriptor:
+            sql: trace
+

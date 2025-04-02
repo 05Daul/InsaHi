@@ -1,17 +1,18 @@
 package com.playdata.AttendanceSalary.atdSalDao.sal;
 
+import com.playdata.AttendanceSalary.atdSalDto.sal.AddPersonPositionSalaryDTO;
 import com.playdata.AttendanceSalary.atdSalEntity.sal.PositionSalaryStepEntity;
 import com.playdata.AttendanceSalary.atdSalRepository.sal.PositionSalaryStepRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
 public class PositionSalaryDaoImpl implements PositionSalaryDao {
-    private final PositionSalaryStepRepository positionSalaryStepRepository;
+
+  private final PositionSalaryStepRepository positionSalaryStepRepository;
 
   @Override
   public PositionSalaryStepEntity savePositionSalaryStep(
@@ -29,9 +30,15 @@ public class PositionSalaryDaoImpl implements PositionSalaryDao {
     positionSalaryStepRepository.delete(positionSalaryStepEntity);
   }
 
-    @Override
-    public Optional<PositionSalaryStepEntity> findPositionSalaryById(Long positionSalaryID) {
-        return positionSalaryStepRepository.findByPositionSalaryId(positionSalaryID);
-    }
+  @Override
+  public Optional<PositionSalaryStepEntity> findPositionSalaryById(Long positionSalaryID) {
+    return positionSalaryStepRepository.findByPositionSalaryId(positionSalaryID);
+  }
+
+  @Override
+  public List<AddPersonPositionSalaryDTO> findAllPositionSalaryInfo(String companyCode) {
+    return positionSalaryStepRepository.findAllPositionSalaryInfo(companyCode);
+  }
+
 }
 

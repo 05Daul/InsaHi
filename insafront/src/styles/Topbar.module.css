@@ -73,7 +73,7 @@
 .user {
   font-size: 14px;
   font-weight: bold;
-  color: #fff;
+  color: orange;
 }
 
 /* 로그아웃 버튼 스타일 (알림 스타일과 동일) */
@@ -93,10 +93,18 @@
 
 .notificationDot {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  background-color: royalblue;
+  top: -4px;
+  right: -8px;
+  width: 8px;
+  height: 8px;
+  background-color: greenyellow;
   border-radius: 50%;
+  z-index: 10;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+
+}
+
+.topmenuapproval {
+  position: relative;
+
 }

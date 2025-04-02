@@ -1,0 +1,39 @@
+# 📌 Persistent Volume (PV)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: database-pv
+  labels:
+    project: insahi
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual  # ✅ StorageClass 추가
+  local:
+    path: /uploads/insahi/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - { key: kubernetes.io/hostname, operator: In, values: [ kubernode2 ] }
+
+---
+
+# 📌 Persistent Volume Claim (PVC)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-pvc
+  namespace: insahi  # ✅ 특정 네임스페이스 추가
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual  # ✅ StorageClass 추가
+  volumeName: database-pv   # ✅ 특정 PV를 강제 연결

@@ -30,6 +30,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -80,11 +82,30 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     List<ApprovalLineEntity> savedLines = approvalLineDao.saveAll(approvers);
     approvalLineDao.saveAll(referrers);
+
     if (!savedLines.isEmpty()) {
-      savedLines.get(0).getApprovalFile().setApprovalLineEntities(savedLines);
+      ApprovalLineEntity firstorder = savedLines.get(0);
+      firstorder.getApprovalFile().setApprovalLineEntities(savedLines);
+      // SSE 연결을 기다리기 위해 1초 후에 알림 전송
+      new Timer().schedule(new TimerTask() {
+        @Override
+        public void run() {
+          sseController.notifyUser(firstorder.getEmployeeId(), "결재할 문서가 있습니다.");
+        }
+      }, 1000); // 1초 지연
+
     }
   }
 
+  public boolean hasFirstPending(String employeeId) {
+    List<ApprovalFileEntity> pendingFiles = approvalLineDao.findAllByEmployeeIdAndFirstPending(
+            employeeId)
+        .stream()
+        .map(ApprovalLineEntity::getApprovalFile)
+        .toList();
+
+    return !pendingFiles.isEmpty();
+  }
 /*  // 결재 요청 제출 (나름 리팩토링된 메서드)
   public void submitApproval(SubmitApprovalRequest request) {
     log.info("Submitting Approval for DTO: {}", request);
@@ -164,7 +185,12 @@ public class ApprovalServiceImpl implements ApprovalService {
     log.info("최종 결재자 처리");
 
     String message = "결재가 처리되었습니다. 상태: " + approveOrNot;
-    sseController.notifyUser(lineEntity.getEmployeeId(), message);
+    new Timer().schedule(new TimerTask() {
+      @Override
+      public void run() {
+        sseController.notifyUser(lineEntity.getEmployeeId(), message);
+      }
+    }, 1000); // 1초 지연
 
     log.info("결재 처리 완료: lineId={}, status={}", approvalLineId, approveOrNot);
 
@@ -197,7 +223,12 @@ public class ApprovalServiceImpl implements ApprovalService {
     // 다음 결재자 알림
     ApprovalLineEntity nextLine = findNextApprover(lines, currentIndex);
     if (nextLine != null) {
-      sseController.notifyUser(nextLine.getEmployeeId(), "결재할 문서가 있습니다.");
+      new Timer().schedule(new TimerTask() {
+        @Override
+        public void run() {
+          sseController.notifyUser(nextLine.getEmployeeId(), "결재할 문서가 있습니다.");
+        }
+      }, 1000); // 1초 지연
     }
 
   }
@@ -258,11 +289,22 @@ public class ApprovalServiceImpl implements ApprovalService {
     }
 // 기안자 알림
     if (isLastApprover && status == ApprovalStatus.APPROVED) {
-      sseController.notifyUser(currentLine.getApprovalFile().getEmployeeId(), "문서가 승인되었습니다.");
+      new Timer().schedule(new TimerTask() {
+        @Override
+        public void run() {
+          sseController.notifyUser(currentLine.getApprovalFile().getEmployeeId(), "문서가 승인되었습니다.");
+        }
+      }, 1000); // 1초 지연
     }
 
     if (status == ApprovalStatus.REJECTED) {
-      sseController.notifyUser(currentLine.getApprovalFile().getEmployeeId(), "문서가 반려되었습니다.");
+      new Timer().schedule(new TimerTask() {
+        @Override
+        public void run() {
+          sseController.notifyUser(currentLine.getApprovalFile().getEmployeeId(), "문서가 반려되었습니다.");
+        }
+      }, 1000); // 1초 지연
+
     }
 
   }

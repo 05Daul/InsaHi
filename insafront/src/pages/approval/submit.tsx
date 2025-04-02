@@ -1,83 +1,71 @@
-import {useState, ChangeEvent, FormEvent, useEffect} from 'react';
+// SubmitPage.tsx (최종 리팩토링)
+import {useState, useEffect, ChangeEvent, FormEvent} from 'react';
 import styles from '@/styles/approval/Submit.module.css';
+import {fetchAllEmployees, submitApproval} from '@/services/approvalService';
+import ApproverSelector from '@/component/approval/ApproverSelector';
+import ReferencedSelector from '@/component/approval/ReferencedSelector';
+import FileUploader from '@/component/approval/FileUploader';
 
 interface FormData {
   id: string;
   name: string;
   text: string;
-  approvers: string;
-  referencedIds: string;
 }
 
-const SubmitPage = () => {
-  const [formData, setFormData] = useState<FormData>({
-    id: '',
-    name: '',
-    text: '',
-    approvers: '',
-    referencedIds: ''
-  });
+function SubmitPage() {
+  const [formData, setFormData] = useState<FormData>({id: '', name: '', text: ''});
   const [companyCode, setCompanyCode] = useState<string>('');
-  const [employeeId, setEmployeeIdToken] = useState<string | null>(null);
+  const [employeeId, setEmployeeId] = useState<string | null>(null);
+  const [approvers, setApprovers] = useState<string[]>(['']);
+  const [referencedIds, setReferencedIds] = useState<string[]>(['']);
+  const [files, setFiles] = useState<File[]>([]);
+  const [allUsers, setAllUsers] = useState<{ employeeId: string; name: string }[]>([]);
+  const [approverErrors, setApproverErrors] = useState<string[]>(['']);
+  const [referencedErrors, setReferencedErrors] = useState<string[]>(['']);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedEmployeeId = localStorage.getItem('employeeId') || 'defaultId';
-      const storedcompanyCode = localStorage.getItem('companyCode') || 'defaultId';
-      setEmployeeIdToken(storedEmployeeId);
-      setCompanyCode(storedcompanyCode);
-    }
+    const storedEmployeeId = localStorage.getItem('employeeId') || '';
+    const storedCompanyCode = localStorage.getItem('companyCode') || '';
+    setEmployeeId(storedEmployeeId);
+    setCompanyCode(storedCompanyCode);
+
+    fetchAllEmployees(storedCompanyCode)
+    .then(setAllUsers)
+    .catch(err => console.error('사용자 목록 불러오기 실패:', err));
   }, []);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const {name, value} = e.target;
-    setFormData((prevData) => ({...prevData, [name]: value}));
-  };
+    setFormData(prev => ({...prev, [name]: value}));
+  }
 
-  const [files, setFiles] = useState<File[]>([]);
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const fileList = Array.from(e.target.files);
-      setFiles(fileList);
-    }
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    const isApproverValid = approvers.every(v => v.trim() !== '');
+    const isReferencedValid = referencedIds.every(v => v.trim() !== '');
 
-    const formPayload = new FormData();
+    if (!isApproverValid || !isReferencedValid) {
+      setApproverErrors(approvers.map(v => (v.trim() === '' ? '결재자 ID를 입력하세요.' : '')));
+      setReferencedErrors(referencedIds.map(v => (v.trim() === '' ? '참조자 ID를 입력하세요.' : '')));
+      alert('결재자 및 참조자 ID를 모두 입력해주세요.');
+      return;
+    }
 
     const jsonData = {
-      id: formData.id,
-      name: formData.name,
-      text: formData.text,
-      companyCode: companyCode,
-      employeeId: employeeId,
-      approvers: formData.approvers.split(',').map(item => item.trim()),
-      referencedIds: formData.referencedIds.split(',').map(item => item.trim())
+      ...formData,
+      companyCode,
+      employeeId,
+      approvers: approvers.filter(v => v.trim() !== ''),
+      referencedIds: referencedIds.filter(v => v.trim() !== '')
     };
-    formPayload.append('jsonData', JSON.stringify(jsonData));
-
-    files.forEach(file => {
-      formPayload.append('files', file);
-    });
 
     try {
-      const response = await fetch('http://127.0.0.1:1005/approval/submit', {
-        method: 'POST',
-        body: formPayload
-      });
-
-      if (response.ok) {
-        alert('성공!');
-      } else {
-        alert(`실패! 상태코드: ${response.status}`);
-      }
+      const status = await submitApproval(jsonData, files);
+      alert(status === 200 ? '성공!' : `실패! 상태코드: ${status}`);
     } catch (error) {
-      console.error('에러:', error);
+      console.error('문서 상신 오류:', error);
     }
-  };
+  }
 
   return (
       <div className={styles.submitPageContainer}>
@@ -107,39 +95,23 @@ const SubmitPage = () => {
               />
             </div>
 
-            <div className={styles.submitFormGroup}>
-              <label className={styles.submitLabel}>결재자 (쉼표로 구분)</label>
-              <input
-                  type="text"
-                  name="approvers"
-                  className={styles.submitInput}
-                  value={formData.approvers}
-                  onChange={handleInputChange}
-                  placeholder="예: user1,user2"
-              />
-            </div>
+            <ApproverSelector
+                approvers={approvers}
+                setApprovers={setApprovers}
+                allUsers={allUsers}
+                approverErrors={approverErrors}
+                setApproverErrors={setApproverErrors}
+            />
 
-            <div className={styles.submitFormGroup}>
-              <label className={styles.submitLabel}>참조자 (쉼표로 구분)</label>
-              <input
-                  type="text"
-                  name="referencedIds"
-                  className={styles.submitInput}
-                  value={formData.referencedIds}
-                  onChange={handleInputChange}
-                  placeholder="예: ref1,ref2"
-              />
-            </div>
+            <ReferencedSelector
+                referencedIds={referencedIds}
+                setReferencedIds={setReferencedIds}
+                allUsers={allUsers}
+                referencedErrors={referencedErrors}
+                setReferencedErrors={setReferencedErrors}
+            />
 
-            <div className={styles.submitFormGroup}>
-              <label className={styles.submitLabel}>첨부파일</label>
-              <input
-                  type="file"
-                  className={styles.submitInput}
-                  multiple
-                  onChange={handleFileChange}
-              />
-            </div>
+            <FileUploader files={files} setFiles={setFiles}/>
 
             <div className={styles.submitButtonGroup}>
               <button type="submit" className={styles.submitButton}>문서 상신</button>
@@ -148,6 +120,6 @@ const SubmitPage = () => {
         </div>
       </div>
   );
-};
+}
 
 export default SubmitPage;

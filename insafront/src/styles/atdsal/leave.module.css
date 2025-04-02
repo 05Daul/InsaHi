@@ -1,0 +1,268 @@
+/* Layout.module.css */
+
+.leaveContainer {
+  padding: 1.5rem;
+  max-width: 80%;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.leaveHeader {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+
+.leaveBox {
+  border: 1px solid #d0d7de;
+  background-color: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+  line-height: 1.8;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.leaveButtonGroup {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  grid-template-columns: repeat(4, minmax(20%, auto));
+}
+
+.leaveButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.leaveButton1 {
+  grid-column: 1/2;
+}
+
+.leaveButton2 {
+  grid-column: 2/3;
+}
+
+.leaveButton3 {
+  grid-column: 3/5;
+}
+
+.leaveBackButton {
+  background-color: #e5e7eb;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.leaveCard {
+  border: 1px solid #e5e7eb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+}
+
+.leaveStatusFilter {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.leavePagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.leaveForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.leaveInput {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.leaveTextarea {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.leaveSubmitButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  font-weight: 500;
+  background-color: #3b82f6;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.leaveSubmitButton:hover {
+  background-color: #2563eb;
+}
+
+.leaveSubmitButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+
+.leaveStatusFilter {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+
+}
+
+.leaveStatusFilterButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  background-color: #e5e7eb;
+  color: #111827;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.leaveStatusFilterButton:hover {
+  background-color: #d1d5db;
+}
+
+.leaveStatusFilterButton.active {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+
+}
+
+.leaveDetailWrapper {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  max-width: 1400px;
+  padding: 2rem;
+  justify-content: space-between;
+  gap: 2rem;
+
+  /*padding: 10%;*/
+  margin: 0 auto;
+}
+
+.leaveDetailLeft {
+  flex: 1;
+  min-width: 50%;
+  grid-column: 1 / 7; /* 6칸 */
+}
+
+.leaveDetailRight {
+  flex: 1;
+  min-width: 50%;
+  grid-column: 7 / 13; /* 6칸 */
+}
+
+.leaveCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+}
+
+.leaveCardInfo {
+  display: flex;
+  gap: 2rem;
+  flex: 1;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.leaveCardStatus {
+  min-width: 220px;
+  font-weight: bold;
+}
+
+.leaveCardButton {
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.leaveSubmitWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.leaveSubmitLeft {
+  flex: 1;
+  min-width: 50%;
+  max-width: 500px;
+}
+
+.leaveSubmitRight {
+  flex: 1;
+  min-width: 50%;
+}
+
+.leaveHistoryBox {
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.leaveSubmitCard {
+  display: grid;
+  /*grid-template-columns: auto auto auto auto;*/
+  grid-template-rows: repeat(3, minmax(25%, auto));
+  gap: 0.25rem 0;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  font-size: 0.95rem;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.leaveSubmitCardDate {
+  /*grid-column: 1 / 2;*/
+  grid-row: 1 / 2;
+}
+
+.leaveSubmitCardStatus {
+  /*grid-column: 2 / 3;*/
+  grid-row: 2 / 3;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.leaveSubmitCardReason {
+  /*grid-column: 2 / 2;*/
+  grid-row: 3 / 4;
+  color: #374151;
+  font-size: 0.9rem;
+}
+

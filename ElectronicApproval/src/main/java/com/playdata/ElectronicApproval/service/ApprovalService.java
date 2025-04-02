@@ -16,6 +16,8 @@ public interface ApprovalService {
 
   void submitApproval(SubmitApprovalRequest request, List<FileDTO> uploadedFiles);
 
+  boolean hasFirstPending(String employeeId);
+
   void approveUpdateStatus(String approvalLineId, ApprovalStatus approveOrNot, String reason);
 
   Page<ApprovalFileDTO> getApprovalFiles(String employeeId, int menu, Pageable pageable);

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmployeeUpdateDTO {
 
-    private String employeeId;
-    private String name;
-    private String email;
-    private String phoneNumber;
+  private String email;
+  private String phoneNumber;
 }

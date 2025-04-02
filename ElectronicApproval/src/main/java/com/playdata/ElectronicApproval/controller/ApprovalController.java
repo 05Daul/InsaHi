@@ -13,6 +13,7 @@ import com.playdata.ElectronicApproval.service.ApprovalService;
 import com.playdata.ElectronicApproval.service.FileDownloadService;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -114,6 +115,12 @@ public class ApprovalController {
 
   }
 
+  @GetMapping("/has-pending/{employeeId}")
+  public Map<String, Boolean> hasFirstPendingDocument(@PathVariable String employeeId) {
+    boolean hasPending = approvalService.hasFirstPending(employeeId);
+    return Map.of("hasPending", hasPending);
+  }
+
 //  @GetMapping("/list/{employeeId}/{menu}") // 결재 문서 조회
 //  public List<ApprovalFileDTO> getApprovalFiles(@PathVariable("employeeId") String employeeId,
 //      @PathVariable("menu") int menu) {
@@ -122,8 +129,8 @@ public class ApprovalController {
 //  }
 
   @GetMapping("/list/{employeeId}/{menu}")
-  public Page<ApprovalFileDTO> getDocuments(@PathVariable String employeeId,
-      @PathVariable int menu,
+  public Page<ApprovalFileDTO> getDocuments(@PathVariable("employeeId") String employeeId,
+      @PathVariable("menu") int menu,
       Pageable pageable) {
     return approvalService.getApprovalFiles(employeeId, menu, pageable);
   }

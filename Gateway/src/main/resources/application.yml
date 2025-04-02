@@ -9,6 +9,8 @@ jwt:
   token-validity-in-second: 86400000 #60*60*24*1000
 
 spring:
+  profiles:
+    active: dev   # default 환경: dev
   application:
     name: Gateway
 
@@ -33,35 +35,61 @@ spring:
             exposed-headers:
               - Authorization
 
-
-
-
       routes:
         - id: HumanResourceManagement
           uri: http://127.0.0.1:1010
           predicates:
             - Path=/employee/**
-            - Method=GET
+            - Method=POST
           filters:
-#            - JwtAuthorizationFilter
-             name: JwtAuthorizationFilter
+            #            - JwtAuthorizationFilter
+            name: JwtAuthorizationFilter
+        - id: static-files
+          uri: file:///C:/fullstack7/work/final-project/InsaHi/HumanResourceManagement/uploads/profile/
+          predicates:
+            - Path=/uploads/profile/**
 
 
         - id: HumanResourceManagement
           uri: http://127.0.0.1:1010
           predicates:
             - Path=/employee/**
-
 
         - id: HumanResourceManagement
           uri: http://127.0.0.1:1010
           predicates:
             - Path=/company/**
 
+        - id: HumanResourceManagement
+          uri: http://127.0.0.1:1010
+          predicates:
+            - Path=/department/**
+
         - id: Chat
           uri: http://127.0.0.1:1004
           predicates:
             - Path=/chat/**
+
+        - id: AttendanceSalary
+          uri: http://127.0.0.1:1000
+          predicates:
+            - Path=/atdsal/**
+        - id: ElectronicApproval
+          uri: http://127.0.0.1:1005
+          predicates:
+            - Path=/approval/**
+          filters:
+            - PreserveHostHeader
+
+        - id: AttendanceSalary
+          uri: http://127.0.0.1:1000
+          predicates:
+            - Path=/leave/**
+
+  #        - id: AttendanceSalary
+  #          uri: http://127.0.0.1:1000
+  #          predicates:
+  #            - Path=/atdsal/**
 
 
 

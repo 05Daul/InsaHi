@@ -7,6 +7,8 @@ server:
   port: 1010
 
 spring:
+  profiles:
+    active: dev   # default 환경: dev
   security:
     user:
       name: admin
@@ -29,6 +31,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
+      #      ddl-auto: create
       ddl-auto: update
     defer-datasource-initialization: true
     properties:
@@ -48,6 +51,9 @@ spring:
           starttls:
             enable: true
             required: true
+
+file:
+  upload-dir: C:/fullstack7/work/final-project/InsaHi/HumanResourceManagement/uploads/profile/
 
 #eureka:
 #  client:

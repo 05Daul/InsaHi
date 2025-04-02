@@ -21,4 +21,11 @@ public class AnnualLeaveDAOImpl implements AnnualLeaveDAO {
   public void save(AnnualLeaveEntity leave) {
     annualLeaveRepository.save(leave);
   }
+
+  @Override
+  public Optional<AnnualLeaveEntity> findLatestByEmployeeId(String employeeId) {
+    return annualLeaveRepository.findTopByEmployeeIdOrderByCreateDateDesc(employeeId);
+  }
+
+
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +16,6 @@ public class ChatMessageResponse {
     private String content;
     private String imageUrl;
     private LocalDateTime createdAt;
+    private boolean deleted;
+    private List<String> readBy;
 }

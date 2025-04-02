@@ -2,8 +2,10 @@ server:
   port: 1005
 
 spring:
+  profiles:
+    active: dev
   application:
-    name: ElectronicApproval
+    name: ElectlronicApproval
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,7 +16,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      #      ddl-auto: create
+      #ddl-auto: create
       ddl-auto: update
 
     properties:
@@ -37,5 +39,5 @@ logging:
             sql: trace
 
 file:
-  dir: C:\fullstack7\downloads
+  dir: /Users/insahiTest
 

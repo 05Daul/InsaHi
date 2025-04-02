@@ -1,0 +1,121 @@
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: Arial, sans-serif;
+}
+
+.section-title {
+  margin-top: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.user-list {
+  margin-top: 15px;
+}
+
+.admin-list {
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.department-section {
+  margin-top: 20px;
+}
+
+.department-title {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.user-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.user-card .department {
+  color: #888;
+  font-size: 13px;
+  margin-left: 10px;
+  flex: 1;
+}
+
+.action-button {
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.action-button.grant {
+  background-color: #d0f0d0;
+}
+
+.action-button.revoke {
+  background-color: #f0d0d0;
+}
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  width: 50%;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+/* ✅ 카드 박스 스타일 */
+.card1 {
+  width: 50%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+
+/* ✅ 제목 간격 */
+.admin-section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  background-color: #3b82f6;
+
+}
+
+/* ✅ 사용자 리스트는 카드 내부에서 flex로 표시 */
+.admin-list1 {
+  display: flex;
+  flex-direction: column; /* 또는 row로도 가능 */
+  gap: 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 8px;
+}
+
+.activePage {
+  font-weight: bold;
+  background-color: #eee;
+}
+

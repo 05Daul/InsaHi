@@ -4,6 +4,8 @@ import MainLayout from "@/component/MainLayout";
 import {useEffect} from "react";
 import {useRouter} from "next/router";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // QueryClient 생성
 const queryClient = new QueryClient();
@@ -33,6 +35,7 @@ export default function App({Component, pageProps}: AppProps) {
         ) : (
             <MainLayout>
               <Component {...pageProps} />
+              <ToastContainer position="top-right" autoClose={3000} hideProgressBar/>
             </MainLayout>
         )}
       </QueryClientProvider>

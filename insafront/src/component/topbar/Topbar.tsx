@@ -1,62 +1,85 @@
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import Sidebar1 from "../sidebar/Sidebar1";
-import Sidebar2 from "../sidebar/Sidebar2";
-import Sidebar4 from "../sidebar/Sidebar4";
-import Sidebar5 from "../sidebar/Sidebar5";
-import Sidebar6 from "../sidebar/Sidebar6";
-
+import {useRouter} from "next/router";
 
 import styles from "@/styles/Topbar.module.css";
-import {useRouter} from "next/router";
 import EmployeeInfoAction from "@/api/mypage/employeeinfoaction";
-
 import useSSE from "@/component/approval/useSSE";
 import Toast from "@/component/approval/Toast";
 
-const TopBar = () => {
-  const [activeSidebar, setActiveSidebar] = useState<string | null>(null);
+type TopBarProps = {
+  activeSidebar: string | null;
+  setActiveSidebar: (sidebar: string | null) => void;
+};
+
+// JWT 디코딩 함수
+function decodeJWT(token: string) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+        atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error("토큰 디코딩 실패:", error);
+    return null;
+  }
+}
+
+const TopBar = ({activeSidebar, setActiveSidebar}: TopBarProps) => {
   const [hasNotification, setHasNotification] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [employee, setEmployee] = useState<employeeInfoDTO | null>(null);
+  const [employeeIdToken, setEmployeeIdToken] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const router = useRouter();
 
-  // 전자결재 - 유저 정보 가져오기 (employeeId)
   const employeeId =
       typeof window !== "undefined" ? localStorage.getItem("employeeId") : null;
 
-  // 전자결재 - SSE 알림 수신 (알림 상태 갱신 + 토스트)
-  useSSE(employeeId, (message) => {
-    setHasNotification(true); // 뱃지 표시
-    setToastMessage(message); // 토스트 알림 표시
+  // SSE 알림 수신
+  useSSE(employeeId, async (message) => {
+    console.log("📩 메시지 수신:", message);
+    setToastMessage(message);
+
+    // 결재할 문서 존재 여부 API 호출
+    const res = await fetch(`http://127.0.0.1:1006/approval/has-pending/${employeeId}`);
+    const {hasPending} = await res.json();
+
+    setHasNotification(hasPending); // 🔴 또는 ❌ 상태 갱신
+    // 모든 페이지에서 이 이벤트로 반응할 수 있음
+    window.dispatchEvent(new Event("sse-notify"));
   });
-
-  // 전자결재 - 알림 클릭 시 핸들러
-  // const handleNotificationClick = () => {
-  //   setHasNotification(false);
-  //   router.push("/notifications"); // 알림 센터 페이지로 이동
-  // };
-
-
-  // 로그아웃 핸들러
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("employeeId");
     localStorage.removeItem("companyCode");
+    localStorage.removeItem("auth");
     alert("로그아웃 되었습니다.");
     router.push("/");
   };
-  const [employee, setEmployee] = useState<employeeInfoDTO | null>(null);
-  const [employeeIdToken, setEmployeeIdToken] = useState<string | null>(null); // 로그인한 사용자의 ID 가져오기
-
 
   useEffect(() => {
-    // 클라이언트에서만 실행되도록 보장
     if (typeof window !== "undefined") {
       const storedEmployeeId = localStorage.getItem("employeeId") || "defaultId";
+      const storedAuthorityName = localStorage.getItem("authorityName")
       setEmployeeIdToken(storedEmployeeId);
+
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        const decoded = decodeJWT(token);
+        if (decoded && decoded.auth && decoded.auth.includes("ROLE_ADMIN")) {
+          setIsAdmin(true);
+        }
+      }
     }
   }, []);
+
   useEffect(() => {
     if (employeeIdToken) {
       const fetchData = async () => {
@@ -70,72 +93,78 @@ const TopBar = () => {
       fetchData();
     }
   }, [employeeIdToken]);
+  useEffect(() => {
+    const checkNotification = async () => {
+      if (!employeeId) return;
 
+      const res = await fetch(`http://127.0.0.1:1006/approval/has-pending/${employeeId}`);
+      const {hasPending} = await res.json();
+
+      setHasNotification(hasPending);
+    };
+
+    checkNotification();
+  }, [employeeId]);
 
   return (
       <div className={styles.topcontainer}>
-        {/* 헤더 */}
         <header className={styles.toptopbar}>
           <nav className={styles.topnav}>
-            {/* 왼쪽 로고 */}
             <Link href={"/mypage/MyPage"} className={styles.toplogo}>인사 HI</Link>
 
-            {/* 중앙 메뉴 */}
             <ul className={styles.topmenu}>
               <li>
-                <Link
-                    href="#"
-                    className={styles.topmenulink}
-                    onClick={() => setActiveSidebar("sidebar1")}
-                >
+                <Link href="/attendance/attendancelog" className={styles.topmenulink}
+                      onClick={() => setActiveSidebar(activeSidebar === "sidebar1" ? null : "sidebar1")}>
                   근태/급여
                 </Link>
               </li>
-              <li>
-                <Link
-                    href="#"
-                    className={styles.topmenulink}
-                    onClick={() => setActiveSidebar("sidebar2")}
-                >
+              <li className={styles.topmenuapproval}>
+                <Link href="/approval/submit" className={styles.topmenulink}
+                      onClick={() => setActiveSidebar(activeSidebar === "sidebar2" ? null : "sidebar2")}>
                   전자결재
                 </Link>
                 {hasNotification && <span className={styles.notificationDot}/>}
               </li>
               <li>
-                <Link
-                    href="#"
-                    className={styles.topmenulink}
-                    onClick={() => setActiveSidebar("sidebar3")}
-                >
+                <Link href="#" className={styles.topmenulink}
+                      onClick={() => setActiveSidebar(activeSidebar === "sidebar3" ? null : "sidebar3")}>
                   주소록
                 </Link>
               </li>
               <li>
-                <Link
-                    href="#"
-                    className={styles.topmenulink}
-                    onClick={() => setActiveSidebar("sidebar4")}
-                >
+                <Link href="#" className={styles.topmenulink}
+                      onClick={() => setActiveSidebar(activeSidebar === "sidebar4" ? null : "sidebar4")}>
                   회의실
                 </Link>
               </li>
-              <li><Link href="#"
-                        className={styles.topmenulink}
-                        onClick={() => setActiveSidebar("sidebar5")}
-              >게시판</Link></li>
-              <li><Link href="#"
-                        className={styles.topmenulink}
-                        onClick={() => setActiveSidebar("sidebar6")}
-              >인사관리</Link></li>
+              <li>
+                <Link href="#" className={styles.topmenulink}
+                      onClick={() => setActiveSidebar(activeSidebar === "sidebar5" ? null : "sidebar5")}>
+                  게시판
+                </Link>
+              </li>
+              {isAdmin && (
+
+                  <li>
+                    <Link href="/admin/RegisterEmployee" className={styles.topmenulink}
+                          onClick={() => setActiveSidebar(activeSidebar === "sidebar6" ? null : "sidebar6")}>
+                      인사관리
+                    </Link>
+                  </li>
+              )}
+              {isAdmin && (
+                  <li>
+                    <Link href="/setting/setting" className={styles.topmenulink}
+                          onClick={() => setActiveSidebar(activeSidebar === "sidebar7" ? null : "sidebar7")}>
+                      설정
+                    </Link>
+                  </li>
+              )}
             </ul>
 
-            {/* 오른쪽 아이콘 */}
             <div className={styles.topicons}>
-              <Link
-                  href="/chat"
-                  className={styles.topmenulink}
-                  style={{ cursor: "pointer" }}
-              >
+              <Link href="/chat" className={styles.topmenulink} style={{cursor: "pointer"}}>
                 채팅
               </Link>
               <Link href={"/mypage/MyPage"} className={styles.user}>
@@ -148,19 +177,9 @@ const TopBar = () => {
           </nav>
         </header>
 
-        {/* 조건부 Sidebar 렌더링 */}
-        <div className={styles.topsidebarcontainer}>
-          {activeSidebar === "sidebar1" && <Sidebar1/>}
-          {activeSidebar === "sidebar2" && <Sidebar2/>}
-          {activeSidebar === "sidebar4" && <Sidebar4/>}
-          {activeSidebar === "sidebar5" && <Sidebar5/>}
-          {activeSidebar === "sidebar6" && <Sidebar6/>}
-        </div>
-        {/* 전자결재 - Toast 알림 */}
         {toastMessage && (
             <Toast message={toastMessage} onClose={() => setToastMessage(null)}/>
         )}
-
       </div>
   );
 };

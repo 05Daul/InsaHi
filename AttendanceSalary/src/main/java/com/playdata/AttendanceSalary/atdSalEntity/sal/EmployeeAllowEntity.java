@@ -25,14 +25,18 @@ public class EmployeeAllowEntity {
     @Column(name = "allowance_type", nullable = false)
     private AllowanceType allowanceType;
 
+//        @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "pay_stub_id")
+//    private PayStubEntity payStub;
+
     @Column(nullable = false)
     private BigDecimal amount;
-
-    EmployeeAllowDTO toDTO() {
-        EmployeeAllowDTO dto = new EmployeeAllowDTO();
-        dto.setEmployeeId(employeeId);
-        dto.setAllowanceType(allowanceType);
-        dto.setAmount(amount);
-        return dto;
-    }
+//
+//    EmployeeAllowDTO toDTO() {
+//        EmployeeAllowDTO dto = new EmployeeAllowDTO();
+//        dto.setEmployeeId(employeeId);
+//        dto.setAllowanceType(allowanceType);
+//        dto.setAmount(amount);
+//        return dto;
+//    }
 }

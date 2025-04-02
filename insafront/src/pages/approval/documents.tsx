@@ -41,11 +41,18 @@ const DocumentsPage = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const employeeId = useLocalStorage('employeeId', 'defaultId');
 
-  // SSE 알림 수신
-  useSSE(employeeId, (msg) => {
-    setToastMessage(msg);
-    refetch();
-  });
+  // SSE 알림 수신 - useSSE() 제거
+  useEffect(() => {
+    const handleSseNotify = () => {
+      refetch(); // 문서 리스트 다시 가져오기
+    };
+
+    window.addEventListener('sse-notify', handleSseNotify);
+
+    return () => {
+      window.removeEventListener('sse-notify', handleSseNotify);
+    };
+  }, []);
 
   const {
     data,
@@ -65,7 +72,7 @@ const DocumentsPage = () => {
       const sortParam = `&sort=createdAt,${sortOrder}`;
 
       const response = await fetch(
-          `http://127.0.0.1:1005/approval/list/${employeeId}/${menu}?page=${pageParam}&size=10${statusParam}${sortParam}`
+          `http://127.0.0.1:1006/approval/list/${employeeId}/${menu}?page=${pageParam}&size=10${statusParam}${sortParam}`
       );
 
       if (!response.ok) throw new Error('문서 목록 불러오기 실패');

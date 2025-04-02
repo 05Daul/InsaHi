@@ -17,6 +17,10 @@
   /*min-height: calc(100vh - 60px); !* 탑바 높이 빼고 컨텐츠 영역 */
 }
 
+.sidebarcontainer {
+  display: flex;
+}
+
 .fullwidth {
   display: flex;
   flex-direction: column; /*추가*/
@@ -32,12 +36,25 @@
   display: flex;
   flex-direction: column; /*추가*/
   /*flex: 1;*/
-  margin-left: 250px; /* 사이드바 공간 확보 */
+  /*margin-left: 250px; !* 사이드바 공간 확보 *!*/
+  margin-left: 0;
+
   /*padding: 20px;*/
   padding-top: 80px; /*탑바 공간 확보 */
+  transition: margin-left 0.3s ease;
+
 
   /*background-color: #213412;*/
   /*min-height: calc(100vh - 60px); !* 탑바 높이 빼고 컨텐츠 영역 */
 
 }
+
+.withSidebarOpen {
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
+  margin-left: 250px; /* 사이드바 너비만큼 밀기 */
+  transition: margin-left 0.3s ease;
+}
+
 

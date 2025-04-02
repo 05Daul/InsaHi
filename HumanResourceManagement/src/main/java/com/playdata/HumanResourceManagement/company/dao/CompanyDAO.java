@@ -1,11 +1,14 @@
 package com.playdata.HumanResourceManagement.company.dao;
 
 import com.playdata.HumanResourceManagement.company.entity.Company;
-import org.springframework.stereotype.Component;
+import java.util.Optional;
 
 
-public class CompanyDAO {
-    public void insert(Company entity) {
+public interface CompanyDAO {
 
-    }
+  public void insert(Company entity);
+
+  Company insertStartTime(String companyCode);
+
+  Optional<Company> findByCompanyCode(String companyCode);
 }

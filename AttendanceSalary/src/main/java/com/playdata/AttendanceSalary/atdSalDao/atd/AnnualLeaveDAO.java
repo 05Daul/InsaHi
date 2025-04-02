@@ -8,4 +8,7 @@ public interface AnnualLeaveDAO {
   Optional<AnnualLeaveEntity> findById(Long annualLeaveId);
 
   void save(AnnualLeaveEntity leave);
+
+  Optional<AnnualLeaveEntity> findLatestByEmployeeId(String employeeId);
+
 }

@@ -1,12 +1,12 @@
 package com.playdata.AttendanceSalary.atdSalDto.sal;
 
 
-import com.playdata.AttendanceSalary.atdSalEntity.sal.PayStubEntity;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.util.List;
 @Data
 public class PayStubResponseDTO {
     private Long payStubId;
@@ -20,18 +20,21 @@ public class PayStubResponseDTO {
     private String companyCode;
     private String employeeId;
 
-    public PayStubEntity toEntity() {
-        PayStubEntity payStubEntity = new PayStubEntity();
-        payStubEntity.setPayStubId(payStubId);
-        payStubEntity.setPaymentDate(paymentDate);
-        payStubEntity.setBaseSalary(baseSalary);
-        payStubEntity.setTotalAllowances(totalAllowances);
-        payStubEntity.setOvertimePay(overtimePay);
-        payStubEntity.setTotalPayment(totalPayment);
-        payStubEntity.setTotalDeductions(totalDeductions);
-        payStubEntity.setNetPay(netPay);
-        payStubEntity.setCompanyCode(companyCode);
-        payStubEntity.setEmployeeId(employeeId);
-        return payStubEntity;
-    }
+    private List<AllowanceResponseDTO> allowances;
+    private List<DeductionResponseDTO> deductions;
+
+//    public PayStubEntity toEntity() {
+//        PayStubEntity payStubEntity = new PayStubEntity();
+//        payStubEntity.setPayStubId(payStubId);
+//        payStubEntity.setPaymentDate(paymentDate);
+//        payStubEntity.setBaseSalary(baseSalary);
+//        payStubEntity.setTotalAllowances(totalAllowances);
+//        payStubEntity.setOvertimePay(overtimePay);
+//        payStubEntity.setTotalPayment(totalPayment);
+//        payStubEntity.setTotalDeductions(totalDeductions);
+//        payStubEntity.setNetPay(netPay);
+//        payStubEntity.setCompanyCode(companyCode);
+//        payStubEntity.setEmployeeId(employeeId);
+//        return payStubEntity;
+//    }
 }

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AnnualLeaveUsageEntity extends DateEntity {
 
   @Id
@@ -18,7 +19,7 @@ public class AnnualLeaveUsageEntity extends DateEntity {
   @Column(nullable = false)
   private Long annualLeaveUsageId; //
 
-  private Long AnnualLeaveId;
+  private Long annualLeaveId;
 
   @Column(nullable = false)
   private LocalDate startDate; //시작일
@@ -35,12 +36,6 @@ public class AnnualLeaveUsageEntity extends DateEntity {
   private String employeeId;
 
   private String companyCode;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id")
-//    private Employee employee;
-//
-//    @Column(name = "id")
-//    private Long id;
+
 
 }

@@ -1,0 +1,120 @@
+server:
+  port: 1006
+
+
+jwt:
+  header: Authorization
+  secret: 4Hirx6BNM+kTbhOxA4cHCUz/BF0B0tokIgTRs2d5ORn3zF8fPAESoo/jXcUiBnWYoZWrxgunF3l3gvGCUi6JGQ==
+  token-validity-in-second: 86400000
+
+spring:
+  application:
+    name: Gateway
+
+  cloud:
+    gateway:
+      default-filters:
+        # 헤더의 중복을 제거하기 위한 필터
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            #테스트용 *                   #'*'           #
+            allowedOrigins: http://13.209.196.244:3000
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
+            exposed-headers:
+              - Authorization
+
+      routes:
+        - id: HumanResourceManagement
+          uri: http://hrm-service:8080
+          predicates:
+            - Path=/employee/**
+            - Method=POST
+          filters:
+            #            - JwtAuthorizationFilter
+            name: JwtAuthorizationFilter
+
+        - id: static-files
+          uri: file:/uploads/insahi/profile
+          predicates:
+            - Path=/uploads/profile/**
+
+
+        - id: HumanResourceManagement
+          uri: http://hrm-service:8080
+          predicates:
+            - Path=/employee/**
+
+        - id: HumanResourceManagement
+          uri: http://hrm-service:8080
+          predicates:
+            - Path=/company/**
+
+        - id: HumanResourceManagement
+          uri: http://hrm-service:8080
+          predicates:
+            - Path=/department/**
+
+        - id: Chat
+          uri: http://chat-service:8080
+          predicates:
+            - Path=/chat/**
+
+        - id: AttendanceSalary
+          uri: http://atdsal-service:8080
+          predicates:
+            - Path=/atdsal/**
+
+        - id: ElectronicApproval
+          uri: http://electronicepproval-service:8080
+          predicates:
+            - Path=/approval/**
+          filters:
+            - PreserveHostHeader
+
+        - id: AttendanceSalary
+          uri: http://atdsal-service:8080
+          predicates:
+            - Path=/leave/**
+
+  #        - id: AttendanceSalary
+  #          uri: http://127.0.0.1:1000
+  #          predicates:
+  #            - Path=/atdsal/**
+
+
+
+
+
+  jpa:
+    show-sql: true
+    hibernate:
+      # ddl-auto: create
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  security:
+    user:
+      roles:
+        - ROLE_ADMIN
+        - ROLE_USER
+logging:
+  level:
+    org:
+      hibernate:
+        sql: debug
+        type:
+          descriptor:
+            sql: trace
+

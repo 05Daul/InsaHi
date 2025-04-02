@@ -21,5 +21,5 @@ public class ChatRoom {
     private List<String> name;
     private String creatorName;
     private LocalDateTime createdAt;
-
+    private String LastMessage;
 }

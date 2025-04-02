@@ -12,7 +12,7 @@ export default async function EmployeeInfoAction(employeeId: string): Promise<em
         {
           method: "GET",
           headers: {
-            "Content-Type": "application/json",
+            // "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
           },
         });

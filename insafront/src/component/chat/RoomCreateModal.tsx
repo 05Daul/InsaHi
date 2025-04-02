@@ -1,177 +1,197 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 
 interface RoomCreateModalProps {
-    visible: boolean;
-    onClose: () => void;
-    onRoomCreated: () => void;
-    currentUserName: string | null;
+  visible: boolean;
+  onClose: () => void;
+  onRoomCreated: () => void;
+  currentUserName: string | null;
+  currentUserId: string | null;
 }
 
-const RoomCreateModal: React.FC<RoomCreateModalProps> = ({ visible, onClose, onRoomCreated, currentUserName }) => {
-    const [roomName, setRoomName] = useState("");
-    const [members, setMembers] = useState<string[]>([]);
-    const [allUsers, setAllUsers] = useState<{ employeeId: string; name: string }[]>([]);
+const RoomCreateModal: React.FC<RoomCreateModalProps> = ({
+                                                           visible,
+                                                           onClose,
+                                                           onRoomCreated,
+                                                           currentUserName,
+                                                           currentUserId
+                                                         }) => {
+  const [roomName, setRoomName] = useState("");
+  const [members, setMembers] = useState<string[]>([]);
+  const [allUsers, setAllUsers] = useState<{ employeeId: string; name: string }[]>([]);
 
-    useEffect(() => {
-        if (!visible) return;
+  useEffect(() => {
+    if (!visible) return;
 
-        let token = localStorage.getItem("accessToken");
+    let token = localStorage.getItem("accessToken");
 
-        //  'Bearer '이 없는 경우 자동으로 추가
-        if (token && !token.startsWith("Bearer ")) {
-            token = `Bearer ${token}`;
-        }
-
-        if (!token) {
-            console.error("❌ 토큰이 없습니다. 회원 목록 요청을 중단합니다.");
-            return; // ❌ 토큰이 없으면 요청을 보내지 않음
-        }
-
-        fetch("http://127.0.0.1:1006/employee/all", {
-            method: "GET",
-            headers: {
-                Authorization: token,  // ✅ 토큰이 있을 때만 요청
-                "Content-Type": "application/json"
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error("❌ 인증 실패 또는 서버 오류");
-                }
-                return res.json();
-            })
-            .then((data: { employeeId: string; name: string }[]) => {
-                const filteredUsers = data.filter(user => user.employeeId !== currentUserName);
-                setAllUsers(filteredUsers); // 👈 전체 사용자 정보 보관
-            })
-            .catch((err) => console.error("회원 목록 불러오기 실패:", err));
-    }, [visible]);
-
-    function createRoom() {
-        if (!roomName.trim()) {
-            alert("방 이름을 입력하세요");
-            return;
-        }
-        const selectedMemberIds  = allUsers
-            .filter((user) => members.includes(user.employeeId))
-            .map((user) => user.name);
-
-        // ✅ 현재 로그인 유저 name 가져오기
-        const creatorName = allUsers.find((user) => user.employeeId === currentUserName)?.name || "익명";
-
-        let currentUserName;
-        const requestBody = {
-            roomName,
-            members: selectedMemberIds ,
-            creatorName: currentUserName || "익명",
-        };
-        fetch("http://127.0.0.1:1006/chat/rooms", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody),
-        })
-            .then(() => {
-                alert("방 생성 완료!");
-                onRoomCreated();
-                onClose();
-            })
-            .catch(() => alert("방 생성 실패"));
+    //  'Bearer '이 없는 경우 자동으로 추가
+    if (token && !token.startsWith("Bearer ")) {
+      token = `Bearer ${token}`;
     }
 
-    if (!visible) return null;
+    if (!token) {
+      console.error("❌ 토큰이 없습니다. 회원 목록 요청을 중단합니다.");
+      return; // ❌ 토큰이 없으면 요청을 보내지 않음
+    }
 
-    return (
+    fetch("http://127.0.0.1:1006/employee/all", {
+      method: "GET",
+      headers: {
+        Authorization: token,  // ✅ 토큰이 있을 때만 요청
+        "Content-Type": "application/json"
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("❌ 인증 실패 또는 서버 오류");
+      }
+      return res.json();
+    })
+    .then((data: { employeeId: string; name: string }[]) => {
+      const filteredUsers = data.filter(user => user.employeeId !== currentUserId);
+      setAllUsers(filteredUsers); // 👈 전체 사용자 정보 보관
+    })
+    .catch((err) => console.error("회원 목록 불러오기 실패:", err));
+  }, [visible]);
+
+  useEffect(() => {
+    if (visible) {
+      setRoomName('');
+      setMembers([]);
+    }
+  }, [visible]);
+
+  function createRoom() {
+    if (!roomName.trim()) {
+      alert("방 이름을 입력하세요");
+      return;
+    }
+    const selectedMemberIds = allUsers
+    .filter((user) => members.includes(user.employeeId))
+    .map((user) => user.name);
+//          로그인한 유저도 멤버로 포함
+    const finalMembers = [...selectedMemberIds];
+    if (currentUserName && !finalMembers.includes(currentUserName)) {
+      finalMembers.push(currentUserName);
+    }
+
+    const requestBody = {
+      roomName,
+      members: finalMembers,
+      creatorName: currentUserName || "익명",
+    };
+
+    fetch("http://127.0.0.1:1006/chat/rooms", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(requestBody),
+    })
+    .then(() => {
+      onRoomCreated();
+      onClose();
+    })
+    .catch(() => alert("방 생성 실패"));
+  }
+
+  if (!visible) return null;
+
+  return (
+      <div style={{
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        padding: "20px",
+        backgroundColor: "white",
+        borderRadius: "8px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+        maxWidth: "600px",  // ✅ 폭 제한
+        width: "90%",        // 반응형 대응
+        margin: "0 auto",
+      }}>
+        <h2 style={{marginBottom: "15px", textAlign: "center"}}>방 생성</h2>
+        <input
+            type="text"
+            placeholder="방 이름 입력"
+            value={roomName}
+            onChange={(e) => setRoomName(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginBottom: "15px",
+              border: "1px solid #ccc",
+              borderRadius: "4px"
+            }}
+        />
+
         <div style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            padding: "20px",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-            maxWidth: "600px",  // ✅ 폭 제한
-            width: "90%",        // 반응형 대응
-            margin: "0 auto",
+          display: "flex",
+          gap: "20px",
+          justifyContent: "center",
+          alignItems: "flex-start"
         }}>
-            <h2 style={{ marginBottom: "15px", textAlign: "center" }}>방 생성</h2>
-            <input
-                type="text"
-                placeholder="방 이름 입력"
-                value={roomName}
-                onChange={(e) => setRoomName(e.target.value)}
-                style={{
-                    width: "100%",
-                    padding: "10px",
-                    marginBottom: "15px",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px"
-                }}
-            />
-
-            <div style={{ display: "flex", gap: "20px", justifyContent: "center", alignItems: "flex-start" }}>
-                {/* 초대할 멤버 목록 */}
-                <div style={{
-                    flex: 1,
-                    padding: "15px",
-                    backgroundColor: "#ffffff",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                    border: "1px solid #ddd",
-                    maxHeight: "250px",       // ✅ 최대 높이 제한
-                    overflowY: "auto",        // ✅ 세로 스크롤
-                }}>
-                    <h4 style={{ marginBottom: "10px" }}>초대할 멤버</h4>
-                    {allUsers.length > 0 ? (
-                        allUsers.map((user) => (
-                            <label key={user.employeeId} style={{ display: "block", marginBottom: "5px" }}>
-                                <input
-                                    type="checkbox"
-                                    value={user.employeeId}
-                                    onChange={(e) => {
-                                        if (e.target.checked) setMembers([...members, user.employeeId]);
-                                        else setMembers(members.filter((m) => m !== user.employeeId));
-                                    }}
-                                />
-                                {user.name}
-                            </label>
-                        ))
-                    ) : (
-                        <p>초대할 멤버가 없습니다.</p>
-                    )}
-                </div>
-            </div>
-
-            {/* 생성 / 취소 버튼 */}
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
-                <button
-                    onClick={createRoom}
-                    style={{
-                        padding: "10px 20px",
-                        marginRight: "10px",
-                        backgroundColor: "#1E3A8A",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer"
-                    }}>
-                    생성
-                </button>
-                <button
-                    onClick={onClose}
-                    style={{
-                        padding: "10px 20px",
-                        backgroundColor: "#ccc",
-                        color: "black",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer"
-                    }}>
-                    취소
-                </button>
-            </div>
+          {/* 초대할 멤버 목록 */}
+          <div style={{
+            flex: 1,
+            padding: "15px",
+            backgroundColor: "#ffffff",
+            borderRadius: "8px",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            maxHeight: "250px",       // ✅ 최대 높이 제한
+            overflowY: "auto",        // ✅ 세로 스크롤
+          }}>
+            <h4 style={{marginBottom: "10px"}}>초대할 멤버</h4>
+            {allUsers.length > 0 ? (
+                allUsers.map((user) => (
+                    <label key={user.employeeId} style={{display: "block", marginBottom: "5px"}}>
+                      <input
+                          type="checkbox"
+                          value={user.employeeId}
+                          onChange={(e) => {
+                            if (e.target.checked) setMembers([...members, user.employeeId]);
+                            else setMembers(members.filter((m) => m !== user.employeeId));
+                          }}
+                      />
+                      {user.name}
+                    </label>
+                ))
+            ) : (
+                <p>초대할 멤버가 없습니다.</p>
+            )}
+          </div>
         </div>
-    );
+
+        {/* 생성 / 취소 버튼 */}
+        <div style={{textAlign: "center", marginTop: "20px"}}>
+          <button
+              onClick={createRoom}
+              style={{
+                padding: "10px 20px",
+                marginRight: "10px",
+                backgroundColor: "#1E3A8A",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer"
+              }}>
+            생성
+          </button>
+          <button
+              onClick={onClose}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#ccc",
+                color: "black",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer"
+              }}>
+            취소
+          </button>
+        </div>
+      </div>
+  );
 };
 
 export default RoomCreateModal;

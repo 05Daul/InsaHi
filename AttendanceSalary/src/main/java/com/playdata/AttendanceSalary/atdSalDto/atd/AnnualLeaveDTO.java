@@ -1,5 +1,9 @@
 package com.playdata.AttendanceSalary.atdSalDto.atd;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +21,5 @@ public class AnnualLeaveDTO {
   private int usedLeave; //사용 연차
   private String employeeId;
   private String companyCode;
-
 
 }

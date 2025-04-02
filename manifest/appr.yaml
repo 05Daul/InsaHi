@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appr
+  namespace: insahi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: insahi
+  template:
+    metadata:
+      labels:
+        project: insahi
+    spec:
+      containers:
+        - name: appr
+          image: daul0519/electronicepproval-service:1.2
+          ports:
+            - containerPort: 1005
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: appr-service
+  namespace: insahi
+
+spec:
+  type: LoadBalancer
+  selector:
+    project: insahi
+
+  ports:
+    - port: 1005
+      targetPort: 1005

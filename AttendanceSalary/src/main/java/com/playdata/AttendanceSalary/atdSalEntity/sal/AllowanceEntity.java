@@ -39,13 +39,5 @@ public class AllowanceEntity extends DateEntity {
     // private boolean taxExemption;
     // private BigDecimal taxExemptionLimit;
 
-    public AllowanceResponseDTO toDTO() {
-        AllowanceResponseDTO dto = new AllowanceResponseDTO();
-        dto.setAllowanceId(allowanceId);
-        dto.setCompanyCode(companyCode);
-        dto.setAllowName(allowType.getDisplayName());
-        dto.setAllowSalary(allowSalary);
-//        dto.setSalaryId(salaryId);
-        return dto;
-    }
+
 }

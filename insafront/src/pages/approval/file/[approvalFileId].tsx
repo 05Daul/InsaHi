@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import {useRouter} from 'next/router';
 import styles from '@/styles/approval/ApprovalDetail.module.css';
-import {ApprovalStatus} from "@/type/ApprovalStatus";
-import StatusBadge from "@/component/approval/StatusBadge";
+import {ApprovalStatus} from '@/type/ApprovalStatus';
+import StatusBadge from '@/component/approval/StatusBadge';
 
 interface File {
   approvalFileNo: string;
@@ -43,29 +43,22 @@ const FilePage = () => {
 
   useEffect(() => {
     if (!approvalFileId) return;
-
     const fetchApprovalFileDetails = async () => {
-      const response = await fetch(`http://127.0.0.1:1005/approval/file/${approvalFileId}`);
+      const response = await fetch(`http://127.0.0.1:1006/approval/file/${approvalFileId}`);
       const data = await response.json();
       setApprovalFile(data);
     };
-
     fetchApprovalFileDetails();
   }, [approvalFileId]);
 
   if (!approvalFile) return <div>Loading...</div>;
 
-  const referenceLines = approvalFile.approvalLines.filter(
-      line => line.approvalOrder === 0 && line.employeeId
-  );
-
-  const approverLines = approvalFile.approvalLines.filter(
-      line => line.approvalOrder !== 0 && line.employeeId
-  );
+  const referenceLines = approvalFile.approvalLines.filter(line => line.approvalOrder === 0);
+  const approverLines = approvalFile.approvalLines.filter(line => line.approvalOrder !== 0);
 
   const handleApproval = async (lineId: string, status: ApprovalStatus) => {
     const payload = {lineId, approveOrNot: status, reason};
-    const response = await fetch(`http://127.0.0.1:1005/approval/permit`, {
+    const response = await fetch(`http://127.0.0.1:1006/approval/permit`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload)
@@ -75,83 +68,114 @@ const FilePage = () => {
 
   return (
       <div className={styles.approvalDetailPageContainer}>
-        <h1 className={styles.approvalDetailPageTitle}>결재 문서 상세</h1>
+        <h1 className={styles.approvalDetailPageTitle}>기안서</h1>
 
-        <div className={styles.approvalDetailCard}>
-          <p>문서 제목: {approvalFile.name}</p>
-          <p>문서 내용: {approvalFile.text}</p>
-          <p>상신자: {approvalFile.employeeId}</p>
-          <StatusBadge status={approvalFile.status}/>
-        </div>
-
-        <div className={styles.approvalDetailCard}>
-          <h2>참조자 목록</h2>
-          {referenceLines.length === 0 ? (
-              <p>참조자가 없습니다.</p>
-          ) : (
-              referenceLines.map(line => (
-                  <div key={line.id}>
-                    <span>{line.employeeId}</span>
-                    <StatusBadge status={line.approvalStatus}/>
-                  </div>
-              ))
-          )}
-        </div>
-
-        <div className={styles.approvalDetailCard}>
-          <h2>결재자 목록</h2>
-          {approverLines.length === 0 ? (
-              <p>결재자가 없습니다.</p>
-          ) : (
-              approverLines.map(line => {
-                const isMyTurn =
-                    line.employeeId === employeeIdToken &&
-                    line.approvalStatus === ApprovalStatus.PENDING;
-                const isFromMenuThree = menu === '3';
-
-                return (
-                    <div key={line.id}>
-                      <span>결재 순서 {line.approvalOrder}: {line.employeeId}</span>
-
-                      {isMyTurn && isFromMenuThree ? (
-                          <>
+        {/* 결재라인 테이블 */}
+        <table className={styles.approvalLineTable}>
+          <thead>
+          <tr>
+            <th>구분</th>
+            {approverLines.map(line => (
+                <th key={line.id}>결재자 {line.approvalOrder}</th>
+            ))}
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>사번</td>
+            {approverLines.map(line => (<td key={line.id}>{line.employeeId}</td>))}
+          </tr>
+          <tr>
+            <td>상태</td>
+            {approverLines.map(line => (
+                <td key={line.id}>
+                  {line.employeeId === employeeIdToken && line.approvalStatus === ApprovalStatus.PENDING && menu === '3' ? (
+                      <>
                     <textarea
+                        className={styles.approvalDetailtextarea}
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                         placeholder="사유 입력"
                     />
-                            <button
-                                onClick={() => handleApproval(line.id, ApprovalStatus.APPROVED)}>
-                              승인
-                            </button>
-                            <button
-                                onClick={() => handleApproval(line.id, ApprovalStatus.REJECTED)}>
-                              반려
-                            </button>
-                          </>
-                      ) : (
-                          <StatusBadge status={line.approvalStatus}/>
-                      )}
-                    </div>
-                );
-              })
+                        <button className={styles.approvalDetailbutton}
+                                onClick={() => handleApproval(line.id, ApprovalStatus.APPROVED)}>승인
+                        </button>
+                        <button className={styles.approvalDetailbutton}
+                                onClick={() => handleApproval(line.id, ApprovalStatus.REJECTED)}>반려
+                        </button>
+                      </>
+                  ) : (
+                      <StatusBadge status={line.approvalStatus}/>
+                  )}
+                </td>
+            ))}
+          </tr>
+          </tbody>
+        </table>
+
+        {/* 문서 메타 정보 테이블 */}
+        <table className={styles.approvalDetailMetaTable}>
+          <tbody>
+          <tr>
+            <th>문서 제목</th>
+            <td>{approvalFile.name}</td>
+            <th>기안자</th>
+            <td>{approvalFile.employeeId}</td>
+          </tr>
+          <tr>
+            <th>회사 코드</th>
+            <td>{approvalFile.companyCode}</td>
+            <th>상태</th>
+            <td><StatusBadge status={approvalFile.status}/></td>
+          </tr>
+          </tbody>
+        </table>
+
+        {/* 참조자 목록 */}
+        <table className={styles.approvalDetailMetaTable}>
+          <thead>
+          <tr>
+            <th>참조자</th>
+            <th>상태</th>
+          </tr>
+          </thead>
+          <tbody>
+          {referenceLines.length === 0 ? (
+              <tr>
+                <td colSpan={2}>참조자가 없습니다.</td>
+              </tr>
+          ) : (
+              referenceLines.map(line => (
+                  <tr key={line.id}>
+                    <td>{line.employeeId}</td>
+                    <td><StatusBadge status={line.approvalStatus}/></td>
+                  </tr>
+              ))
           )}
+          </tbody>
+        </table>
+
+        {/* 문서 내용 */}
+        <div className={styles.contentBox}>
+          <div className={styles.sectionTitle}>문서 내용</div>
+          <div>{approvalFile.text}</div>
         </div>
 
-        <div className={styles.approvalDetailCard}>
-          <h2>첨부파일 목록</h2>
-          {approvalFile.files.map(file => (
-              <div key={file.approvalFileNo}>
-                <span>{file.originalFilename}</span>
-                <button
-                    onClick={() =>
-                        handleDownload(file.approvalFileNo, file.originalFilename)
-                    }
-                >
-                  다운로드
-                </button>
-              </div>
-          ))}
+        {/* 첨부파일 목록 */}
+        <div className={styles.fileSection}>
+          <div className={styles.sectionTitle}>첨부파일</div>
+          {approvalFile.files.length === 0 ? (
+              <p>첨부파일 없음</p>
+          ) : (
+              approvalFile.files.map(file => (
+                  <div className={styles.fileRow} key={file.approvalFileNo}>
+                    <span>{file.originalFilename}</span>
+                    <button className={styles.button}
+                            onClick={() => handleDownload(file.approvalFileNo, file.originalFilename)}>다운로드
+                    </button>
+                  </div>
+              ))
+          )}
         </div>
       </div>
   );
@@ -160,7 +184,7 @@ const FilePage = () => {
 export default FilePage;
 
 const handleDownload = async (fileId: string, fileName: string) => {
-  const response = await fetch(`http://127.0.0.1:1005/approval/file/download/${fileId}`);
+  const response = await fetch(`http://127.0.0.1:1006/approval/file/download/${fileId}`);
   const blob = await response.blob();
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);

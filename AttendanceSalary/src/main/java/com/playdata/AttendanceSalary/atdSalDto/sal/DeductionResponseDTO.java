@@ -2,18 +2,22 @@ package com.playdata.AttendanceSalary.atdSalDto.sal;
 
 
 import com.playdata.AttendanceSalary.atdSalEntity.sal.DeductionEntity;
+import com.playdata.AttendanceSalary.atdSalEntity.sal.DeductionType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-
+@Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DeductionResponseDTO {
     private Long deductionId;
-    private Long payrollDetailsId;
-    private Long payrollItemId;
     private BigDecimal amount;
-    private Long salaryId;
     private Long payStubId;
+    private String deductionType;
 
     public DeductionEntity toEntity(){
         DeductionEntity deductionEntity = new DeductionEntity();
