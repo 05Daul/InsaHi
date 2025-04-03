@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {API_BASE_URL_Chat} from "@/api/api_base_url";
 
 interface ChatRoom {
   roomId: string;
@@ -6,7 +7,7 @@ interface ChatRoom {
   name: string[];
   createdAt: string;
   creatorName: string;
-  unreadCount?:number ; //안읽은 메시지 수
+  unreadCount?: number; //안읽은 메시지 수
   lastMessage: string; //마지막 메시지 미리보기
 }
 
@@ -59,7 +60,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
   useEffect(() => {
     const handleClickOutside = () => {
       if (contextMenu.visible) {
-        setContextMenu({ ...contextMenu, visible: false });
+        setContextMenu({...contextMenu, visible: false});
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -73,7 +74,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
       return;
     }
 
-    fetch(`http://127.0.0.1:1006/chat/rooms/member/${currentUserName}`, {
+    fetch(`${API_BASE_URL_Chat}/rooms/member/${currentUserName}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -91,7 +92,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
   }
 
   function handleRoomClick(roomId: string, name: string[]) {
-    onSelectRoom(roomId,name);
+    onSelectRoom(roomId, name);
   }
 
   function handleContextMenu(e: React.MouseEvent, room: ChatRoom) {
@@ -101,7 +102,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
     const token = localStorage.getItem("accessToken");
     if (!token) return;
 
-    fetch(`http://127.0.0.1:1006/chat/rooms/${room.roomId}`, {
+    fetch(`${API_BASE_URL_Chat}/rooms/${room.roomId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -123,7 +124,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
 
   function handleLeaveRoom() {
     if (!contextMenu.room) return;
-    fetch(`http://127.0.0.1:1006/chat/rooms/${contextMenu.room.roomId}/members/${currentUserName}`, {
+    fetch(`${API_BASE_URL_Chat}/rooms/${contextMenu.room.roomId}/members/${currentUserName}`, {
       method: "DELETE",
     })
     .then(() => {
@@ -186,7 +187,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
             {rooms.map((room) => (
                 <div
                     key={room.roomId}
-                    onClick={() => handleRoomClick(room.roomId,room.name)}
+                    onClick={() => handleRoomClick(room.roomId, room.name)}
                     onContextMenu={(e) => {
                       e.preventDefault(); // 기본 우클릭 메뉴 막기
                       handleContextMenu(e, room);
@@ -213,7 +214,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
                             : room.lastMessage)
                         : "메시지가 없습니다"}
                   </div>
-                  {(room.unreadCount ?? 0)> 0 && (
+                  {(room.unreadCount ?? 0) > 0 && (
                       <span style={{
                         backgroundColor: "red",
                         color: "white",
@@ -243,21 +244,21 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({
                 }}
             >
               <div
-                  style={{ padding: "6px", cursor: "pointer" }}
+                  style={{padding: "6px", cursor: "pointer"}}
                   onClick={() => {
                     const room = contextMenu.room!;
                     // 1. 방 정보 보기 처리
                     onViewRoomInfo(room);
-                    setContextMenu({ ...contextMenu, visible: false });
+                    setContextMenu({...contextMenu, visible: false});
                   }}
               >
                 방 정보 보기
               </div>
               <div
-                  style={{ padding: "6px", cursor: "pointer", color: "red" }}
+                  style={{padding: "6px", cursor: "pointer", color: "red"}}
                   onClick={() => {
                     handleLeaveRoom(); // 2. 방 나가기 처리
-                    setContextMenu({ ...contextMenu, visible: false });
+                    setContextMenu({...contextMenu, visible: false});
                   }}
               >
                 방 나가기

@@ -6,9 +6,10 @@ import SockJS from "sockjs-client";
 import Stomp, {Client} from "stompjs";
 import {useRouter} from "next/router";
 import RoomInfoModal from "@/component/chat/RoomInfoModal";
+import {API_BASE_URL_Chat, API_BASE_URL_Employee} from "@/api/api_base_url";
 
 
-const SOCKET_URL = "http://127.0.0.1:1006/chat/ws-stomp"; //  Spring Boot와 일치
+const SOCKET_URL = `${API_BASE_URL_Chat}/ws-stomp`; //  Spring Boot와 일치
 
 interface Message {
   text: string;
@@ -87,7 +88,7 @@ export default function Chat() {
         const employeeId = payload.sub?.trim();
         if (employeeId) {
           setCurrentUserId(employeeId);
-          const res = await fetch(`http://127.0.0.1:1006/employee/find?employeeId=${employeeId}`, {
+          const res = await fetch(`${API_BASE_URL_Employee}/find?employeeId=${employeeId}`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,

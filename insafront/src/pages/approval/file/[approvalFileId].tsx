@@ -3,6 +3,7 @@ import {useRouter} from 'next/router';
 import styles from '@/styles/approval/ApprovalDetail.module.css';
 import {ApprovalStatus} from '@/type/ApprovalStatus';
 import StatusBadge from '@/component/approval/StatusBadge';
+import {API_BASE_URL_Approval} from "@/api/api_base_url";
 
 interface File {
   approvalFileNo: string;
@@ -44,7 +45,7 @@ const FilePage = () => {
   useEffect(() => {
     if (!approvalFileId) return;
     const fetchApprovalFileDetails = async () => {
-      const response = await fetch(`http://127.0.0.1:1006/approval/file/${approvalFileId}`);
+      const response = await fetch(`${API_BASE_URL_Approval}/file/${approvalFileId}`);
       const data = await response.json();
       setApprovalFile(data);
     };
@@ -58,7 +59,7 @@ const FilePage = () => {
 
   const handleApproval = async (lineId: string, status: ApprovalStatus) => {
     const payload = {lineId, approveOrNot: status, reason};
-    const response = await fetch(`http://127.0.0.1:1006/approval/permit`, {
+    const response = await fetch(`${API_BASE_URL_Approval}/permit`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload)
@@ -184,7 +185,7 @@ const FilePage = () => {
 export default FilePage;
 
 const handleDownload = async (fileId: string, fileName: string) => {
-  const response = await fetch(`http://127.0.0.1:1006/approval/file/download/${fileId}`);
+  const response = await fetch(`${API_BASE_URL_Approval}/file/download/${fileId}`);
   const blob = await response.blob();
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);

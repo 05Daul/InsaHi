@@ -1,5 +1,6 @@
 import {attendanceFetcher} from '@/api/serviceFetcher/attendanceFetcher';
 import {PositionSalaryStepEntity} from '@/type/Setting';
+import {API_BASE_URL_Employee} from "@/api/api_base_url";
 
 // 직급/호봉 목록 조회
 export const fetchSalarySteps = async (companyCode: string): Promise<PositionSalaryStepEntity[]> => {
@@ -12,7 +13,7 @@ export const fetchSalarySteps = async (companyCode: string): Promise<PositionSal
   }
 };
 export const updateEmployeeSalaryStep = async (employeeId: string, positionSalaryId: number) => {
-  const url = `http://localhost:1006/employee/update-salary-step?employeeId=${employeeId}&positionSalaryId=${positionSalaryId}`;
+  const url = `${API_BASE_URL_Employee}/update-salary-step?employeeId=${employeeId}&positionSalaryId=${positionSalaryId}`;
   return await fetch(url, {method: 'PUT'});
 };
 // 직급/호봉 추가

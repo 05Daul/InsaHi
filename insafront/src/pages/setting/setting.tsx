@@ -4,6 +4,7 @@ import {useAllowanceActions, usePositionActions} from '@/services/salaryAction';
 import {usePositionSalaryStepActions} from '@/services/positionSalaryStepAction';
 import {allowanceTypes} from '@/type/Setting';
 import {fetcher} from "@/api/fetcher";
+import {API_BASE_URL_Company, API_BASE_URL_Employee} from "@/api/api_base_url";
 
 const Setting: React.FC = () => {
   const [companyCodeFromToken, setCompanyCodeFromToken] = useState<string>('');
@@ -31,7 +32,7 @@ const Setting: React.FC = () => {
       return;
     }
 
-    const url = `http://127.0.0.1:1006/company/${companyCodeFromToken}/start-time`;
+    const url = `${API_BASE_URL_Company}/${companyCodeFromToken}/start-time`;
     console.log('조회 요청 URL:', url);
 
     try {
@@ -53,7 +54,7 @@ const Setting: React.FC = () => {
       return;
     }
 
-    const url = `http://127.0.0.1:1006/company/start-Time`;
+    const url = `${API_BASE_URL_Company}/start-Time`;
     console.log('등록 요청 URL:', url);
 
     try {
@@ -98,7 +99,7 @@ const Setting: React.FC = () => {
     }
     try {
       console.log(selectedPositionSalaryId)
-      const url = `http://127.0.0.1:1006/employee/update-salary-step?employeeId=${selectedEmployeeId}&positionSalaryId=${Number(selectedPositionSalaryId)}`;
+      const url = `${API_BASE_URL_Employee}/update-salary-step?employeeId=${selectedEmployeeId}&positionSalaryId=${Number(selectedPositionSalaryId)}`;
       console.log(url)
       await fetcher(url, {method: 'PUT'});
       alert('대표자의 직급 호봉이 성공적으로 업데이트되었습니다.');

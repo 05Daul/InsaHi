@@ -1,6 +1,8 @@
+import {API_BASE_URL_Employee} from "@/api/api_base_url";
+
 export async function RegisterEmployeeAction(formData: FormData) {
   console.log("서버 액션 실행됨!");
-  const url = "http://127.0.0.1:1006/employee/insertemployee";
+  const url = `${API_BASE_URL_Employee}/insertemployee`;
   const formObject = Object.fromEntries(formData);
   console.log("폼 데이터:", formObject);
   let token = "";

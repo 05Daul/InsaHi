@@ -1,5 +1,6 @@
 // component/approval/useSSE.tsx
 import {useEffect, useRef} from 'react';
+import {API_BASE_URL_Approval} from "@/api/api_base_url";
 
 const eventSourceMap = new Map<string, EventSource>(); // employeeId별 싱글톤 유지
 
@@ -14,7 +15,7 @@ const useSSE = (employeeId: string | null, onMessage: (msg: string) => void) => 
     // 이미 연결되어 있다면 새로 만들지 않음
     if (eventSourceMap.has(employeeId)) return;
 
-    const eventSource = new EventSource(`http://127.0.0.1:1006/approval/sse/subscribe/${employeeId}`);
+    const eventSource = new EventSource(`${API_BASE_URL_Approval}/sse/subscribe/${employeeId}`);
     eventSourceMap.set(employeeId, eventSource);
 
     const handleEvent = (event: MessageEvent) => {

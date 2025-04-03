@@ -1,4 +1,5 @@
 import {useState, ChangeEvent, FormEvent} from 'react';
+import {API_BASE_URL_Approval} from "@/api/api_base_url";
 
 interface ApprovalData {
   lineId: string;
@@ -22,7 +23,7 @@ const ApprovePage = () => {
     e.preventDefault();
     const {lineId, approveOrNot, reason} = approvalData;
 
-    const response = await fetch(`http://127.0.0.1:1006/approval/permit?lineId=${lineId}&approveOrNot=${approveOrNot}&reason=${reason}`, {
+    const response = await fetch(`${API_BASE_URL_Approval}/permit?lineId=${lineId}&approveOrNot=${approveOrNot}&reason=${reason}`, {
       method: 'GET'
     });
 

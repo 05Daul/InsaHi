@@ -1,7 +1,3 @@
-url:
-  service:
-    att: 127.0.0.1:1000
-
 server:
   #  port: 0
   port: 1010

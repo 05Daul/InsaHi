@@ -1,7 +1,8 @@
 import axios from "axios";
+import {API_BASE_URL} from "@/api/api_base_url";
 
 const accessToken = axios.create({
-  baseURL: "http://127.0.0.1:1006", // 백엔드 주소
+  baseURL: `${API_BASE_URL}`, // 백엔드 주소
   withCredentials: false, // 필요 시 true
 });
 

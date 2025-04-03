@@ -1,6 +1,8 @@
 //캘린더 정보 가져오기
+import {API_BASE_URL_Leave} from "@/api/api_base_url";
+
 export default async function CalendarAction(employeeId: string, status: string): Promise<CalendarDTO[] | null> {
-  const url = `http://127.0.0.1:1006/leave/getemployeeleavel/${employeeId}/${status}`; //status 어케처리함?
+  const url = `${API_BASE_URL_Leave}/getemployeeleavel/${employeeId}/${status}`; //status 어케처리함?
   try {
 
     let token = "";

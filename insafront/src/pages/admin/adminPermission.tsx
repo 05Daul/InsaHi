@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import UserCard from '@/component/admin/UserCard';
 import styles from '@/styles/admin/adminPermission.module.css';
+import {API_BASE_URL_Employee} from "@/api/api_base_url";
 
 // API 응답 타입
 type RawUser = {
@@ -38,7 +39,7 @@ export default function AdminPermissionPage() {
     const fetchAdmins = async () => {
       try {
         const res = await fetch(
-            `http://127.0.0.1:1006/employee/auth-list?companyCode=${companyCode}&authorityName=ROLE_ADMIN`,
+            `${API_BASE_URL_Employee}/auth-list?companyCode=${companyCode}&authorityName=ROLE_ADMIN`,
             {
               method: 'GET',
               headers: {
@@ -62,7 +63,7 @@ export default function AdminPermissionPage() {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-            `http://127.0.0.1:1006/employee/auth-list?companyCode=${companyCode}&authorityName=ROLE_USER`,
+            `${API_BASE_URL_Employee}/auth-list?companyCode=${companyCode}&authorityName=ROLE_USER`,
             {
               method: 'GET',
               headers: {
@@ -97,7 +98,7 @@ export default function AdminPermissionPage() {
     try {
       const token = localStorage.getItem('accessToken');
       const res = await fetch(
-          `http://127.0.0.1:1006/employee/grant-admin?employeeId=${user.employeeId}`,
+          `${API_BASE_URL_Employee}/grant-admin?employeeId=${user.employeeId}`,
           {
             method: 'POST',
             headers: {
@@ -123,7 +124,7 @@ export default function AdminPermissionPage() {
     try {
       const token = localStorage.getItem('accessToken');
       const res = await fetch(
-          `http://127.0.0.1:1006/employee/delete-admin?employeeId=${user.employeeId}`,
+          `${API_BASE_URL_Employee}/delete-admin?employeeId=${user.employeeId}`,
           {
             method: 'DELETE',
             headers: {

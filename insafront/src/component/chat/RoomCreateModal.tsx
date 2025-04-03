@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {API_BASE_URL_Chat, API_BASE_URL_Employee} from "@/api/api_base_url";
 
 interface RoomCreateModalProps {
   visible: boolean;
@@ -34,7 +35,7 @@ const RoomCreateModal: React.FC<RoomCreateModalProps> = ({
       return; // ❌ 토큰이 없으면 요청을 보내지 않음
     }
 
-    fetch("http://127.0.0.1:1006/employee/all", {
+    fetch(`${API_BASE_URL_Employee}/all`, {
       method: "GET",
       headers: {
         Authorization: token,  // ✅ 토큰이 있을 때만 요청
@@ -81,7 +82,7 @@ const RoomCreateModal: React.FC<RoomCreateModalProps> = ({
       creatorName: currentUserName || "익명",
     };
 
-    fetch("http://127.0.0.1:1006/chat/rooms", {
+    fetch(`${API_BASE_URL_Chat}/rooms`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(requestBody),

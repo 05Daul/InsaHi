@@ -6,6 +6,7 @@ import styles from "@/styles/Topbar.module.css";
 import EmployeeInfoAction from "@/api/mypage/employeeinfoaction";
 import useSSE from "@/component/approval/useSSE";
 import Toast from "@/component/approval/Toast";
+import {API_BASE_URL_Approval} from "@/api/api_base_url";
 
 type TopBarProps = {
   activeSidebar: string | null;
@@ -48,7 +49,7 @@ const TopBar = ({activeSidebar, setActiveSidebar}: TopBarProps) => {
     setToastMessage(message);
 
     // 결재할 문서 존재 여부 API 호출
-    const res = await fetch(`http://127.0.0.1:1006/approval/has-pending/${employeeId}`);
+    const res = await fetch(`${API_BASE_URL_Approval}/has-pending/${employeeId}`);
     const {hasPending} = await res.json();
 
     setHasNotification(hasPending); // 🔴 또는 ❌ 상태 갱신
@@ -97,7 +98,7 @@ const TopBar = ({activeSidebar, setActiveSidebar}: TopBarProps) => {
     const checkNotification = async () => {
       if (!employeeId) return;
 
-      const res = await fetch(`http://127.0.0.1:1006/approval/has-pending/${employeeId}`);
+      const res = await fetch(`${API_BASE_URL_Approval}/has-pending/${employeeId}`);
       const {hasPending} = await res.json();
 
       setHasNotification(hasPending);

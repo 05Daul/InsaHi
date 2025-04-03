@@ -1,8 +1,9 @@
 import {profileCardDTO} from "@/type/profilecard";
+import {API_BASE_URL_Employee} from "@/api/api_base_url";
 
 //
 export default async function ProfileCard(employeeId: string): Promise<profileCardDTO | null> {
-  const url = `http://127.0.0.1:1006/employee/${employeeId}/profilecard`;
+  const url = `${API_BASE_URL_Employee}/${employeeId}/profilecard`;
   console.log(employeeId);
   try {
 

@@ -1,8 +1,9 @@
 // src/services/departmentService.ts
 
 import axios from "axios";
+import {API_BASE_URL} from "@/api/api_base_url";
 
-const BASE_URL = "http://127.0.0.1:1006";
+const BASE_URL = `${API_BASE_URL}`;
 
 export const fetchDepartments = async () => {
   const response = await axios.get(`${BASE_URL}/department/list`);
