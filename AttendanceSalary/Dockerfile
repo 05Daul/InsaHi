@@ -24,6 +24,7 @@ COPY --from=build /myapp/AttendanceSalary/build/libs/*.jar /myapp/atdsal.jar
 
 # 포트
 EXPOSE 1000
+ENV SPRING_PROFILES_ACTIVE=prod
 
 # 실행 명령
 ENTRYPOINT ["java", "-jar", "/myapp/atdsal.jar"]

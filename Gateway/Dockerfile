@@ -11,7 +11,7 @@ COPY . /myapp
 RUN chmod +x gradlew
 
 # 테스트 생략하고 빌드 (더 빠르게)
-RUN ./gradlew clean build --no-daemon -x test
+RUN ./gradlew :Gateway:clean :Gateway:bootJar --no-daemon -x test
 
 # 실행 환경 (경량 Alpine)
 FROM openjdk:17-alpine
@@ -20,7 +20,7 @@ FROM openjdk:17-alpine
 WORKDIR /myapp
 
 # 빌드 결과 JAR 파일 복사
-COPY --from=build /myapp/build/libs/*.jar /myapp/gateway-service.jar
+COPY --from=build /myapp/Gateway/build/libs/*.jar /myapp/gateway-service.jar
 
 # 포트
 EXPOSE 1006
@@ -29,7 +29,6 @@ EXPOSE 1006
 ENV TZ=Asia/Seoul
 
 # 환경변수 (실제 값은 외부에서 주입)
-ENV SPRING_PROFILES_ACTIVE=prod
 
 # 실행 명령
 ENTRYPOINT ["java", "-jar", "/myapp/gateway-service.jar"]

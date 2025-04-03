@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@FeignClient(name = "hrm", url = "${hrm.service.url}", configuration = FeignClientConfig.class)
+@FeignClient(name = "hrm-service", configuration = FeignClientConfig.class)
 public interface HrmFeignClient {
 
   @GetMapping(value = "/employee/find", produces = {MediaType.APPLICATION_JSON_VALUE,
