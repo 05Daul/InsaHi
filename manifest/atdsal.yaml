@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: appr
-          image: daul0519/atdsal-service:1.3
+          image: daul0519/atdsal-service:1.5
           ports:
             - containerPort: 1000
           env:

@@ -14,7 +14,6 @@ import com.playdata.AttendanceSalary.atdSalEntity.sal.PositionSalaryStepEntity;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -230,7 +229,7 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 
 
   // 휴가 등록 - 매달 발생
-  @Scheduled(cron = "0 * * * * ?", zone = "Asia/Seoul")
+  @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Seoul")
   public void executeLeaveGrant() {
     log.info("==== 연차/월차 자동 지급 배치 시작 ====");
 

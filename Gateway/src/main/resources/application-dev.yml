@@ -35,7 +35,7 @@ spring:
 
       routes:
         - id: HumanResourceManagement
-          uri: http://127.0.0.1:1010
+          uri: http://hrm-service:1010
           predicates:
             - Path=/employee/**
             - Method=POST
@@ -49,12 +49,12 @@ spring:
 
 
         - id: HumanResourceManagement
-          uri: http://127.0.0.1:1010
+          uri: http://hrm-service:1010
           predicates:
             - Path=/employee/**
 
         - id: HumanResourceManagement
-          uri: http://127.0.0.1:1010
+          uri: http://hrm-service:1010
           predicates:
             - Path=/company/**
 
@@ -64,33 +64,25 @@ spring:
             - Path=/department/**
 
         - id: Chat
-          uri: http://127.0.0.1:1004
+          uri: http://chat-service:1004
           predicates:
             - Path=/chat/**
 
         - id: AttendanceSalary
-          uri: http://127.0.0.1:1000
+          uri: http://atdsal-service:1000
           predicates:
             - Path=/atdsal/**
         - id: ElectronicApproval
-          uri: http://127.0.0.1:1005
+          uri: http://appr-service:1005
           predicates:
             - Path=/approval/**
           filters:
             - PreserveHostHeader
 
         - id: AttendanceSalary
-          uri: http://127.0.0.1:1000
+          uri: http://atdsal-service:1000
           predicates:
             - Path=/leave/**
-
-  #        - id: AttendanceSalary
-  #          uri: http://127.0.0.1:1000
-  #          predicates:
-  #            - Path=/atdsal/**
-
-
-
 
 
   jpa:
