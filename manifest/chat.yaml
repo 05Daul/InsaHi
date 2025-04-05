@@ -4,7 +4,7 @@ metadata:
   name: chat
   namespace: insahi
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: insahi-chat
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: chat
-          image: daul0519/chat-service:1.2
+          image: daul0519/chat-service:4.3
           ports:
             - containerPort: 1004
 

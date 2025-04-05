@@ -4,7 +4,7 @@ metadata:
   name: hrm
   namespace: insahi
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: insahi-hrm
@@ -15,12 +15,22 @@ spec:
     spec:
       containers:
         - name: hrm
-          image: daul0519/hrm-service
+          image: daul0519/hrm-service:4.2
           ports:
             - containerPort: 1010
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: AWS_ACCESS_KEY
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: AWS_SECRET_KEY
 
 
 

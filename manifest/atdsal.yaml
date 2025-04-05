@@ -4,7 +4,7 @@ metadata:
   name: atdsal
   namespace: insahi
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: insahi-atdsal
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: atdsal
-          image: daul0519/atdsal-service:2.4
+          image: daul0519/atdsal-service:4.0
           ports:
             - containerPort: 1000
           env:

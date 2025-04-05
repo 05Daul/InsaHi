@@ -4,7 +4,7 @@ metadata:
   name: appr
   namespace: insahi
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: insahi-appr
@@ -15,12 +15,23 @@ spec:
     spec:
       containers:
         - name: appr
-          image: daul0519/electronicepproval-service:4.0
+          image: daul0519/appr-service:4.3
           ports:
             - containerPort: 1005
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: AWS_ACCESS_KEY
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: s3-secret
+                  key: AWS_SECRET_KEY
+
 
 ---
 

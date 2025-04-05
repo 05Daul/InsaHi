@@ -3,6 +3,10 @@ plugins {
     id 'org.springframework.boot' version '3.3.8'
     id 'io.spring.dependency-management' version '1.1.7'
 }
+springBoot {
+    mainClass = 'com.playdata.Gateway.GatewayApplication'
+}
+
 
 ext {
     springCloudVersion = "2023.0.5"

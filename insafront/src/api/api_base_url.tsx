@@ -1,8 +1,5 @@
-// src/api/api_base_url.tsx
-
-// 개발용 - local
 // export const API_BASE_URL = "http://127.0.0.1:1006";
-// export const API_BASE_URL_Employee = "http://127.0.0.1:1006/employee";
+// export const API_BASE_URL_Employee = "http://127.0.0.1:1006/employee"; = "http://43.201.66.223:31770/leave";
 // export const API_BASE_URL_Company = "http://127.0.0.1:1006/company";
 // export const API_BASE_URL_Department = "http://127.0.0.1:1006/department";
 // export const API_BASE_URL_Chat = "http://127.0.0.1:1006/chat";

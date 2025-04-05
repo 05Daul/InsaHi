@@ -1,7 +1,6 @@
 server:
   port: 1006
 
-
 jwt:
   header: Authorization
   secret: 4Hirx6BNM+kTbhOxA4cHCUz/BF0B0tokIgTRs2d5ORn3zF8fPAESoo/jXcUiBnWYoZWrxgunF3l3gvGCUi6JGQ==
@@ -12,7 +11,6 @@ spring:
     name: Gateway
 
   cloud:
-
 
     gateway:
       default-filters:
