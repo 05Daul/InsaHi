@@ -3,7 +3,7 @@ import {updatePasswordDTO} from "@/type/updatepassword";
 import {API_BASE_URL_Employee} from "@/api/api_base_url";
 
 export default async function UpdatePasswordAction(employeeId: string, currentPassword: string, newPassword: string): Promise<updatePasswordDTO | null> {
-  const url = `${API_BASE_URL_Employee}/${employeeId}/profilecard`;
+  const url = `${API_BASE_URL_Employee}/${employeeId}/updatepassword`;
   try {
 
     let token = "";

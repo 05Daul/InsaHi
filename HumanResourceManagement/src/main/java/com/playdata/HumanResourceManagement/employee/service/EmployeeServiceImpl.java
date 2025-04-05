@@ -52,6 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   private final PasswordEncoder passwordEncoder;
   private final EmployeeRepository employeeRepository;
   private final FileEntityRepository fileEntityRepository;
+  private final EmployeeImageUploadService employeeImageUploadService;
 
 
   @Override
@@ -173,8 +174,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     dto.setHireDate(employee.getHireDate());
 
     if (employee.getProfileImage() != null) {
-      String imageUrl =
-          "http://127.0.0.1:1010/uploads/profile/" + employee.getProfileImage().getStoreFilename();
+      String imageUrl = employeeImageUploadService.getProfileImageUrl(
+          employee.getProfileImage().getStoreFilename());
       dto.setProfileImage(imageUrl);
     }
 
@@ -195,8 +196,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     responseDTO.setCompanyName(employee.getCompany().getCompanyName());
 
     if (employee.getProfileImage() != null) {
-      String imageUrl =
-          "http://127.0.0.1:1010/uploads/profile/" + employee.getProfileImage().getStoreFilename();
+      String imageUrl = employeeImageUploadService.getProfileImageUrl(
+          employee.getProfileImage().getStoreFilename());
       responseDTO.setProfileImage(imageUrl);
     }
     System.out.println("profileinfo 회사이름 : :: : : :" + employee.getCompany().getCompanyName());
@@ -209,6 +210,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     return responseDTO;
   }
 
+
   //개인정보 변경
   @Override
   public EmployeeResponseDTO updateEmployeeInfo(String employeeId,
@@ -218,34 +220,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 이미지 있을 경우 저장 처리
     if (profileImage != null && !profileImage.isEmpty()) {
-      String storedFilename = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
-      String fullPath = uploadDir + storedFilename;
+      String storedFilename = employeeImageUploadService.uploadProfileImage(profileImage);
+      String imageUrl = employeeImageUploadService.getProfileImageUrl(storedFilename);
 
-      try {
-        File targetFile = new File(fullPath);
-        if (!targetFile.getParentFile().exists()) {
-          targetFile.getParentFile().mkdirs();
-        }
+      FileEntity fileEntity = employee.getProfileImage();
 
-        profileImage.transferTo(targetFile);
-
-        FileEntity fileEntity = employee.getProfileImage();
-
-        if (fileEntity == null) {
-          fileEntity = new FileEntity();
-          fileEntity.setEmployee(employee);
-        }
-
-        fileEntity.setOriginalFileName(profileImage.getOriginalFilename());
-        fileEntity.setStoreFilename(storedFilename);
-        fileEntity.setFilePath("/uploads/profile/");
-        fileEntity.setCategory("employee");
-
-        employee.setProfileImage(fileEntity); // 새로 할당 or 갱신된 상태
-
-      } catch (IOException e) {
-        throw new RuntimeException("파일 저장 실패", e);
+      if (fileEntity == null) {
+        fileEntity = new FileEntity();
+        fileEntity.setEmployee(employee);
       }
+
+      fileEntity.setOriginalFileName(profileImage.getOriginalFilename());
+      fileEntity.setStoreFilename(storedFilename);
+      fileEntity.setFilePath(imageUrl);
+      fileEntity.setCategory("employee");
+
+      employee.setProfileImage(fileEntity); // 새로 할당 or 갱신된 상태
+
     }
 
     employeeDAO.update(employee);
