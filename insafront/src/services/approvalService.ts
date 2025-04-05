@@ -11,13 +11,16 @@ interface FormDataPayload {
   referencedIds: string[];
 }
 
-export async function fetchAllEmployees(companyCode: string): Promise<{
+interface Employee {
   employeeId: string;
-  name: string
-}[]> {
-  const response = await accessToken.get('/employee/all');
-  const all = response.data as any[];
-  return all.filter((user: any) => user.companyCode === companyCode);
+  name: string;
+  companyCode: string;
+}
+
+export async function fetchAllEmployees(): Promise<Employee[]> {
+  const response = await accessToken.get<Employee[]>('/employee/allEmp');
+  console.log('실제 응답 구조:', response.data);
+  return response.data;
 }
 
 export async function submitApproval(
