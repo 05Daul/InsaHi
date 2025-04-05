@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: hrm
-          image: daul0519/hrm-service:4.2
+          image: daul0519/hrm-service:4.5
           ports:
             - containerPort: 1010
           env:
