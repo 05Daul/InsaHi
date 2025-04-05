@@ -230,17 +230,35 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 
   }
 
+  private EmployeeResponseDTO safeFindEmployee(String employeeId) {
+    try {
+      return findEmployee(employeeId); // 내부적으로 hrmFeignClient 호출
+    } catch (Exception e) {
+      log.warn("Feign 호출 실패 - employeeId: {}", employeeId);
+      return null;
+    }
+  }
+
 
   // 휴가 등록 - 매달 발생
-  @Scheduled(cron = "0 * * * * ?", zone = "Asia/Seoul")
+  @Scheduled(cron = "0 0 */6 * * ?", zone = "Asia/Seoul")
   public void executeLeaveGrant() {
     log.info("==== 연차/월차 자동 지급 배치 시작 ====");
 
     // 1. 모든 직원 리스트 조회 (Feign 호출 또는 내부 서비스)
     List<String> employeeIdList = hrmFeignClient.getEmployeeIds();
 
+    // 2. 유효한 사원만 필터링
+    List<String> validEmployeeIds = employeeIdList.stream()
+        .map(this::safeFindEmployee) // 예외 방지용 safe 조회
+        .filter(e -> e != null
+            && e.getHireDate() != null
+            && e.getPositionSalaryId() != null)
+        .map(EmployeeResponseDTO::getEmployeeId)
+        .collect(Collectors.toList());
+
     // 2. 직원별로 처리
-    for (String employeeId : employeeIdList) {
+    for (String employeeId : validEmployeeIds) {
       try {
         grantLeaveToEmployee(employeeId);
       } catch (Exception e) {
@@ -252,10 +270,19 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 
   @Override
   public AnnualLeaveDTO findLatestAnnualLeave(String employeeId) {
-    AnnualLeaveEntity leaveEntity = annualLeaveDAO.findLatestByEmployeeId(employeeId)
-        .orElseThrow(() -> new RuntimeException("연차 정보를 불러오기 어렵습니다. "));
-    AnnualLeaveDTO leaveDTO = modelMapper.map(leaveEntity, AnnualLeaveDTO.class);
-    return leaveDTO;
+    return annualLeaveDAO.findLatestByEmployeeId(employeeId)
+        .map(entity -> modelMapper.map(entity, AnnualLeaveDTO.class))
+        .orElseGet(() -> {
+          AnnualLeaveDTO emptyLeave = new AnnualLeaveDTO();
+          emptyLeave.setAnnualLeaveId(0L);
+          emptyLeave.setEmployeeId(employeeId);
+          emptyLeave.setBaseLeave(0);
+          emptyLeave.setAdditionalLeave(0);
+          emptyLeave.setTotalGrantedLeave(0);
+          emptyLeave.setRemainingLeave(0);
+          emptyLeave.setUsedLeave(0);
+          return emptyLeave;
+        });
   }
 
 
