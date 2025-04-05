@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: appr
-          image: daul0519/appr-service:4.3
+          image: daul0519/appr-service:9239009
           ports:
             - containerPort: 1005
           env:
