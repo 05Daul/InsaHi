@@ -329,6 +329,10 @@ public class ApprovalServiceImpl implements ApprovalService {
       List<ApprovalFileEntity> pendingFiles = firstpendingFiles(employeeId);
       filesPage = convertListToPage(pendingFiles, pageable);
 
+    } else if (menu == 4) {
+      // 참조자로 지정된 문서
+      List<ApprovalFileEntity> referencedFiles = findByReferencedDocuments(employeeId);
+      filesPage = convertListToPage(referencedFiles, pageable);
     } else {
       // 기본 빈 페이지 반환
       filesPage = Page.empty(pageable);
@@ -450,4 +454,11 @@ public class ApprovalServiceImpl implements ApprovalService {
         .map(line -> line.getApprovalFile()).collect(Collectors.toList());
   }
 
+  private List<ApprovalFileEntity> findByReferencedDocuments(String employeeId) {
+    return approvalLineDao.findAllByEmployeeIdAndApprovalStatus(employeeId,
+            ApprovalStatus.REFERENCES)
+        .stream()
+        .map(ApprovalLineEntity::getApprovalFile)
+        .collect(Collectors.toList());
+  }
 }
