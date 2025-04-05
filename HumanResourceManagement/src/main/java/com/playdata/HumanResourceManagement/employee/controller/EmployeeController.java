@@ -272,4 +272,17 @@ public class EmployeeController {
   public List<Employee> getMemberList() {
     return employeeService.getMemberList();
   }
+
+  @GetMapping("/allEmp")
+  public List<EmployeeResponseAtdSalDTO> getEmployeeList() {
+    
+    return employeeService.getMemberList()
+        .stream()
+        .map(employee -> {
+          log.info(employee.toString());
+          return new EmployeeResponseAtdSalDTO(employee.getName(), employee.getEmployeeId(), null,
+              employee.getCompanyCode(), null, null);
+        })
+        .collect(Collectors.toList());
+  }
 }

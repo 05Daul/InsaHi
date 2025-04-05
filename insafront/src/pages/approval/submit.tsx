@@ -29,8 +29,17 @@ function SubmitPage() {
     setEmployeeId(storedEmployeeId);
     setCompanyCode(storedCompanyCode);
 
-    fetchAllEmployees(storedCompanyCode)
-    .then(setAllUsers)
+    fetchAllEmployees()
+    .then((users) => {
+      const filtered = users
+      .filter((user) => user.companyCode === storedCompanyCode)
+      .map((user) => ({
+        employeeId: user.employeeId,
+        name: user.name,
+      }));
+
+      setAllUsers(filtered);
+    })
     .catch(err => console.error('사용자 목록 불러오기 실패:', err));
   }, []);
 
