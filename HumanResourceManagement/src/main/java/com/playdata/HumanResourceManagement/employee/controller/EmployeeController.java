@@ -131,11 +131,21 @@ public class EmployeeController {
     if (employeeResponseDTO == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 직원을 찾을 수 없습니다.");
     }
+    log.info("HRM 응답: employeeId={}, positionSalaryId={}", employeeResponseDTO.getEmployeeId(),
+        employeeResponseDTO.getPositionSalaryId());
     EmployeeResponseAtdSalDTO responseAtdSalDTO = new EmployeeResponseAtdSalDTO(
         employeeResponseDTO.getName(),
-        employeeResponseDTO.getEmployeeId(), employeeResponseDTO.getRole(),
-        employeeResponseDTO.getCompanyCode(), employeeResponseDTO.getPositionSalaryId(),
+        employeeResponseDTO.getEmployeeId(),
+        employeeResponseDTO.getRole(),
+        employeeResponseDTO.getCompanyCode(),
+        employeeResponseDTO.getPositionSalaryId(),
         employeeResponseDTO.getHireDate());
+//    private String name;
+//    private String employeeId;
+//    private String role;
+//    private String companyCode;
+//    private Long positionSalaryId;
+//    private Date hireDate;
     return ResponseEntity.ok(responseAtdSalDTO);
   }
 
@@ -275,7 +285,7 @@ public class EmployeeController {
 
   @GetMapping("/allEmp")
   public List<EmployeeResponseAtdSalDTO> getEmployeeList() {
-    
+
     return employeeService.getMemberList()
         .stream()
         .map(employee -> {
