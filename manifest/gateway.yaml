@@ -7,6 +7,7 @@ metadata:
     app: gateway
 spec:
   replicas: 4
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: gateway
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: gateway
+
     spec:
       containers:
         - name: gateway
@@ -34,6 +36,7 @@ spec:
   type: ClusterIP
   selector:
     app: gateway
+
   ports:
     - port: 1006       # 클러스터 내부에서 쓸 포트
       targetPort: 1006 # 컨테이너 내 gateway 포트

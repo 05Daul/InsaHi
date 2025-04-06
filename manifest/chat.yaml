@@ -5,6 +5,7 @@ metadata:
   namespace: insahi
 spec:
   replicas: 3
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: insahi-chat
