@@ -1,6 +1,5 @@
 package com.playdata.HumanResourceManagement.employee.config;
 
-import com.playdata.ElectronicApproval.config.S3Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
