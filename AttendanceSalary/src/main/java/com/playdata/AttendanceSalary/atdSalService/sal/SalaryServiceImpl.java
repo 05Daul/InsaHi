@@ -188,7 +188,7 @@ public class SalaryServiceImpl implements SalaryService {
       PositionSalaryStepEntity salaryStep = positionSalaryDao.findPositionSalaryById(
               employee.getPositionSalaryId())
           .orElseThrow(() -> new RuntimeException("직원의 직급 정보를 찾을 수 없습니다."));
-      // 직급 호봉 아이디를 가져오기
+
       BigDecimal totalBaseSalary = salaryStep.getBaseSalary()
           .add(salaryStep.getPositionAllowance());
       BigDecimal overtimeHours = attendanceServiceImpl.calculateMonthlyOvertimeHours(employeeId,
