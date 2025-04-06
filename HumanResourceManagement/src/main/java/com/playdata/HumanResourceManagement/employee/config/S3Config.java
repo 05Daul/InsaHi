@@ -1,5 +1,6 @@
 package com.playdata.HumanResourceManagement.employee.config;
 
+import com.playdata.ElectronicApproval.config.S3Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,13 +19,10 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class S3Config {
 
   private final S3Properties s3Properties;
-
 //  @Value("${cloud.aws.credentials.access-key}")
 //  private String accessKey;
-//
 //  @Value("${cloud.aws.credentials.secret-key}")
 //  private String secretKey;
-//
 //  @Value("${cloud.aws.region.static}")
 //  private String region;
 
