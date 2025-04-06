@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DeductionResponseDTO {
 
+  //1추가
   private Long deductionId;
   private BigDecimal amount;
   private Long payStubId;
