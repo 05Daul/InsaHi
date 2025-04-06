@@ -182,7 +182,9 @@ public class SalaryServiceImpl implements SalaryService {
       if (employee == null || employee.getEmployeeId() == null) {
         throw new RuntimeException("직원 정보를 찾을 수 없습니다.");
       }
-
+      log.info(String.valueOf(employee.getPositionSalaryId()));
+      log.info(employee.getCompanyCode());
+      log.info(employee.getEmployeeId());
       PositionSalaryStepEntity salaryStep = positionSalaryDao.findPositionSalaryById(
               employee.getPositionSalaryId())
           .orElseThrow(() -> new RuntimeException("직원의 직급 정보를 찾을 수 없습니다."));
@@ -218,7 +220,7 @@ public class SalaryServiceImpl implements SalaryService {
         allowanceTotal = allowanceTotal.add(employeeAllowance.getAllowSalary());
       }
 
-      // ✅ 공제 생성 및 공제 리스트 생성
+      //  공제 생성 및 공제 리스트 생성
       createDeductionsForPayStub(payStub);
       List<DeductionEntity> deductionEntities = deductionDao.findByPayStubId(
           payStub.getPayStubId());
@@ -230,7 +232,7 @@ public class SalaryServiceImpl implements SalaryService {
           })
           .collect(Collectors.toList());
 
-      // ✅ 총합 계산
+      //  총합 계산
       BigDecimal totalDeductions = deductionDao.sumByPayStubId(payStub.getPayStubId());
       BigDecimal totalAllowances = allowanceTotal;
       BigDecimal totalPayment = totalBaseSalary.add(totalOvertimeAllowance).add(totalAllowances);
@@ -243,7 +245,7 @@ public class SalaryServiceImpl implements SalaryService {
 
       payStubDao.save(payStub);
 
-      // ✅ 최종 PayStubResponseDTO 반환 (수당/공제 리스트 포함)
+      //  최종 PayStubResponseDTO 반환 (수당/공제 리스트 포함)
       PayStubResponseDTO responseDTO = modelMapper.map(payStub, PayStubResponseDTO.class);
       responseDTO.setAllowances(allowanceResponseList);
       responseDTO.setDeductions(deductionResponseList);
@@ -360,7 +362,6 @@ public class SalaryServiceImpl implements SalaryService {
     //return modelMapper.map(positionSalaryDao.findPositionSalaryStepById(positionSalaryStepId), PositionSalaryStepResponseDTO.class);
     Optional<PositionSalaryStepEntity> pss = positionSalaryDao.findPositionSalaryById(
         positionSalaryId);
-
     return modelMapper.map(pss.get(), PositionSalaryStepResponseDTO.class);
   }
 
