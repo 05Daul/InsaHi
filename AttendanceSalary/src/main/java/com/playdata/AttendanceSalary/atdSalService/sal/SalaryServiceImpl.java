@@ -51,20 +51,20 @@ public class SalaryServiceImpl implements SalaryService {
   private final HrmFeignClient hrmFeignClient;
   private final AttendanceServiceImpl attendanceServiceImpl;
 
-  public EmployeeResponseDTO updatePositionSalary(EmployeeResponseDTO employeeResponse) {
-
-    EmployeeResponseDTO employeeResponseDTO = hrmFeignClient.findEmployee(
-        employeeResponse.getEmployeeId());
-
-    Optional<PositionSalaryStepEntity> settingSalaryStep =
-        positionSalaryDao.findPositionSalaryById(employeeResponse.getPositionSalaryId());
-
-    settingSalaryStep.ifPresent(positionSalaryStep ->
-        employeeResponseDTO.setPositionSalaryId(positionSalaryStep.getPositionSalaryId())
-    );
-
-    return employeeResponseDTO;
-  }
+//  public EmployeeResponseDTO updatePositionSalary(EmployeeResponseDTO employeeResponse) {
+//
+//    EmployeeResponseDTO employeeResponseDTO = hrmFeignClient.findEmployee(
+//        employeeResponse.getEmployeeId());
+//
+//    Optional<PositionSalaryStepEntity> settingSalaryStep =
+//        positionSalaryDao.findPositionSalaryById(employeeResponse.getPositionSalaryId());
+//
+//    settingSalaryStep.ifPresent(positionSalaryStep ->
+//        employeeResponseDTO.setPositionSalaryId(positionSalaryStep.getPositionSalaryId())
+//    );
+//
+//    return employeeResponseDTO;
+//  }
 
   @Override
   public String findPositionNameByPositionSalaryStepId(Long stepId) {
@@ -172,7 +172,7 @@ public class SalaryServiceImpl implements SalaryService {
 
   @Transactional
 //  @Scheduled(cron = "0 0 0 1 * ?")
-  @Scheduled(cron = "0 */5 * * * *")
+  @Scheduled(cron = "0 */1 * * * *")
   public void calculateAndSaveEmployeePayStub() {
     // 1. 모든 직원 리스트 조회 (Feign 호출 또는 내부 서비스)
     List<String> employeeIdList = hrmFeignClient.getEmployeeIds();
@@ -182,9 +182,9 @@ public class SalaryServiceImpl implements SalaryService {
       if (employee == null || employee.getEmployeeId() == null) {
         throw new RuntimeException("직원 정보를 찾을 수 없습니다.");
       }
-      log.info("직원 호봉:" + employee.getPositionSalaryId());
+      log.info("직원 직급 호봉:" + employee.getPositionSalaryId());
       log.info("직원 코드:" + employee.getCompanyCode());
-      log.info("직원 사번:" + employee.getEmployeeId());
+      log.info("직급 사번:" + employee.getEmployeeId());
       log.info("고용일 " + employee.getHireDate());
       PositionSalaryStepEntity salaryStep = positionSalaryDao.findPositionSalaryById(
               employee.getPositionSalaryId())
@@ -223,15 +223,32 @@ public class SalaryServiceImpl implements SalaryService {
 
       //  공제 생성 및 공제 리스트 생성
       createDeductionsForPayStub(payStub);
+
       List<DeductionEntity> deductionEntities = deductionDao.findByPayStubId(
           payStub.getPayStubId());
-      List<DeductionResponseDTO> deductionResponseList = deductionEntities.stream()
-          .map(entity -> {
-            DeductionResponseDTO dto = modelMapper.map(entity, DeductionResponseDTO.class);
-            dto.setPayStubId(entity.getPayStub().getPayStubId());
-            return dto;
-          })
-          .collect(Collectors.toList());
+      deductionEntities.forEach(deductionEntity -> {
+        log.info("공제 ID: {}", deductionEntity.getDeductionId());
+        log.info("공제 금액: {}", deductionEntity.getAmount());
+        log.info("급여명세서 ID: {}",
+            deductionEntity.getPayStub() != null ? deductionEntity.getPayStub().getPayStubId()
+                : "null");
+        log.info("급여명세서 사번: {}",
+            deductionEntity.getPayStub() != null ? deductionEntity.getPayStub().getEmployeeId()
+                : "null");
+      });
+//      List<DeductionResponseDTO> deductionResponseList = deductionEntities.stream()
+//          .map(entity -> {
+//            DeductionResponseDTO dto = modelMapper.map(entity, DeductionResponseDTO.class);
+//            dto.setPayStubId(entity.getPayStub().getPayStubId());
+//            log.info("공제 ID: {}", entity.getDeductionId());
+//            log.info("공제 금액: {}", entity.getAmount());
+//            log.info("급여명세서 ID: {}",
+//                entity.getPayStub() != null ? entity.getPayStub().getPayStubId() : "null");
+//            log.info("급여명세서 사번: {}",
+//                entity.getPayStub() != null ? entity.getPayStub().getEmployeeId() : "null");
+//            return dto;
+//          })
+//          .collect(Collectors.toList());
 
       //  총합 계산
       BigDecimal totalDeductions = deductionDao.sumByPayStubId(payStub.getPayStubId());
@@ -245,13 +262,10 @@ public class SalaryServiceImpl implements SalaryService {
       payStub.setNetPay(netPay);
 
       payStubDao.save(payStub);
-
       //  최종 PayStubResponseDTO 반환 (수당/공제 리스트 포함)
-      PayStubResponseDTO responseDTO = modelMapper.map(payStub, PayStubResponseDTO.class);
-      responseDTO.setAllowances(allowanceResponseList);
-      responseDTO.setDeductions(deductionResponseList);
-
-
+//      PayStubResponseDTO responseDTO = modelMapper.map(payStub, PayStubResponseDTO.class);
+//      responseDTO.setAllowances(allowanceResponseList);
+//      responseDTO.setDeductions(deductionResponseList);
     }
 
   }
@@ -268,9 +282,7 @@ public class SalaryServiceImpl implements SalaryService {
           .deductionAmount(deductionAmount)
           .amount(deductionAmount)
           .payStub(payStub)
-
           .build();
-
       deductionDao.save(deduction);
     }
   }
