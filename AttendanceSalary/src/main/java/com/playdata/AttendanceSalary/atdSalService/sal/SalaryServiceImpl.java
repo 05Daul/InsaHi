@@ -182,10 +182,10 @@ public class SalaryServiceImpl implements SalaryService {
       if (employee == null || employee.getEmployeeId() == null) {
         throw new RuntimeException("직원 정보를 찾을 수 없습니다.");
       }
-      log.info(String.valueOf("직원 호봉:" + employee.getPositionSalaryId()));
+      log.info("직원 호봉:" + employee.getPositionSalaryId());
       log.info("직원 코드:" + employee.getCompanyCode());
       log.info("직원 사번:" + employee.getEmployeeId());
-      log.info("고용일 " + String.valueOf(employee.getHireDate()));
+      log.info("고용일 " + employee.getHireDate());
       PositionSalaryStepEntity salaryStep = positionSalaryDao.findPositionSalaryById(
               employee.getPositionSalaryId())
           .orElseThrow(() -> new RuntimeException("직원의 직급 정보를 찾을 수 없습니다."));
