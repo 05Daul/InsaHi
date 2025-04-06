@@ -17,10 +17,8 @@ public class AllowanceResponseDTO {
   private Long allowanceId;
   private String companyCode;
   private BigDecimal allowSalary;
-  //    private PayStubEntity payStub;
   private String allowName;
   private String allowType;
-  private String employeeId;
 
   public AllowanceEntity toEntity() {
     AllowanceEntity allowanceEntity = new AllowanceEntity();

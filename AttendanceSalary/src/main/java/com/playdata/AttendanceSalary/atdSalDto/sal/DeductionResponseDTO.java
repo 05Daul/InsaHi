@@ -19,7 +19,6 @@ public class DeductionResponseDTO {
   private BigDecimal amount;
   private Long payStubId;
   private String deductionType;
-  private String employeeId;
 
   public DeductionEntity toEntity() {
     DeductionEntity deductionEntity = new DeductionEntity();

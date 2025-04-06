@@ -101,23 +101,55 @@ public class SalaryServiceImpl implements SalaryService {
 
           List<AllowanceEntity> allowanceEntities = allowanceDao.findByPayStubId(
               entity.getPayStubId());
-          List<AllowanceResponseDTO> allowanceDTOs = allowanceEntities.stream()
-              .map(a -> modelMapper.map(a, AllowanceResponseDTO.class))
-              .collect(Collectors.toList());
+//          List<AllowanceResponseDTO> allowanceDTOs = allowanceEntities.stream()
+//              .map(a -> modelMapper.map(a, AllowanceResponseDTO.class))
+//              .collect(Collectors.toList());
 
           List<DeductionEntity> deductionEntities = deductionDao.findByPayStubId(
               entity.getPayStubId());
-          List<DeductionResponseDTO> deductionDTOs = deductionEntities.stream()
-              .map(d -> modelMapper.map(d, DeductionResponseDTO.class))
-              .collect(Collectors.toList());
-
-          dto.setAllowances(allowanceDTOs);
-          dto.setDeductions(deductionDTOs);
+//          List<DeductionResponseDTO> deductionDTOs = deductionEntities.stream()
+//              .map(d -> modelMapper.map(d, DeductionResponseDTO.class))
+//              .collect(Collectors.toList());
+//
+//          dto.setAllowances(allowanceDTOs);
+//          dto.setDeductions(deductionDTOs);
+          dto.setAllowances(convertToAllowanceDTOs(allowanceEntities));
+          dto.setDeductions(convertToDeductionDTOs(deductionEntities));
 
           return dto;
         }).toList();
     return payStubResponseDTOS;
 
+  }
+
+  private List<DeductionResponseDTO> convertToDeductionDTOs(
+      List<DeductionEntity> deductionEntities) {
+    return deductionEntities.stream()
+        .map(d -> {
+          DeductionResponseDTO dto = new DeductionResponseDTO();
+          dto.setDeductionId(d.getDeductionId());
+          dto.setDeductionType(
+              d.getDeductionType() != null ? d.getDeductionType().name() : null); // enum → String
+          dto.setAmount(d.getAmount());
+          dto.setPayStubId(d.getPayStub() != null ? d.getPayStub().getPayStubId() : null);
+          return dto;
+        })
+        .collect(Collectors.toList());
+  }
+
+  private List<AllowanceResponseDTO> convertToAllowanceDTOs(
+      List<AllowanceEntity> allowanceEntities) {
+    return allowanceEntities.stream()
+        .map(a -> {
+          AllowanceResponseDTO dto = new AllowanceResponseDTO();
+          dto.setAllowanceId(a.getAllowanceId());
+          dto.setAllowType(
+              a.getAllowType() != null ? a.getAllowType().name() : null); // enum → String
+          dto.setAllowSalary(a.getAllowSalary());
+          dto.setCompanyCode(a.getCompanyCode());
+          return dto;
+        })
+        .collect(Collectors.toList());
   }
 
   @Override
