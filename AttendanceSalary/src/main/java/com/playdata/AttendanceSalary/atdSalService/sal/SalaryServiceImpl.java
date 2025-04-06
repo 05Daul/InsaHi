@@ -171,7 +171,7 @@ public class SalaryServiceImpl implements SalaryService {
   /// 급여 계산 로직
 
   @Transactional
-  @Scheduled(cron = "0 0 0 1 * ?")
+  @Scheduled(cron = "0 0 1 1 * ?")
   public void calculateAndSaveEmployeePayStub() {
     // 1. 모든 직원 리스트 조회 (Feign 호출 또는 내부 서비스)
     List<String> employeeIdList = hrmFeignClient.getEmployeeIds();
