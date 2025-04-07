@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 @RequiredArgsConstructor
+//@ConditionalOnProperty(name = "cloud.aws.s3.enable", havingValue = "true", matchIfMissing = false)
 
 public class EmployeeImageUploadServiceImpl implements EmployeeImageUploadService {
 
