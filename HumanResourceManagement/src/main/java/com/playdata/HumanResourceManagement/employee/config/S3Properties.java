@@ -3,9 +3,9 @@ package com.playdata.HumanResourceManagement.employee.config;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 
-//@Configuration
-//@ConfigurationProperties(prefix = "cloud.aws")
+@Configuration
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
