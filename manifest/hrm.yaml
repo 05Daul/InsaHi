@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: hrm
-          image: daul0519/hrm-service:b346d58
+          image: daul0519/hrm-service:80e62d9
           ports:
             - containerPort: 1010
           env:
