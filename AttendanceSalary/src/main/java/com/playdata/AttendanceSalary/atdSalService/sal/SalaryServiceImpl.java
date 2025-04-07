@@ -98,7 +98,7 @@ public class SalaryServiceImpl implements SalaryService {
           dto.setTotalAllowances(entity.getTotalAllowances());
           dto.setTotalPayment(entity.getTotalPayment());
           dto.setTotalDeductions(entity.getTotalDeductions());
-///1. 모델 매퍼
+///1.   ci/cd 영상 모델 매퍼
           List<AllowanceEntity> allowanceEntities = allowanceDao.findByPayStubId(
               entity.getPayStubId());
           List<AllowanceResponseDTO> allowanceDTOs = allowanceEntities.stream()
