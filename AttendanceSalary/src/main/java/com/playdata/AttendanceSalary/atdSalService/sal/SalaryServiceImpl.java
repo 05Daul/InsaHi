@@ -101,20 +101,28 @@ public class SalaryServiceImpl implements SalaryService {
 ///매퍼 바꿈
           List<AllowanceEntity> allowanceEntities = allowanceDao.findByPayStubId(
               entity.getPayStubId());
-//          List<AllowanceResponseDTO> allowanceDTOs = allowanceEntities.stream()
-//              .map(a -> modelMapper.map(a, AllowanceResponseDTO.class))
-//              .collect(Collectors.toList());
+          List<AllowanceResponseDTO> allowanceDTOs = allowanceEntities.stream()
+              .map(a -> modelMapper.map(a, AllowanceResponseDTO.class))
+              .collect(Collectors.toList());
 
           List<DeductionEntity> deductionEntities = deductionDao.findByPayStubId(
               entity.getPayStubId());
-//          List<DeductionResponseDTO> deductionDTOs = deductionEntities.stream()
-//              .map(d -> modelMapper.map(d, DeductionResponseDTO.class))
-//              .collect(Collectors.toList());
+          List<DeductionResponseDTO> deductionDTOs = deductionEntities.stream()
+              .map(d -> modelMapper.map(d, DeductionResponseDTO.class))
+              .collect(Collectors.toList());
+          ;
+
+          dto.setAllowances(allowanceDTOs);
+          dto.setDeductions(deductionDTOs);
+
+//          List<AllowanceEntity> allowanceEntities = allowanceDao.findByPayStubId(
+//              entity.getPayStubId());
 //
-//          dto.setAllowances(allowanceDTOs);
-//          dto.setDeductions(deductionDTOs);
-          dto.setAllowances(convertToAllowanceDTOs(allowanceEntities));
-          dto.setDeductions(convertToDeductionDTOs(deductionEntities));
+//          List<DeductionEntity> deductionEntities = deductionDao.findByPayStubId(
+//              entity.getPayStubId());
+//          dto.setAllowances(convertToAllowanceDTOs(allowanceEntities));
+//          dto.setDeductions(convertToDeductionDTOs(deductionEntities));
+//
 
           return dto;
         }).toList();
