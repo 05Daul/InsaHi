@@ -4,6 +4,12 @@ metadata:
   name: hrm
   namespace: insahi
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  minReadySeconds: 20
   replicas: 3
   revisionHistoryLimit: 1
   selector:

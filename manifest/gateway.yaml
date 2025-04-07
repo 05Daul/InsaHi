@@ -6,6 +6,12 @@ metadata:
   labels:
     app: gateway
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  minReadySeconds: 20
   replicas: 4
   revisionHistoryLimit: 1
   selector:
