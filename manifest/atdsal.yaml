@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: atdsal
-          image: daul0519/atdsal-service:36f89b8
+          image: daul0519/atdsal-service:57226c0
           ports:
             - containerPort: 1000
           env:
