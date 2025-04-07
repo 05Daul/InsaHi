@@ -3,12 +3,15 @@ package com.playdata.HumanResourceManagement.employee.config;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Configuration
+@ConfigurationProperties(prefix = "cloud.aws")
 public class S3Properties {
 
   private Credentials credentials = new Credentials();
