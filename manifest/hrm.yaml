@@ -4,7 +4,14 @@ metadata:
   name: hrm
   namespace: insahi
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  minReadySeconds: 20
   replicas: 3
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: insahi-hrm
@@ -15,7 +22,7 @@ spec:
     spec:
       containers:
         - name: hrm
-          image: daul0519/hrm-service:4.5
+          image: daul0519/hrm-service:b346d58
           ports:
             - containerPort: 1010
           env:

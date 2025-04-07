@@ -18,13 +18,10 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class S3Config {
 
   private final S3Properties s3Properties;
-
 //  @Value("${cloud.aws.credentials.access-key}")
 //  private String accessKey;
-//
 //  @Value("${cloud.aws.credentials.secret-key}")
 //  private String secretKey;
-//
 //  @Value("${cloud.aws.region.static}")
 //  private String region;
 

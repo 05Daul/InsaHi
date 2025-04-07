@@ -6,7 +6,14 @@ metadata:
   labels:
     app: gateway
 spec:
-  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  minReadySeconds: 20
+  replicas: 4
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: gateway
@@ -14,10 +21,11 @@ spec:
     metadata:
       labels:
         app: gateway
+
     spec:
       containers:
         - name: gateway
-          image: jahee24/gateway-service:4.0
+          image: daul0519/gateway-service:4.0
           ports:
             - containerPort: 1006
           env:
@@ -34,6 +42,7 @@ spec:
   type: ClusterIP
   selector:
     app: gateway
+
   ports:
     - port: 1006       # 클러스터 내부에서 쓸 포트
       targetPort: 1006 # 컨테이너 내 gateway 포트
