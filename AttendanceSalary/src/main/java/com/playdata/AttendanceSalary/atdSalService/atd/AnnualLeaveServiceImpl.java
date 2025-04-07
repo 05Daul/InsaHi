@@ -241,7 +241,7 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 
 
   // 휴가 등록 - 매달 발생
-  @Scheduled(cron = "0 0 */6 * * ?", zone = "Asia/Seoul")
+  @Scheduled(cron = "0 */10 * * * ?", zone = "Asia/Seoul")
   public void executeLeaveGrant() {
     log.info("==== 연차/월차 자동 지급 배치 시작 ====");
 
